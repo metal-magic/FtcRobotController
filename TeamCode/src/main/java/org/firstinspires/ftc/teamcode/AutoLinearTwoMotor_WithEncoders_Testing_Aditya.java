@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  * I used this youtube tutorial link from FTC Canada:    https://www.youtube.com/watch?v=c__eqpm2vc0
  */
 
-@Autonomous(name="Robot: Auto Drive By Encoder", group="Robot")
+@Autonomous(name="Robot: Auto Drive By Encoder2", group="Robot")
 @Disabled
 public class AutoLinearTwoMotor_WithEncoders_Testing_Aditya extends LinearOpMode {
 
