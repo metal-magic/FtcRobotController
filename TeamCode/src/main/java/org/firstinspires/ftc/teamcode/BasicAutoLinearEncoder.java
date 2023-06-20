@@ -66,8 +66,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class BasicAutoLinearEncoder extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private DcMotor         leftDrive   = null;
-    private DcMotor         rightDrive  = null;
+    private DcMotor         leftFrontDrive   = null;
+    private DcMotor         rightFrontDrive  = null;
+    private DcMotor         rightBackDrive = null;
+    private DcMotor         leftBackDrive = null;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -116,13 +118,15 @@ public class BasicAutoLinearEncoder extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  88,  88, 2.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-        sleep(1000);  // pause to display final telemetry message.
+        encoderDrive(DRIVE_SPEED,  88,  88,  88, 88, 2.0); // Move 88 inches forward
+        encoderDrive(TURN_SPEED, 13.7444678595, -13.7444678595, -13.7444678595, 13.7444678595, 2.0); // Turn 90 degrees to the right
+        encoderDrive(DRIVE_SPEED, 88, 88, 88, 88, 2.0); // Move 88 in forward
+        encoderDrive(DRIVE_SPEED, 88, -88, 88, -88, 2.0); // Strafe 88 in to the right
+        encoderDrive(TURN_SPEED, 27.488935719, -27.488935719, -27.488935719,27.488935719, 2.0); // Turn 180 degrees to the right
+        encoderDrive(DRIVE_SPEED,  88,  88,  88, 88, 2.0); // Move forward 88 in
+        encoderDrive(TURN_SPEED,   20.6167017893, 20.6167017893, 20.6167017893, 20.6167017893, 2.0); // Turn 45 degrees to the right
+        encoderDrive(DRIVE_SPEED,   62.2253967444, 62.2253967444, 62.2253967444, 62.2253967444, 2.0); // Move 62 in forward
+        encoderDrive(TURN_SPEED, -54.977871438, 54.977871438, 54.977871438, -54.977871438, 1/0); // Turn 360 degrees to the left
     }
 
     /*
@@ -134,28 +138,38 @@ public class BasicAutoLinearEncoder extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
+                             double leftFrontInches, double rightFrontInches, double rightBackInches, double leftBackInches,
                              double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newLeftFrontTarget;
+        int newRightFrontTarget;
+        int newLeftBackTarget;
+        int newRightBackTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            leftDrive.setTargetPosition(newLeftTarget);
-            rightDrive.setTargetPosition(newRightTarget);
+            newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(leftFrontInches * COUNTS_PER_INCH);
+            newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(rightFrontInches * COUNTS_PER_INCH);
+            newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(rightBackInches * COUNTS_PER_INCH);
+            newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(leftBackInches *COUNTS_PER_INCH);
+            leftFrontDrive.setTargetPosition(newLeftFrontTarget);
+            rightFrontDrive.setTargetPosition(newRightFrontTarget);
+            rightBackDrive.setTargetPosition(newRightBackTarget);
+            leftBackDrive.setTargetPosition(newLeftBackTarget);
 
             // Turn On RUN_TO_POSITION
-            leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            leftDrive.setPower(Math.abs(speed));
-            rightDrive.setPower(Math.abs(speed));
+            leftFrontDrive.setPower(Math.abs(speed));
+            rightFrontDrive.setPower(Math.abs(speed));
+            rightBackDrive.setPower(Math.abs(speed));
+            leftBackDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -163,9 +177,14 @@ public class BasicAutoLinearEncoder extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
+
+
+            //WE DO NOT NEED THIS PART
+
+
+            /*while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (leftDrive.isBusy() && rightDrive.isBusy())) {
+                   (leftFrontDrive.isBusy() && rightFrontDrive.isBusy() && rightBackDrive.isBusy() && leftBackDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
@@ -173,14 +192,18 @@ public class BasicAutoLinearEncoder extends LinearOpMode {
                                             leftDrive.getCurrentPosition(), rightDrive.getCurrentPosition());
                 telemetry.update();
             }
-
+            */
             // Stop all motion;
-            leftDrive.setPower(0);
-            rightDrive.setPower(0);
+            leftFrontDrive.setPower(0);
+            rightFrontDrive.setPower(0);
+            rightBackDrive.setPower(0);
+            leftBackDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(250);   // optional pause after each move.
         }
