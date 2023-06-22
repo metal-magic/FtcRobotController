@@ -90,31 +90,34 @@ public class BasicAutoLinearEncoder extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        //leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+        //rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+
         // Initialize the drive system variables.
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        leftBackDrive  = hardwareMap.get(DcMotor.class, "motorBackLeft");
+        rightFrontDrive  = hardwareMap.get(DcMotor.class, "motorFrontRight");
+        rightBackDrive  = hardwareMap.get(DcMotor.class, "motorBackRight");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         // Reverse the right side motors
-        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -123,14 +126,18 @@ public class BasicAutoLinearEncoder extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  88,  88,  88, 88, 2.0); // Move 88 inches forward
-        encoderDrive(TURN_SPEED, 13.7444678595, -13.7444678595, -13.7444678595, 13.7444678595, 2.0); // Turn 90 degrees to the right
+        encoderDrive(TURN_SPEED, 13.7444678595, -13.7444678595, -13.7444678595, 13.7444678595, 60.0); // Turn 90 degrees to the right
         encoderDrive(DRIVE_SPEED, 88, 88, 88, 88, 2.0); // Move 88 in forward
         encoderDrive(DRIVE_SPEED, 88, -88, 88, -88, 2.0); // Strafe 88 in to the right
-        encoderDrive(TURN_SPEED, 27.488935719, -27.488935719, -27.488935719,27.488935719, 2.0); // Turn 180 degrees to the right
+        encoderDrive(TURN_SPEED, 27.488935719, -27.488935719, -27.488935719,27.488935719, 60.0); // Turn 180 degrees to the right
         encoderDrive(DRIVE_SPEED,  88,  88,  88, 88, 2.0); // Move forward 88 in
-        encoderDrive(TURN_SPEED,   20.6167017893, 20.6167017893, 20.6167017893, 20.6167017893, 2.0); // Turn 45 degrees to the right
-        encoderDrive(DRIVE_SPEED,   62.2253967444, 62.2253967444, 62.2253967444, 62.2253967444, 2.0); // Move 62 in forward
-        encoderDrive(TURN_SPEED, -54.977871438, 54.977871438, 54.977871438, -54.977871438, 1/0); // Turn 360 degrees to the left
+        encoderDrive(TURN_SPEED,   20.6167017893, 20.6167017893, 20.6167017893, 20.6167017893, 60.0); // Turn 45 degrees to the right
+        encoderDrive(DRIVE_SPEED,   62.2253967444, 62.2253967444, 62.2253967444, 62.2253967444, 60.0); // Move 62 in forward
+        encoderDrive(TURN_SPEED, -54.977871438, 54.977871438, 54.977871438, -54.977871438, 60.0); // Turn 360 degrees to the left
+
+        // TIMEOUTS MAY BE WRONG WE HAVE TO FIX
+        //
+        //
     }
 
     /*
