@@ -51,6 +51,9 @@ public class MecanumDrive4x4 extends LinearOpMode {
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+
         waitForStart();
 
         if (isStopRequested()) return;
