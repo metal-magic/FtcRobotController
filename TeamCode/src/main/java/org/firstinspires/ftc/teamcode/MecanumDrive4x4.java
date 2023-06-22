@@ -48,11 +48,11 @@ public class MecanumDrive4x4 extends LinearOpMode {
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
 
         // Reverse the right side motors
-        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         waitForStart();
 
