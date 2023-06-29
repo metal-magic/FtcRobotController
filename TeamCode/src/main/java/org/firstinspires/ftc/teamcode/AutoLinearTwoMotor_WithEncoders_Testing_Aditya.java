@@ -40,50 +40,71 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 
 @Autonomous(name="Robot: Auto Drive By Encoder2", group="Robot")
-@Disabled
 public class AutoLinearTwoMotor_WithEncoders_Testing_Aditya extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    private DcMotor left;
-    private DcMotor right;
 
-    private int leftPos;
-    private int rightPos;
+    private DcMotor leftFrontDrive;
+    private DcMotor rightFrontDrive;
+    private DcMotor rightBackDrive;
+    private DcMotor leftBackDrive;
+
+    private int leftFrontDrivePos;
+    private int rightFrontDrivePos;
+    private int rightBackDrivePos;
+    private int leftBackDrivePos;
 
 
     @Override
     public void runOpMode() {
-        left = hardwareMap.get(DcMotor.class, "leftMotor");
-        right = hardwareMap.get(DcMotor.class, "rightMotor");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
 
-        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        right.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftPos = 0;
-        rightPos = 0;
+        rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftFrontDrivePos = 0;
+        rightBackDrivePos = 0;
+        leftBackDrivePos = 0;
+        rightFrontDrivePos = 0;
 
         waitForStart();
 
-        drive(1000, 1000, 0.25);
-        drive(1000, -1000, 0.25);
+        drive(1000, 1000, 1000,1000, .25);
+        drive(-1000, 1000, -1000,1000, .25);
     }
 
-    private void drive(int leftTarget, int rightTarget, double speed) {
-        leftPos += leftTarget;
-        rightPos += rightTarget;
+    private void drive(int leftFrontTarget, int rightBackTarget, int leftBackTarget, int rightFrontTarget, double speed) {
+        leftFrontDrivePos += leftFrontTarget;
+        rightBackDrivePos += rightBackTarget;
+        leftBackDrivePos += leftBackTarget;
+        rightFrontDrivePos += rightFrontTarget;
 
-        left.setTargetPosition(leftPos);
-        right.setTargetPosition(rightPos);
+        leftFrontDrive.setTargetPosition(leftFrontDrivePos);
+        rightBackDrive.setTargetPosition(rightBackDrivePos);
+        leftBackDrive.setTargetPosition(leftBackDrivePos);
+        rightFrontDrive.setTargetPosition(rightFrontDrivePos);
 
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        left.setPower(speed);
-        right.setPower(speed);
+        leftFrontDrive.setPower(speed);
+        rightBackDrive.setPower(speed);
+        leftFrontDrive.setPower(speed);
+        rightBackDrive.setPower(speed);
 
-        while(opModeIsActive() && left.isBusy() && right.isBusy()) {
+        while(opModeIsActive() && leftFrontDrive.isBusy() && rightBackDrive.isBusy() && rightFrontDrive.isBusy() && leftBackDrive.isBusy()) {
             idle();
         }
 
