@@ -3,12 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
-import java. lang. Math;
 @Autonomous(name="Robot: Auto Drive By Encoder THREE", group="Robot")
 public class TestAutoWithEncoders extends LinearOpMode {
 
-    public static final double MOTOR_SPEED = 0.5;
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -21,6 +18,7 @@ public class TestAutoWithEncoders extends LinearOpMode {
     static final double WHEEL_DIAMETER = 96 / 25.4; // in Inches
     static final double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER; // pi * the diameter of the wheels in inches
 
+    static final double SPEED = 0.5; // Motor Power setting
     @Override
     public void runOpMode() {
         /* Assign all the motors */
@@ -44,36 +42,103 @@ public class TestAutoWithEncoders extends LinearOpMode {
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
+        /* Example:
+        rotate(45);
+        rotate(-45);
 
+        moveStraightLine (88)
+         */
 
-        drive(MOTOR_SPEED, 88, 88, 88, 88);
-        drive(0.5, 13.7444678595, 13.7444678595, -13.7444678595, -13.7444678595);
-        drive(0.5, 88, 88, 88, 88);
-        drive(0.5, 88, -88, -88, 88);
-        drive(0.5, 27.488935719, 27.488935719, -27.488935719, -27.488935719);
-        drive(0.5, 88, 88, 88, 88);
-        drive(0.5, 20.6167017893, 20.6167017893, -20.6167017893, -20.6167017893);
-        drive(0.5, 62.2253967444, 62.2253967444, 62.2253967444, 62.2253967444);
-        drive(0.5, -54.977871438, -54.977871438, 54.977871438, 54.977871438);
+      /*
+        ============================
+        THIS IS THE ACTUAL DRIVING
+        ============================
+       */
+        moveStraightLine (88);
+        rotate(90);
+        moveStraightLine (88);
+        strafe(88);
+        rotate(180);
+        moveStraightLine(88);
+        rotate(45);
+        moveStraightLine(62.2253967444);
+        rotate(-360);
+
+//        drive(SPEED, 88, 88, 88, 88);
+//        drive(SPEED, 13.7444678595, 13.7444678595, -13.7444678595, -13.7444678595);
+//        drive(SPEED, 88, 88, 88, 88);
+//        drive(SPEED, 88, -88, -88, 88);
+//        drive(SPEED, 27.488935719, 27.488935719, -27.488935719, -27.488935719);
+//        drive(SPEED, 88, 88, 88, 88);
+//        drive(SPEED, 20.6167017893, 20.6167017893, -20.6167017893, -20.6167017893);
+//        drive(SPEED, 62.2253967444, 62.2253967444, 62.2253967444, 62.2253967444);
+//        drive(SPEED, -54.977871438, -54.977871438, 54.977871438, 54.977871438);
 
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
 
-
-
-
     }
 
+    /*
+    =====================================================
+    PROGRAMMING FUNCTIONS FOR THE SEPARATE MOVEMENT TYPES
+    =====================================================
+     */
+    private void strafe(double strafeInches) {
+        // We assume that strafing right means positive
+        if (strafeInches >= 0) {
+            telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
+            telemetry.update();
+            drive(SPEED,
+                    -1 * strafeInches,
+                    1 * strafeInches,
+                    -1 * strafeInches,
+                    1 * strafeInches);
+        } else {
+            telemetry.addData("Strafing towards Left by ", "%.3f inches", Math.abs(strafeInches));
+            telemetry.update();
+            drive(SPEED,
+                    1 * strafeInches,
+                    -1 * strafeInches,
+                    1 * strafeInches,
+                    -1 * strafeInches);
+        }
+    }
+    private void moveStraightLine (double movementInInches){
+        telemetry.addData("Moving ", "%.3f inches", movementInInches);
+        telemetry.update();
+        drive(SPEED, movementInInches, movementInInches, movementInInches, movementInInches);
+    }
+
+
+    /**
+     * Function to Rotate the 4-Wheel Robot by certain amount of degrees.
+     *
+     * @param degrees POSITIVE degrees means rotating **RIGHT**
+     */
     private void rotate(double degrees){
         // Assume positive degrees means moving towards the right
         double movement_of_wheel_in_inches = Math.abs(degrees / 360 * CIRCUMFERENCE);
 
-        if (degrees > 0){
-            drive(0.5, movement_of_wheel_in_inches, movement_of_wheel_in_inches, -1 * movement_of_wheel_in_inches, -1 * movement_of_wheel_in_inches);
+        if (degrees >= 0){
+            telemetry.addData("Rotating right by ", "%.3f inches", degrees);
+            telemetry.update();
+            drive(SPEED,
+                    1.0 * movement_of_wheel_in_inches,
+                    1.0 * movement_of_wheel_in_inches,
+                    -1 * movement_of_wheel_in_inches,
+                    -1 * movement_of_wheel_in_inches);
         }else{
-
+            // Moving negative means rotating left
+            telemetry.addData("Rotating left by ", "%.3finches", Math.abs(degrees));
+            telemetry.update();
+            drive(SPEED,
+                    -1 * movement_of_wheel_in_inches,
+                    -1 * movement_of_wheel_in_inches,
+                    1.0 * movement_of_wheel_in_inches,
+                    1.0 * movement_of_wheel_in_inches);
         }
     }
     public void drive(double speed, double leftFrontInches, double leftBackInches, double rightFrontInches, double rightBackInches) {
@@ -88,6 +153,12 @@ public class TestAutoWithEncoders extends LinearOpMode {
         int RFdrivetarget = (int)(RFrotation * MOTOR_TICK_COUNTS) + rightFrontDrive.getCurrentPosition();
         int RBdrivetarget = (int)(RBrotation * MOTOR_TICK_COUNTS) + rightBackDrive.getCurrentPosition();
 
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         leftFrontDrive.setTargetPosition(LFdrivetarget);
         leftBackDrive.setTargetPosition(LBdrivetarget);
         rightFrontDrive.setTargetPosition(RFdrivetarget);
@@ -98,15 +169,15 @@ public class TestAutoWithEncoders extends LinearOpMode {
         rightFrontDrive.setPower(speed);
         rightBackDrive.setPower(speed);
 
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while (leftFrontDrive.isBusy() && leftBackDrive.isBusy() && rightFrontDrive.isBusy() && rightBackDrive.isBusy()) {
-            telemetry.addData("All 4 wheels are running", '1');
+        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
+            telemetry.addLine()
+                    .addData("Left Front inches", "%.3f", leftFrontInches)
+                    .addData("Left Back inches", "%.3f", leftBackInches)
+                    .addData("Right Front inches", "%.3f", rightFrontInches)
+                    .addData("Right Back inches", "%.3f", rightBackInches);
             telemetry.update();
         }
-        sleep(250);
+        sleep(1000);
     }
 }
