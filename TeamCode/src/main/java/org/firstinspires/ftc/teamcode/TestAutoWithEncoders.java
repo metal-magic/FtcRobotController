@@ -45,10 +45,6 @@ public class TestAutoWithEncoders extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
 
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -63,9 +59,17 @@ public class TestAutoWithEncoders extends LinearOpMode {
         THIS IS THE ACTUAL DRIVING
         ============================
        */
-        moveStraightLine(12);
-        strafe(12);
-        rotate(90);
+
+        moveStraightLine(20);
+//        rotate(90);
+//        moveStraightLine(20);
+//        strafe(20);
+        rotate(-180);
+//        moveStraightLine(20);
+//        rotate(135);
+//        moveStraightLine(Math.sqrt((20 * 20) + (20 * 20)));
+//        rotate(-360);
+
 
 //        moveStraightLine (88);
 //        strafe(88);
@@ -132,7 +136,7 @@ public class TestAutoWithEncoders extends LinearOpMode {
      */
     private void rotate(double degrees) {
         // Assume positive degrees means moving towards the right
-        double movement_of_wheel_in_inches = Math.abs( 360 / degrees) * CIRCUMFERENCE_INCHES;
+        double movement_of_wheel_in_inches = Math.abs(360 / degrees) * (CIRCUMFERENCE_INCHES * 2);
 
         if (degrees >= 0) {
             telemetry.addData("Rotating right by ", "%.3f inches", degrees);
@@ -200,12 +204,6 @@ public class TestAutoWithEncoders extends LinearOpMode {
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
-
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
 
 
         sleep(250);
