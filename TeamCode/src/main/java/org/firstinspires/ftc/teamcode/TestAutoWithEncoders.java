@@ -103,29 +103,31 @@ public class TestAutoWithEncoders extends LinearOpMode {
      */
     private void strafe(double strafeInches) {
         // We assume that strafing right means positive
+        double strafeRevs = strafeInches / CIRCUMFERENCE_INCHES;
         if (strafeInches >= 0) {
             telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
             telemetry.update();
             drive(SPEED,
-                    1 * strafeInches,
-                    -1 * strafeInches,
-                    -1 * strafeInches,
-                    1 * strafeInches);
+                    1 * strafeRevs,
+                    -1 * strafeRevs,
+                    -1 * strafeRevs,
+                    1 * strafeRevs);
         } else {
             telemetry.addData("Strafing towards Left by ", "%.3f inches", Math.abs(strafeInches));
             telemetry.update();
             drive(SPEED,
-                    -1 * strafeInches,
-                    1 * strafeInches,
-                    1 * strafeInches,
-                    -1 * strafeInches);
+                    -1 * strafeRevs,
+                    1 * strafeRevs,
+                    1 * strafeRevs,
+                    -1 * strafeRevs);
         }
     }
 
     private void moveStraightLine(double movementInInches) {
+        double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
         telemetry.addData("Moving ", "%.3f inches", movementInInches);
         telemetry.update();
-        drive(SPEED, movementInInches, movementInInches, movementInInches, movementInInches);
+        drive(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
     }
 
 
@@ -136,7 +138,7 @@ public class TestAutoWithEncoders extends LinearOpMode {
      */
     private void rotate(double degrees) {
         // Assume positive degrees means moving towards the right
-        double movement_of_wheel_in_inches = Math.abs(360 / degrees) * (CIRCUMFERENCE_INCHES * 2);
+        double movement_of_wheel_in_inches = Math.abs(360 / degrees) * CIRCUMFERENCE_INCHES;
 
         if (degrees >= 0) {
             telemetry.addData("Rotating right by ", "%.3f inches", degrees);
@@ -158,16 +160,12 @@ public class TestAutoWithEncoders extends LinearOpMode {
         }
     }
 
-    public void drive(double speed, double leftFrontInches, double leftBackInches, double rightFrontInches, double rightBackInches) {
-        double LFrotation = leftFrontInches / CIRCUMFERENCE_INCHES;
-        double LBrotation = leftBackInches / CIRCUMFERENCE_INCHES;
-        double RFrotation = rightFrontInches / CIRCUMFERENCE_INCHES;
-        double RBrotation = rightBackInches / CIRCUMFERENCE_INCHES;
+    public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs) {
 
-        int LFdrivetarget = (int) (LFrotation * MOTOR_TICK_COUNTS) + leftFrontDrive.getCurrentPosition();
-        int LBdrivetarget = (int) (LBrotation * MOTOR_TICK_COUNTS) + leftBackDrive.getCurrentPosition();
-        int RFdrivetarget = (int) (RFrotation * MOTOR_TICK_COUNTS) + rightFrontDrive.getCurrentPosition();
-        int RBdrivetarget = (int) (RBrotation * MOTOR_TICK_COUNTS) +  rightBackDrive.getCurrentPosition();
+        int LFdrivetarget = (int) (leftFrontRevs * MOTOR_TICK_COUNTS) + leftFrontDrive.getCurrentPosition();
+        int LBdrivetarget = (int) (leftBackRevs * MOTOR_TICK_COUNTS) + leftBackDrive.getCurrentPosition();
+        int RFdrivetarget = (int) (rightFrontRevs * MOTOR_TICK_COUNTS) + rightFrontDrive.getCurrentPosition();
+        int RBdrivetarget = (int) (rightBackRevs * MOTOR_TICK_COUNTS) +  rightBackDrive.getCurrentPosition();
 
         leftFrontDrive.setTargetPosition(LFdrivetarget);
         leftBackDrive.setTargetPosition(LBdrivetarget);
