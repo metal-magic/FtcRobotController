@@ -4,7 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name="Debug Rotation using Encoders", group="Debug")
+/**
+ * The intention of this OpMode is to debug and find out
+ * how many degrees the robot turns with 1 Rev of each of the 4 wheels
+ * since its a 4-wheel drive train and the rotation axis is
+ * at the intersection of the diagonals. We learnt through this experimentation
+ * that 1 Rev move 45 degrees, 2 revs rotates 90 degrees as so on.
+ */
+@Autonomous(name="Debug Rotation using Encoders", group="Robot")
     public class DebugRotationWithEncoders extends LinearOpMode {
 
         /* Declare all motors as null */
@@ -37,7 +44,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
             waitForStart();
 
-            drive(SPEED, 1, 1, -1, -1);
+            drive(SPEED, 2, 2, -2, -2);
 
         }
 
@@ -93,10 +100,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
                     .addData("Right Front  ", "%d", rightFrontDrive.getCurrentPosition())
                     .addData("Right Back  ", "%d", rightBackDrive.getCurrentPosition())
 
-                    .addData("Left Front Ticks ", "%.2f", leftFrontDrive.getTargetPosition())
-                    .addData("Left Front Ticks ", "%.2f", leftFrontDrive.getTargetPosition())
-                    .addData("Left Front Ticks ", "%.2f", leftFrontDrive.getTargetPosition())
-                    .addData("Left Front Ticks ", "%.2f", leftFrontDrive.getTargetPosition())
+                    .addData("Left Front Ticks ", "%d", leftFrontDrive.getTargetPosition())
+                    .addData("Left Front Ticks ", "%d", leftFrontDrive.getTargetPosition())
+                    .addData("Left Front Ticks ", "%d", leftFrontDrive.getTargetPosition())
+                    .addData("Left Front Ticks ", "%d", leftFrontDrive.getTargetPosition())
 
                     .addData("Ticks front left Motor", "%.2f", leftFrontDrive.getMotorType().getTicksPerRev())
                     .addData(" Counter: ", "%d", counter++);

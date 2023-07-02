@@ -51,7 +51,7 @@ public class DebugLeftRightMotorWithEncoders extends LinearOpMode {
         while (testMotor.isBusy()) {
             telemetry.addLine("Current Position of the Motors")
                     .addData("Left Front  ", "%d", testMotor.getCurrentPosition())
-                            .addData(" Counter: ", "%d", counter++);
+                    .addData(" Counter: ", "%d", counter++);
 
             telemetry.update();
         }

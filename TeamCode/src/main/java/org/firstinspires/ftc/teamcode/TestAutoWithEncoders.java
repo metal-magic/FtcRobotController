@@ -22,6 +22,8 @@ public class TestAutoWithEncoders extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 96 / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
 
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
+
     static final double SPEED = 0.5; // Motor Power setting
 
     @Override
@@ -60,39 +62,15 @@ public class TestAutoWithEncoders extends LinearOpMode {
         ============================
        */
 
-        moveStraightLine(20);
-//        rotate(90);
-//        moveStraightLine(20);
-//        strafe(20);
+        moveStraightLine(88);
+        rotate(90);
+        moveStraightLine(88);
+        strafe(88);
         rotate(-180);
-//        moveStraightLine(20);
-//        rotate(135);
-//        moveStraightLine(Math.sqrt((20 * 20) + (20 * 20)));
-//        rotate(-360);
-
-
-//        moveStraightLine (88);
-//        strafe(88);
-//        rotate(180);
-//        moveStraightLine(88);
-//        rotate(45);
-//        moveStraightLine(62.2253967444);
-//        rotate(-360);
-
-//        drive(SPEED, 88, 88, 88, 88);
-//        drive(SPEED, 13.7444678595, 13.7444678595, -13.7444678595, -13.7444678595);
-//        drive(SPEED, 88, 88, 88, 88);
-//        drive(SPEED, 88, -88, -88, 88);
-//        drive(SPEED, 27.488935719, 27.488935719, -27.488935719, -27.488935719);
-//        drive(SPEED, 88, 88, 88, 88);
-//        drive(SPEED, 20.6167017893, 20.6167017893, -20.6167017893, -20.6167017893);
-//        drive(SPEED, 62.2253967444, 62.2253967444, 62.2253967444, 62.2253967444);
-//        drive(SPEED, -54.977871438, -54.977871438, 54.977871438, 54.977871438);
-
-//        leftFrontDrive.setPower(0);
-//        leftBackDrive.setPower(0);
-//        rightFrontDrive.setPower(0);
-//        rightBackDrive.setPower(0);
+        moveStraightLine(88);
+        rotate(135);
+        moveStraightLine(Math.sqrt((88 * 8) + (88 * 8)));
+        rotate(-360);
 
     }
 
@@ -138,25 +116,25 @@ public class TestAutoWithEncoders extends LinearOpMode {
      */
     private void rotate(double degrees) {
         // Assume positive degrees means moving towards the right
-        double movement_of_wheel_in_inches = Math.abs(360 / degrees) * CIRCUMFERENCE_INCHES;
+        double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
 
         if (degrees >= 0) {
             telemetry.addData("Rotating right by ", "%.3f inches", degrees);
             telemetry.update();
             drive(SPEED,
-                    1.0 * movement_of_wheel_in_inches,
-                    1.0 * movement_of_wheel_in_inches,
-                    -1 * movement_of_wheel_in_inches,
-                    -1 * movement_of_wheel_in_inches);
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs);
         } else {
             // Moving negative means rotating left
             telemetry.addData("Rotating left by ", "%.3finches", Math.abs(degrees));
             telemetry.update();
             drive(SPEED,
-                    -1 * movement_of_wheel_in_inches,
-                    -1 * movement_of_wheel_in_inches,
-                    1.0 * movement_of_wheel_in_inches,
-                    1.0 * movement_of_wheel_in_inches);
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs);
         }
     }
 
@@ -202,6 +180,7 @@ public class TestAutoWithEncoders extends LinearOpMode {
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
+
 
 
         sleep(250);
