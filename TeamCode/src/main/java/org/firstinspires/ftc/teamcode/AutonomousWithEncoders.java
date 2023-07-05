@@ -66,7 +66,7 @@ public class AutonomousWithEncoders extends LinearOpMode {
         rotate(-180);
         moveStraightLine(88);
         rotate(135);
-        moveStraightLine(Math.sqrt((88 * 8) + (88 * 8)));
+        moveStraightLine(Math.sqrt((88 * 8) + (88 * 8)));     //Goes to approximately the center of the 8ft*8ft field
         rotate(-360);
 
     }
