@@ -62,14 +62,14 @@ public class TestAutoWithEncoders extends LinearOpMode {
         ============================
        */
 
-        moveStraightLine(88);
+        moveStraightLine(78);
         rotate(90);
-        moveStraightLine(88);
-        strafe(88);
+        moveStraightLine(78);
+        strafe(78);
         rotate(-180);
-        moveStraightLine(88);
+        moveStraightLine(78);
         rotate(135);
-        moveStraightLine(Math.sqrt((88 * 8) + (88 * 8)));
+        moveStraightLine(65);
         rotate(-360);
 
     }
