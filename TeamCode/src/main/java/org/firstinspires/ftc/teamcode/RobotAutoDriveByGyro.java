@@ -158,26 +158,7 @@ public class RobotAutoDriveByGyro extends LinearOpMode {
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // define initialization values for IMU, and then initialize it.
-        BHI260IMU.Parameters parameters = new BHI260IMU.Parameters();
-        parameters.angleUnit              = BHI260IMU.angleUnit.DEGREES;
-        imu = hardwareMap.get(BHI260IMU.class, "imu");
-        imu.initialize(parameters);
 
-        // Ensure the robot is stationary.  Reset the encoders and set the motors to BRAKE mode
-        frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Wait for the game to start (Display Gyro value while waiting)
-        while (opModeInInit()) {
-            telemetry.addData(">", "Robot Heading = %4.0f", getRawHeading());
-            telemetry.update();
-        }
 
         // Set the encoders for closed loop speed control, and reset the heading.
         frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -248,45 +229,6 @@ public class RobotAutoDriveByGyro extends LinearOpMode {
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
-            // Determine new target position, and pass to motor controller
-            int moveCounts = (int)(distance * COUNTS_PER_INCH);
-            leftTarget = leftDrive.getCurrentPosition() + moveCounts;
-            rightTarget = rightDrive.getCurrentPosition() + moveCounts;
-
-            // Set Target FIRST, then turn on RUN_TO_POSITION
-            leftDrive.setTargetPosition(leftTarget);
-            rightDrive.setTargetPosition(rightTarget);
-
-            leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // Set the required driving speed  (must be positive for RUN_TO_POSITION)
-            // Start driving straight, and then enter the control loop
-            maxDriveSpeed = Math.abs(maxDriveSpeed);
-            moveRobot(maxDriveSpeed, 0);
-
-            // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() &&
-                    (leftDrive.isBusy() && rightDrive.isBusy())) {
-
-                // Determine required steering to keep on heading
-                turnSpeed = getSteeringCorrection(heading, P_DRIVE_GAIN);
-
-                // if driving in reverse, the motor correction also needs to be reversed
-                if (distance < 0)
-                    turnSpeed *= -1.0;
-
-                // Apply the turning correction to the current driving speed.
-                moveRobot(driveSpeed, turnSpeed);
-
-                // Display drive status for the driver.
-                sendTelemetry(true);
-            }
-
-            // Stop all motion & Turn off RUN_TO_POSITION
-            moveRobot(0, 0);
-            leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
@@ -408,8 +350,8 @@ public class RobotAutoDriveByGyro extends LinearOpMode {
             rightSpeed /= max;
         }
 
-        leftDrive.setPower(leftSpeed);
-        rightDrive.setPower(rightSpeed);
+//        leftDrive.setPower(leftSpeed);
+//        rightDrive.setPower(rightSpeed);
     }
 
     /**
@@ -419,27 +361,28 @@ public class RobotAutoDriveByGyro extends LinearOpMode {
      */
     private void sendTelemetry(boolean straight) {
 
-        if (straight) {
-            telemetry.addData("Motion", "Drive Straight");
-            telemetry.addData("Target Pos L:R",  "%7d:%7d",      leftTarget,  rightTarget);
-            telemetry.addData("Actual Pos L:R",  "%7d:%7d",      leftDrive.getCurrentPosition(),
-                    rightDrive.getCurrentPosition());
-        } else {
-            telemetry.addData("Motion", "Turning");
-        }
-
-        telemetry.addData("Angle Target:Current", "%5.2f:%5.0f", targetHeading, robotHeading);
-        telemetry.addData("Error:Steer",  "%5.1f:%5.1f", headingError, turnSpeed);
-        telemetry.addData("Wheel Speeds L:R.", "%5.2f : %5.2f", leftSpeed, rightSpeed);
-        telemetry.update();
+//        if (straight) {
+//            telemetry.addData("Motion", "Drive Straight");
+//            telemetry.addData("Target Pos L:R",  "%7d:%7d",      leftTarget,  rightTarget);
+//            telemetry.addData("Actual Pos L:R",  "%7d:%7d",      leftDrive.getCurrentPosition(),
+//                    rightDrive.getCurrentPosition());
+//        } else {
+//            telemetry.addData("Motion", "Turning");
+//        }
+//
+//        telemetry.addData("Angle Target:Current", "%5.2f:%5.0f", targetHeading, robotHeading);
+//        telemetry.addData("Error:Steer",  "%5.1f:%5.1f", headingError, turnSpeed);
+//        telemetry.addData("Wheel Speeds L:R.", "%5.2f : %5.2f", leftSpeed, rightSpeed);
+//        telemetry.update();
     }
 
     /**
      * read the raw (un-offset Gyro heading) directly from the IMU
      */
     public double getRawHeading() {
-        Orientation angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return angles.firstAngle;
+//        Orientation angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//        return angles.firstAngle;
+        return 0;
     }
 
     /**
