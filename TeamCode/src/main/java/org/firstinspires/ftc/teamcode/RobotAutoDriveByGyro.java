@@ -30,7 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.hardware.bosch.BHI260IMU
+import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -98,7 +98,7 @@ public class RobotAutoDriveByGyro extends LinearOpMode {
     private DcMotor         frontRightDrive  = null;
     private DcMotor         backLeftDrive    = null;
     private DcMotor         backRightDrive   = null;
-    private BHI260APIMU        imu              = null;      // Control/Expansion Hub IMU Also, changed imu model to the new one
+    private BHI260IMU        imu              = null;      // Control/Expansion Hub IMU Also, changed imu model to the new one
 
     private double          robotHeading  = 0;
     private double          headingOffset = 0;
@@ -158,9 +158,9 @@ public class RobotAutoDriveByGyro extends LinearOpMode {
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // define initialization values for IMU, and then initialize it.
-        BHI260APIMU.Parameters parameters = new BHI260APIMU.Parameters();
-        parameters.angleUnit              = BHI260APIMU.AngleUnit.DEGREES;
-        imu = hardwareMap.get(BHI260APIMU.class, "imu");
+        BHI260IMU.Parameters parameters = new BHI260IMU.Parameters();
+        parameters.angleUnit              = BHI260IMU.angleUnit.DEGREES;
+        imu = hardwareMap.get(BHI260IMU.class, "imu");
         imu.initialize(parameters);
 
         // Ensure the robot is stationary.  Reset the encoders and set the motors to BRAKE mode
@@ -194,7 +194,7 @@ public class RobotAutoDriveByGyro extends LinearOpMode {
         //===================
         //EXAMPLES
         // ===================
-        /**
+
          driveStraight(DRIVE_SPEED, 24.0, 0.0);    // Drive Forward 24"
          turnToHeading( TURN_SPEED, -45.0);               // Turn  CW to -45 Degrees
          holdHeading( TURN_SPEED, -45.0, 0.5);   // Hold -45 Deg heading for a 1/2 second
@@ -212,8 +212,6 @@ public class RobotAutoDriveByGyro extends LinearOpMode {
          telemetry.addData("Path", "Complete");
          telemetry.update();
          sleep(1000);  // Pause to display last telemetry message.
-
-         */
 
         //===========================
         //ACTUAL CODE THAT WILL RUN
