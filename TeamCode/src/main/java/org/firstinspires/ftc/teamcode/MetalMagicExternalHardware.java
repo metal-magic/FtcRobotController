@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -16,7 +17,7 @@ public class MetalMagicExternalHardware {
         initIMU();
     }
 
-    private void initIMU() {
+    private void initIMU(HardwareMap hardwareMap, Telemetry telemetry) {
 //        BHI260IMU.
 //        IMU.Parameters parameters = new BHI260IMU.Parameters(RevHubOrientationOnRobot.LogoFacingDirection.);
 //        parameters.angleUnit = BHI260IMU.a.DEGREES;
