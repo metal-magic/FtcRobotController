@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class MetalMagicExternalHardware {
-    
+
     private IMU imu = null;
     public void runOpMode() throws InterruptedException {
         initIMU();
