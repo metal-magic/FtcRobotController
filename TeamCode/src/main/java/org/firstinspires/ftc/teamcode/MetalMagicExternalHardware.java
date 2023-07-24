@@ -17,7 +17,7 @@ public class MetalMagicExternalHardware {
     private IMU imu = null;
     public void runOpMode(HardwareMap hardwareMap, Telemetry telemetry) throws InterruptedException {
 
-        initIMU(HardwareMap hardwareMap, Telemetry telemetry);
+        initIMU(hardwareMap, telemetry);
     }
 
     private void initIMU(HardwareMap hardwareMap, Telemetry telemetry) {
