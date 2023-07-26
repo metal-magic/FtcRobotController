@@ -10,7 +10,7 @@ public class AutoByGyro extends LinearOpMode {
 
     private IMU imu = null;
     public void runOpMode() throws InterruptedException{
-
+        waitForStart();
         initIMU();
 
 
