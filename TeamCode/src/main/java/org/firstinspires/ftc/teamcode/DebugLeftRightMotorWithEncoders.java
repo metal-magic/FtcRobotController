@@ -4,18 +4,20 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import cc.metalmagic.robot.Constants;
+
 @Autonomous(name="Robot: Testing Motor Polarity", group="Robot")
 public class DebugLeftRightMotorWithEncoders extends LinearOpMode {
 
     /* Declare all motors as null */
     private DcMotor testMotor = null;
 
-    static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
+    static final double MOTOR_TICK_COUNTS = Constants.MOTOR_TICK_COUNT; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
-    static final double WHEEL_DIAMETER_INCHES = 96 / 25.4; // in Inches
-    static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
+    static final double WHEEL_DIAMETER_INCHES = Constants.WHEEL_DIAMETER_INCHES; // in Inches
+    static final double CIRCUMFERENCE_INCHES = Constants.CIRCUMFERENCE_INCHES; // pi * the diameter of the wheels in inches
 
     static final double SPEED = 0.5; // Motor Power setting
 

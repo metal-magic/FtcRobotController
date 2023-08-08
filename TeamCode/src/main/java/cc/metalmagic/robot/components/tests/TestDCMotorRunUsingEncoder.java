@@ -2,19 +2,20 @@ package cc.metalmagic.robot.components.tests;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import cc.metalmagic.robot.HardwareConfig;
 import cc.metalmagic.robot.components.tests.Exceptions.TestFailedException;
-import cc.metalmagic.robot.components.tests.Exceptions.TestNotInitializedException;
 
 public class TestDCMotorRunUsingEncoder extends ComponentTest {
-    private DcMotor dcMotor;
+    private final DcMotor dcMotor;
 
     /***
      * This class is designed to run a series of tests on the DC Motor to debug any electrical,
      * mechanical or connection issues
-     * @param motor
+     * @param motor The {@link DcMotor} to be tested.
      */
     public TestDCMotorRunUsingEncoder(DcMotor motor, int portNumber, Telemetry telemetry){
         super(motor.getDeviceName(), portNumber, telemetry);
@@ -24,25 +25,23 @@ public class TestDCMotorRunUsingEncoder extends ComponentTest {
 
     private void testForwardMotion(DcMotorSimple.Direction direction) throws TestFailedException {
         int targetPosition = 50*100;
-        int tolerance = 20;
+        double tolerance = 2.0/100.0 * targetPosition; //2% tolerance max
+
         dcMotor.setDirection(direction);
         dcMotor.setTargetPosition(targetPosition);
-        dcMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         dcMotor.setPower(1);
 
         while (dcMotor.isBusy()){
-            // Check if it is running in the right polarity set above
+            // Check if it is running in the right polarity.
+            // If its not going in the direction we expect it to,
+            // stop the Motor and indicate that the test has failed.
             if (direction == DcMotor.Direction.FORWARD && dcMotor.getCurrentPosition() < 0){
-                // Its not going in the direction we expect it to!
-                // Stop the Motor and throw an Exception
                 resetMotor();
                 testFailed("\nExpected the Motor to run FORWARD, but found current position to be negative." +
                         "Check if the Motor is plugged in correctly (Polarity is not reversed)\n");
             }
 
             if (direction == DcMotor.Direction.REVERSE && dcMotor.getCurrentPosition() > 0){
-                // Its not going in the direction we expect it to!
-                // Stop the Motor and throw an Exception
                 resetMotor();
                 testFailed("\nExpected the Motor to run REVERSE, but found current position to be positive." +
                         "Check if the Motor is plugged in correctly (Polarity is not reversed)\n");
@@ -62,14 +61,14 @@ public class TestDCMotorRunUsingEncoder extends ComponentTest {
         if (Math.abs(targetPosition - currentPosition) > tolerance){
             resetMotor();
             testFailed("\nIncorrect position reached. Expected %d, actual %d. Do you have any " +
-                    "mechanical issues such as a roller gone bad, lose motor or bad motor? It could " +
-                    "also be an issue with the power or electrical connection.", targetPosition, dcMotor.getCurrentPosition());
+                    "mechanical issues such as a roller gone bad, loose or bad motor? It could " +
+                    "also be an electrical issue such as low power or bad connection.", targetPosition, dcMotor.getCurrentPosition());
         }
         resetMotor();
     }
 
     @Override
-    void runTestsInternal() throws TestNotInitializedException, TestFailedException {
+    void runTestsInternal() throws TestFailedException {
         telemetry.addLine("Resetting " + dcMotor.getDeviceName());
         telemetry.update();
         resetMotor();
@@ -78,7 +77,6 @@ public class TestDCMotorRunUsingEncoder extends ComponentTest {
         telemetry.update();
         testForwardMotion(DcMotor.Direction.FORWARD);
 
-        resetMotor();
         telemetry.addLine("Test Forward Motion");
         telemetry.update();
         testForwardMotion(DcMotor.Direction.REVERSE);
@@ -93,5 +91,30 @@ public class TestDCMotorRunUsingEncoder extends ComponentTest {
         dcMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         dcMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         dcMotor.setPower(0);
+    }
+
+    /***
+     * A Utility Factory class to create and return DCMotor Tests.
+     * If more DC Motors are added and should be tested, you can add it here.
+     * Its a simple pattern to make the tests manageable.
+     */
+    public static class Factory{
+        public static ComponentTest[] getDCMotorTests(HardwareMap hardwareMap, Telemetry telemetry){
+            // Test Motors
+            TestDCMotorRunUsingEncoder frontLeft = new TestDCMotorRunUsingEncoder(
+                    hardwareMap.get(DcMotor.class, HardwareConfig.FRONT_LEFT_MOTOR),
+                    0, telemetry);
+            TestDCMotorRunUsingEncoder frontRight = new TestDCMotorRunUsingEncoder(
+                    hardwareMap.get(DcMotor.class, HardwareConfig.FRONT_RIGHT_MOTOR),
+                    1, telemetry);
+            TestDCMotorRunUsingEncoder backLeft = new TestDCMotorRunUsingEncoder(
+                    hardwareMap.get(DcMotor.class, HardwareConfig.BACK_LEFT_MOTOR),
+                    2, telemetry);
+            TestDCMotorRunUsingEncoder backRight = new TestDCMotorRunUsingEncoder(
+                    hardwareMap.get(DcMotor.class, HardwareConfig.BACK_RIGHT_MOTOR),
+                    3, telemetry);
+            return new ComponentTest[]{frontLeft, frontRight, backLeft, backRight};
+
+        }
     }
 }

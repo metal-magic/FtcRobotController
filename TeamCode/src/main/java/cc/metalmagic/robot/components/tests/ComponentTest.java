@@ -14,7 +14,7 @@ import cc.metalmagic.robot.components.tests.Exceptions.TestNotInitializedExcepti
 public abstract class ComponentTest {
     public enum Status {
         /***
-         * Status is inan unknown condition. Usually it means it has
+         * Status is in an unknown condition. Usually it means it has
          * not been {@link Status#INITIALIZED}.
          */
         Unknown,
@@ -29,21 +29,44 @@ public abstract class ComponentTest {
          */
         RUNNING,
 
-        /*** Test is finished running with or without throwing
+        /*** Test is finished running and is successful.
          * @see TestFailedException
          * DONOT attempt to restart the test until it is {@link Status#INITIALIZED} again.
          */
         DONE,
+        /*** Test is finished, but failed
+         *
+         */
+        FAILED,
 
         /*** Test is cancelled while it was running.
-         * DONOT attempt to restart the test until it is {@link Status#INITIALIZED} again.
+         * DO NOT attempt to restart the test until it is {@link Status#INITIALIZED} again.
          */
-        CANCELLED
+        CANCELLED;
+
+        public static String getStatusString(Status status){
+            switch (status){
+                case DONE: return "<span>&#9989;</span>";
+                case RUNNING: return "<span>&#9201;</span>";
+                case CANCELLED: return "<span>&#128683;</span>";
+                case FAILED: return "<span'>&#10060;</span>";
+                default: return "<span>&#10067;</span>";
+            }
+        }
     }
-    private int port;
+    private final int port;
     protected Telemetry telemetry;
     private Status status = Status.Unknown;
-    private String testName;
+    private final String testName;
+
+    /***
+     * Create a Test
+     * @param testName Give your test a name that has some meaning (e.g. Left Motor Test)
+     * @param portNumber The Port number that you think the device is connected to.
+     *      *                   The real port number is queried at runtime to make sure that
+     *      *                   this port number matches the expectation.
+     * @param telemetry {@link Telemetry} to display status on the Driver Station.
+     */
     public ComponentTest(String testName, int portNumber, @NonNull Telemetry telemetry){
         port = portNumber;
         this.telemetry = telemetry;
@@ -51,36 +74,37 @@ public abstract class ComponentTest {
     }
     /***
      * Initialize the Test, otherwise it will fail to run
-     * @param portNumber The Port number that you think the device is connected to.
-     *                   The real port number is queried at runtime to make sure that
-     *                   this port number matches the expectation.
-     * @param telemetry
      */
-    public final void init(int portNumber, @NonNull Telemetry telemetry){
+    public final void init(){
         // RESERVING FOR FUTURE IN CASE WE NEED TO DO ANY further Initialization
         status = Status.INITIALIZED;
     }
 
     /***
-     * Internal method to initialize the state machine and run some basic tests (e.g. check port number)
-     * @throws Exception
+     * Override this method and run your tests here.
+     * @throws TestFailedException If the test fails. Using Exceptions as a way to force checking the status
+     * and stop the tests and perform any cleanup (e.g. resetting Component).
      */
-    abstract void runTestsInternal() throws TestNotInitializedException, TestFailedException;
+    abstract void runTestsInternal() throws TestFailedException;
 
     final void testFailed(String format, Object... args) throws TestFailedException{
         String errorMessage = String.format(format, args);
-        setStatus(Status.DONE);
+        setStatus(Status.FAILED);
         throw new TestFailedException(testName, errorMessage);
     }
 
     /***
-     * Put all your tests under this method.
-     * @throws TestFailedException if a test fails.
+     * A general method which sets up the state properly, performs some basic checks and calls
+     * @see ComponentTest#runTestsInternal() . You should put your tests there (after overriding it
+     * @throws TestNotInitializedException If the test has not been initialized {@link ComponentTest#init()}
+     * @throws TestFailedException If the test fails. Using Exceptions as a way to force checking the status
+     * and stop the tests and perform any cleanup (e.g. resetting the Component.
      */
     public final void runTests() throws TestNotInitializedException, TestFailedException{
         if (status != Status.INITIALIZED) {
-            throw new TestNotInitializedException(testName, "The Test must be initialized.");
+            throw new TestNotInitializedException(testName, "The test must be initialized before running it.");
         }
+
         setStatus(Status.RUNNING);
 
         if (getPortNumber() == port){
@@ -112,7 +136,7 @@ public abstract class ComponentTest {
     /***
      * Internal method designed for sub-classes (Tests) to set the status of the
      * running test.
-     * @param status
+     * @param status {@link ComponentTest.Status}
      */
     final void setStatus(Status status){
         this.status = status;
