@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * at the intersection of the diagonals. We learnt through this experimentation
  * that 1 Rev move 45 degrees, 2 revs rotates 90 degrees as so on.
  */
+@Disabled
 @Autonomous(name="Debug Rotation using Encoders", group="Robot")
     public class DebugRotationWithEncoders extends LinearOpMode {
 
