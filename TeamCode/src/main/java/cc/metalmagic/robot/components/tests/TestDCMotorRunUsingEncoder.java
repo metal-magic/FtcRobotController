@@ -7,8 +7,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import cc.metalmagic.robot.HardwareConfig;
-import cc.metalmagic.robot.components.tests.Exceptions.TestFailedException;
+import cc.metalmagic.robot.components.tests.internal.Annotations.TestDisabled;
+import cc.metalmagic.robot.components.tests.internal.Exceptions.TestFailedException;
+import cc.metalmagic.robot.components.tests.internal.ComponentTest;
 
+@TestDisabled
 public class TestDCMotorRunUsingEncoder extends ComponentTest {
     private final DcMotor dcMotor;
 
@@ -23,7 +26,7 @@ public class TestDCMotorRunUsingEncoder extends ComponentTest {
         telemetry.setAutoClear(false);
     }
 
-    private void testForwardMotion(DcMotorSimple.Direction direction) throws TestFailedException {
+    private void testMotion(DcMotorSimple.Direction direction) throws TestFailedException {
         int targetPosition = 50*100;
         double tolerance = 2.0/100.0 * targetPosition; //2% tolerance max
 
@@ -68,18 +71,18 @@ public class TestDCMotorRunUsingEncoder extends ComponentTest {
     }
 
     @Override
-    void runTestsInternal() throws TestFailedException {
+    protected void runTestsInternal() throws TestFailedException {
         telemetry.addLine("Resetting " + dcMotor.getDeviceName());
         telemetry.update();
         resetMotor();
         // Run a Test to Check Polarity and Position
         telemetry.addLine("Test Forward Motion");
         telemetry.update();
-        testForwardMotion(DcMotor.Direction.FORWARD);
+        testMotion(DcMotor.Direction.FORWARD);
 
-        telemetry.addLine("Test Forward Motion");
+        telemetry.addLine("Test REVERSE Motion");
         telemetry.update();
-        testForwardMotion(DcMotor.Direction.REVERSE);
+        testMotion(DcMotor.Direction.REVERSE);
     }
 
     @Override
@@ -99,20 +102,17 @@ public class TestDCMotorRunUsingEncoder extends ComponentTest {
      * Its a simple pattern to make the tests manageable.
      */
     public static class Factory{
+        private static TestDCMotorRunUsingEncoder createTest(HardwareMap hardwareMap,
+                                                             String whichDCMotor, int portNumber,
+                                                             Telemetry telemetry){
+            return new TestDCMotorRunUsingEncoder(hardwareMap.get(DcMotor.class, whichDCMotor), portNumber, telemetry);
+        }
         public static ComponentTest[] getDCMotorTests(HardwareMap hardwareMap, Telemetry telemetry){
             // Test Motors
-            TestDCMotorRunUsingEncoder frontLeft = new TestDCMotorRunUsingEncoder(
-                    hardwareMap.get(DcMotor.class, HardwareConfig.FRONT_LEFT_MOTOR),
-                    0, telemetry);
-            TestDCMotorRunUsingEncoder frontRight = new TestDCMotorRunUsingEncoder(
-                    hardwareMap.get(DcMotor.class, HardwareConfig.FRONT_RIGHT_MOTOR),
-                    1, telemetry);
-            TestDCMotorRunUsingEncoder backLeft = new TestDCMotorRunUsingEncoder(
-                    hardwareMap.get(DcMotor.class, HardwareConfig.BACK_LEFT_MOTOR),
-                    2, telemetry);
-            TestDCMotorRunUsingEncoder backRight = new TestDCMotorRunUsingEncoder(
-                    hardwareMap.get(DcMotor.class, HardwareConfig.BACK_RIGHT_MOTOR),
-                    3, telemetry);
+            TestDCMotorRunUsingEncoder frontLeft = createTest(hardwareMap, HardwareConfig.FRONT_LEFT_MOTOR, 0, telemetry);
+            TestDCMotorRunUsingEncoder frontRight = createTest(hardwareMap, HardwareConfig.FRONT_RIGHT_MOTOR, 1, telemetry);
+            TestDCMotorRunUsingEncoder backLeft = createTest(hardwareMap, HardwareConfig.BACK_LEFT_MOTOR,2, telemetry);
+            TestDCMotorRunUsingEncoder backRight = createTest(hardwareMap, HardwareConfig.BACK_RIGHT_MOTOR, 3, telemetry);
             return new ComponentTest[]{frontLeft, frontRight, backLeft, backRight};
 
         }

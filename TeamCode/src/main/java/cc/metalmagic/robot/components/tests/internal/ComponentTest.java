@@ -1,11 +1,12 @@
-package cc.metalmagic.robot.components.tests;
+package cc.metalmagic.robot.components.tests.internal;
 
 import androidx.annotation.NonNull;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import cc.metalmagic.robot.components.tests.Exceptions.TestFailedException;
-import cc.metalmagic.robot.components.tests.Exceptions.TestNotInitializedException;
+import cc.metalmagic.robot.components.tests.internal.Exceptions.TestFailedException;
+import cc.metalmagic.robot.components.tests.internal.Exceptions.TestNotInitializedException;
+import cc.metalmagic.robot.components.tests.TestDCMotorRunUsingEncoder;
 
 /***
  * An abstract class designed to be inherited by all Tests. See an example implementation
@@ -85,9 +86,9 @@ public abstract class ComponentTest {
      * @throws TestFailedException If the test fails. Using Exceptions as a way to force checking the status
      * and stop the tests and perform any cleanup (e.g. resetting Component).
      */
-    abstract void runTestsInternal() throws TestFailedException;
+    protected abstract void runTestsInternal() throws TestFailedException;
 
-    final void testFailed(String format, Object... args) throws TestFailedException{
+    protected final void testFailed(String format, Object... args) throws TestFailedException{
         String errorMessage = String.format(format, args);
         setStatus(Status.FAILED);
         throw new TestFailedException(testName, errorMessage);
@@ -108,7 +109,7 @@ public abstract class ComponentTest {
         setStatus(Status.RUNNING);
 
         if (getPortNumber() == port){
-            testFailed("Incorrect Por Number. Expected %d, got %d. Please check your Connection."
+            testFailed("Incorrect Port Number. Expected %d, got %d. Please check your Connection."
                     ,port, getPortNumber());
         }
 
