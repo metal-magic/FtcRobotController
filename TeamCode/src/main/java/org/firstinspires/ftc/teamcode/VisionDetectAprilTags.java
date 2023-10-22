@@ -39,7 +39,7 @@ public class VisionDetectAprilTags extends LinearOpMode{
         //stating the webcam
         VisionPortal visionPortal = new VisionPortal.Builder()
                 .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
                 .setCameraResolution(new Size(640, 480))
                 .build();
 
