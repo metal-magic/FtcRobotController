@@ -2,30 +2,34 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Size;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp
+@Autonomous
 public class VisionDetectAprilTags extends LinearOpMode{
-
-    //stating the motors
-    DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-    DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-    DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-    DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
 
     @Override
 
     public void runOpMode() throws InterruptedException {
-       //MyDriveTrain m = new MyDriveDrain();
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+
+        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //MyDriveTrain m = new MyDriveDrain();
         //m.rotate(90);
 
         //drawing information on the driver station camera screen
@@ -52,10 +56,10 @@ public class VisionDetectAprilTags extends LinearOpMode{
         while (!isStopRequested() && opModeIsActive()) {
 
             //rotate robot until it detects an AprilTag
-            if (tagProcessor.getDetections().size() == 0) {
-                rotateRobot(0.5);
-            } else {
+            if (tagProcessor.getDetections().size() != 0) {
                 rotateRobot(0);
+            } else {
+                rotateRobot(0.2);
             }
 
 
@@ -73,15 +77,26 @@ public class VisionDetectAprilTags extends LinearOpMode{
             telemetry.update();
 
 
+
         }
 
     }
-    //method to rotate robot
+
     private void rotateRobot(double value) {
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
         motorFrontLeft.setPower(value);
         motorBackLeft.setPower(value);
-        motorFrontRight.setPower(-value);
-        motorBackRight.setPower(-value);
-
+        motorFrontRight.setPower(-1 * value);
+        motorBackRight.setPower(-1 * value);
     }
+
 }
