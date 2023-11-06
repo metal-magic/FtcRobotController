@@ -32,6 +32,7 @@ public class VisionDetectAprilTags extends LinearOpMode{
         //MyDriveTrain m = new MyDriveDrain();
         //m.rotate(90);
 
+
         //drawing information on the driver station camera screen
         AprilTagProcessor tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
@@ -39,6 +40,10 @@ public class VisionDetectAprilTags extends LinearOpMode{
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
                 .build();
+
+        //VisionPortal myBestVisionPortal;
+        //myBestVisionPortal = VisionPortal.easyCreateWithDefaults(hardwareMap.get(WebcamName.class, "testWebcam"), tagProcessor);
+
 
         //stating the webcam
         VisionPortal visionPortal = new VisionPortal.Builder()

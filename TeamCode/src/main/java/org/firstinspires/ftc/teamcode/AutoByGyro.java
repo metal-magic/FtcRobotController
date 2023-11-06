@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 
 // import com.qualcomm.
-public class AutoByGyro extends LinearOpMode {
+public class
+AutoByGyro extends LinearOpMode {
 
     private IMU imu = null;
     public void runOpMode() throws InterruptedException{
