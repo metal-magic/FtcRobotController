@@ -1,11 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.metalmagic23summer;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@Autonomous(name="Robot: Auto Drive By Encoder THREE", group="Robot")
-public class AutonomousWithEncoders extends LinearOpMode {
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+@Autonomous(name="Robot: Auto Drive By Encoder FOUR", group="Robot")
+public class TestAutoWithEncoders extends LinearOpMode {
 
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;
