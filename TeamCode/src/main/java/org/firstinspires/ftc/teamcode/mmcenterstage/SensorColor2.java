@@ -14,11 +14,10 @@ public class SensorColor2 {
         proximitySensor = hwMap.get(DistanceSensor.class, "proximitySensor");
     }
     public String getRGB() {
-        return "(" + colorSensor.red() + " , " + colorSensor.green() + " , " + colorSensor.blue() + ")";
+        return "(" + (colorSensor.red()) + " , " + colorSensor.green() + " , " + colorSensor.blue() + ")";
     }
     public String getProximity(DistanceUnit du) {
         return proximitySensor.getDistance(du)+" inches";
     }
-
 
 }

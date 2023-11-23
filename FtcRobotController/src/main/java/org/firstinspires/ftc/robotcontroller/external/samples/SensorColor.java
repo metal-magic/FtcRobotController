@@ -198,7 +198,7 @@ public class SensorColor extends LinearOpMode {
       telemetry.addLine()
               .addData("Hue", "%.3f", hsvValues[0])
               .addData("Saturation", "%.3f", hsvValues[1])
-              .addData("Value", "%.3f", hsvValues[2]);
+              .addData("Value", "%. 3f", hsvValues[2]);
       telemetry.addData("Alpha", "%.3f", colors.alpha);
 
       /* If this color sensor also has a distance sensor, display the measured distance.
