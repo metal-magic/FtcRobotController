@@ -1,15 +1,19 @@
 package org.firstinspires.ftc.teamcode.mmcenterstage;
 
+import com.qualcomm.hardware.rev.RevSPARKMini;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptRevSPARKMini;
 
 public class ArmMotorTest extends OpMode {
 
-    DcMotor armMotor = null;
+    CRServo armMotor = null;
 
     @Override
     public void init() {
-        armMotor = hardwareMap.get(DcMotor.class, "armMotor");
+        armMotor = hardwareMap.get(CRServo.class, "armMotor");
 
     }
 
