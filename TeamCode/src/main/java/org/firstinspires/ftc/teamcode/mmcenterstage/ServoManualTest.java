@@ -31,6 +31,7 @@ public class ServoManualTest extends OpMode {
         }
         else if (gamepad1.right_trigger == 1.0F) {
             servo2.setPosition(0.65);
+
         }
 
     }
