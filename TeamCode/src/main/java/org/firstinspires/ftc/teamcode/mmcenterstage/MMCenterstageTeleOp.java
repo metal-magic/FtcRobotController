@@ -133,9 +133,9 @@ public class MMCenterstageTeleOp extends OpMode {
 
         if (gamepad2.right_stick_y == 0) {
             pivotServo.setPosition(pivotServo.getPosition());
+        } else {
+            pivotServo.setPosition(gamepad2.right_stick_y);
         }
-        pivotServo.setPosition(gamepad2.right_stick_y);
-
 
     }
 }
