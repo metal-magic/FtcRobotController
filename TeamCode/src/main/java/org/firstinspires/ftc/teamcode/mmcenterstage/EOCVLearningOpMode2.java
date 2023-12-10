@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.mmcenterstage.eocv;
+package org.firstinspires.ftc.teamcode.mmcenterstage;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.mmcenterstage.eocv.EOCVLearningPipeline2;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;

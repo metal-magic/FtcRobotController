@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmcenterstage.eocv;
+package org.firstinspires.ftc.teamcode.mmcenterstage;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;

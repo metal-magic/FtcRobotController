@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmcenterstage.eocv;
+package org.firstinspires.ftc.teamcode.mmcenterstage;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;

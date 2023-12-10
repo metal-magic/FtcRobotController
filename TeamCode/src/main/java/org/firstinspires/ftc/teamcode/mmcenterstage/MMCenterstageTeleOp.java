@@ -51,7 +51,7 @@ public class MMCenterstageTeleOp extends OpMode {
 
         Servo gripperServo1 = null;
         Servo gripperServo2 = null;
-        Servo pivotServo = null;
+        CRServo pivotServo = null;
 
         CRServo armMotor = null;
 
@@ -72,7 +72,7 @@ public class MMCenterstageTeleOp extends OpMode {
 
         Servo gripperServo1 = hardwareMap.servo.get("gripperServo1");
         Servo gripperServo2 = hardwareMap.servo.get("gripperServo2");
-        Servo pivotServo = hardwareMap.servo.get("pivotServo");
+        CRServo pivotServo = hardwareMap.crservo.get("pivotServo");
 
         // TouchSensor touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
@@ -122,6 +122,8 @@ public class MMCenterstageTeleOp extends OpMode {
 
         armMotor.setPower(gamepad2.left_stick_y);
 
+        pivotServo.setPower(gamepad2.right_stick_y);
+
         /* if (gamepad2.a) {
             armMotor.setPower(1);
             if (touchSensor.isPressed()) {
@@ -132,11 +134,12 @@ public class MMCenterstageTeleOp extends OpMode {
 
 
         if (gamepad2.right_stick_y == 0) {
-            pivotServo.setPosition(pivotServo.getPosition());
+            pivotServo.setPower(pivotServo.getPower());
         } else {
-            pivotServo.setPosition(gamepad2.right_stick_y);
-        }
+            pivotServo.setPower(gamepad2.right_stick_y);
 
+
+        }
     }
 }
 
