@@ -42,7 +42,9 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 @TeleOp
 public class MMCenterstageTeleOp extends OpMode {
 
-    @Override
+
+
+ @Override
     public void init() {
         DcMotor motorFrontLeft = null;
         DcMotor motorFrontRight = null;
@@ -50,7 +52,6 @@ public class MMCenterstageTeleOp extends OpMode {
         DcMotor motorBackRight = null;
 
         Servo gripperServo1 = null;
-        Servo gripperServo2 = null;
         CRServo pivotServo = null;
 
         CRServo armMotor = null;
@@ -64,6 +65,7 @@ public class MMCenterstageTeleOp extends OpMode {
     public void loop() {
 
 
+
         // Declare motors
         DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
         DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
@@ -71,7 +73,6 @@ public class MMCenterstageTeleOp extends OpMode {
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
 
         Servo gripperServo1 = hardwareMap.servo.get("gripperServo1");
-        Servo gripperServo2 = hardwareMap.servo.get("gripperServo2");
         CRServo pivotServo = hardwareMap.crservo.get("pivotServo");
 
         // TouchSensor touchSensor = hardwareMap.touchSensor.get("touchSensor");
@@ -89,10 +90,10 @@ public class MMCenterstageTeleOp extends OpMode {
         armMotor.setDirection(CRServo.Direction.REVERSE);
 
 
+
         double y = -gamepad1.left_stick_y; // REVERSED
         double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
         double rx = gamepad1.right_stick_x;
-
         // Denominator is the largest motor power (abs value) or 1
         // This makes sure that the ratio stays the same
         // but only when at least one is out of range [-1, 1]
@@ -102,10 +103,10 @@ public class MMCenterstageTeleOp extends OpMode {
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
-        motorFrontLeft.setPower(frontLeftPower);
-        motorBackLeft.setPower(backLeftPower);
-        motorFrontRight.setPower(frontRightPower);
-        motorBackRight.setPower(backRightPower);
+        motorFrontLeft.setPower(frontLeftPower * 0.5);
+        motorBackLeft.setPower(backLeftPower * 0.5);
+        motorFrontRight.setPower(frontRightPower * 0.5);
+        motorBackRight.setPower(backRightPower * 0.5);
 
         if (gamepad2.left_bumper) {
             gripperServo1.setPosition(1);
@@ -113,11 +114,6 @@ public class MMCenterstageTeleOp extends OpMode {
             gripperServo1.setPosition(0.2);
         }
 
-        if (gamepad2.right_bumper) {
-            gripperServo2.setPosition(0.5);
-        } else if (gamepad2.right_trigger == 1.0F) {
-            gripperServo2.setPosition(0.65);
-        }
 
 
         armMotor.setPower(gamepad2.left_stick_y);
@@ -133,13 +129,15 @@ public class MMCenterstageTeleOp extends OpMode {
         } */
 
 
-        if (gamepad2.right_stick_y == 0) {
+        /* if (gamepad2.right_stick_y == 0) {
             pivotServo.setPower(pivotServo.getPower());
         } else {
             pivotServo.setPower(gamepad2.right_stick_y);
 
 
         }
+
+         */
     }
 }
 
