@@ -17,6 +17,6 @@ public class ColorOpMode extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("RGB is ", board.getRGB());
-        telemetry.addData("Proximity is ", board.getProximity(DistanceUnit.INCH));
+        telemetry.addData("Proximity is ", board.getProximity(DistanceUnit.INCH)  );
     }
 }
