@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Autonomous(name="Robot: Auto Drive By Encoder FOUR", group="Robot")
+@Autonomous(name="TestAutoWithEncoders", group="Robot")
 public class TestAutoWithEncoders extends LinearOpMode {
 
     /* Declare all motors as null */

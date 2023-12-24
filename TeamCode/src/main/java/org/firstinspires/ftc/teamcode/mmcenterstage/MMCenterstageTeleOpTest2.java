@@ -37,8 +37,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
-
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 
 @TeleOp
@@ -56,8 +58,9 @@ public class MMCenterstageTeleOpTest2 extends OpMode {
 
     CRServo armMotor = null;
     double pivotServoPos = 0.5;
-    double pivotServoExpectedPos = pivotServoPos;
 
+    Gamepad currentStateForScorerGamePad = new Gamepad();
+    Gamepad previousStateForScorerGamePad = new Gamepad();
 
     @Override
     public void init() {
@@ -68,6 +71,9 @@ public class MMCenterstageTeleOpTest2 extends OpMode {
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         pivotServo = hardwareMap.servo.get("pivotServo");
+
+        // Refer to Documentation at https://gm0.org/en/latest/docs/power-and-electronics/servo-guide/choosing-servo.html
+        ((ServoImplEx)pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         // TouchSensor touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
         armMotor = hardwareMap.crservo.get("armMotor");
@@ -87,8 +93,29 @@ public class MMCenterstageTeleOpTest2 extends OpMode {
     }
 
     @Override
+    public void init_loop() {
+        // Keep it Empty for Now
+    };
+
+    @Override
+    public void start() {
+        // Keep it Empty for Now
+    };
+
+    @Override
+    public void stop() {
+        // This will be the most useful
+        // to ensure that stat of the robot
+        // (e.g. ARM, etc. is in certain mode
+        // For now, Keep Empty
+    };
+    @Override
     public void loop() {
         // pivotServoPos = pivotServo.getPosition();
+        previousStateForScorerGamePad.copy(currentStateForScorerGamePad);
+
+        // Store the current state for future iteration
+        currentStateForScorerGamePad.copy(gamepad2);
 
         double y = -gamepad1.left_stick_y; // REVERSED
         double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
@@ -123,81 +150,16 @@ public class MMCenterstageTeleOpTest2 extends OpMode {
 
         armMotor.setPower(gamepad2.left_stick_y * 0.35);
 
-        if (pivotServoPos >=  pivotServoExpectedPos){
-            //Do this on when the servo hasn't reached the expected psotion
-            pivotServoPos = pivotServoExpectedPos;
-            if (gamepad2.dpad_up) {
-                pivotServoExpectedPos += 0.1;
-                telemetry.addLine("Servo Up :" + pivotServoExpectedPos);
-//            if (pivotServoPos > 1) {
-//                pivotServoPos = 1;
-//            }
-            } else if (gamepad2.dpad_down) {
-                pivotServoExpectedPos -= 0.1;
-                telemetry.addLine("Servo Down :" + pivotServoExpectedPos);
-//            if (pivotServoPos < 0) {
-//                pivotServoPos = 0;
-//            }
-            }
-            pivotServo.setPosition(pivotServoExpectedPos);
-        }else{
-            telemetry.addLine("Servo is at : " + pivotServoPos + " and still moving to :" + pivotServoExpectedPos);
+        if (currentStateForScorerGamePad.dpad_up && previousStateForScorerGamePad.dpad_up) {
+            telemetry.addLine("Servo Will go Up");
+            pivotServo.setPosition(pivotServo.getPosition() + 0.1);
         }
 
 
-
-
-
-
-
-
-        /* if (gamepad2.right_stick_y == 0) {
-            pivotServo.setPosition(pivotServo.getPosition());
+        if (currentStateForScorerGamePad.dpad_down && previousStateForScorerGamePad.dpad_down) {
+            telemetry.addLine("Servo Will go down");
+            pivotServo.setPosition(pivotServo.getPosition() - 0.1);
         }
-        else {
-            pivotServo.setPosition(gamepad2.right_stick_y);
-        } */
-
-        /* if (gamepad2.dpad_up) {
-            pivotServo.setPosition(pivotServo.getPosition() + 0.01);
-        }
-        if (gamepad2.dpad_down) {
-            pivotServo.setPosition(pivotServo.getPosition() - 0.01);
-        } */
-
-
-
-
-
-
-        /* if (gamepad2.dpad_up) {
-            pivotServoPos = Math.min(pivotServo.getPosition() + 0.005, 1.0);
-        }
-        else if (gamepad2.dpad_down) {
-            pivotServoPos = Math.max(pivotServo.getPosition() - 0.005, 0);
-        }
-
-         */
-        // pivotServo.setPosition(pivotServoPos);
-
-        /* if (gamepad2.a) {
-            armMotor.setPower(1);
-            if (touchSensor.isPressed()) {
-
-                armMotor.setPower(0);
-            }
-        } */
-
-
-        /* if (gamepad2.right_stick_y == 0) {
-            pivotServo.setPower(pivotServo.getPower());
-        } else {
-            pivotServo.setPower(gamepad2.right_stick_y);
-
-
-        }
-
-         */
     }
 }
 

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name="Robot: Auto Drive By Encoder FOUR", group="Robot")
+@Autonomous(name="MMCenterstageAutonomous", group="Robot")
 public class MMCenterstageAutonomous extends LinearOpMode{
     int Avik = 0;  //Avik iq level
 
