@@ -65,11 +65,11 @@ public class MMCenterstageAutonomous extends LinearOpMode{
         ============================
        */
 
-            moveStraightLine(78);
-            rotate(90);
+            moveStraightLine(24);
+            rotate(-90);
             moveStraightLine(78);
             strafe(78);
-            rotate(-180);
+            rotate(-180);   
             moveStraightLine(78);
             rotate(135);
             moveStraightLine(65);
