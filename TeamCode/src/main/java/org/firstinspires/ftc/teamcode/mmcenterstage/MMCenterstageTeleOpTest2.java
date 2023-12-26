@@ -30,141 +30,136 @@
 package org.firstinspires.ftc.teamcode.mmcenterstage;
 
 
+import static java.lang.Math.max;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 
 @TeleOp
-public class MMCenterstageTeleOp extends OpMode {
+public class MMCenterstageTeleOpTest2 extends OpMode {
 
-    public DcMotor motorFrontLeft = null;
-    public DcMotor motorFrontRight = null;
-    public DcMotor motorBackLeft = null;
-    public DcMotor motorBackRight = null;
 
-    public Servo gripperServo1 = null;
-    public Servo gripperServo2 = null;
-    public CRServo pivotServo = null;
+    // Declare motors
+    DcMotor motorFrontLeft = null;
+    DcMotor motorFrontRight = null;
+    DcMotor motorBackLeft = null;
+    DcMotor motorBackRight = null;
 
-    public CRServo armMotor = null;
+    Servo gripperServo1 = null;
+    Servo pivotServo = null;
 
-    // TouchSensor touchSensor = null;
+    CRServo armMotor = null;
+    double pivotServoPos = 0.5;
+
+    Gamepad currentStateForScorerGamePad = new Gamepad();
+    Gamepad previousStateForScorerGamePad = new Gamepad();
 
     @Override
     public void init() {
-
         motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
         motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
         motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
         motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
-        pivotServo = hardwareMap.crservo.get("pivotServo");
+        pivotServo = hardwareMap.servo.get("pivotServo");
 
+        // Refer to Documentation at https://gm0.org/en/latest/docs/power-and-electronics/servo-guide/choosing-servo.html
+        ((ServoImplEx)pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         // TouchSensor touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
         armMotor = hardwareMap.crservo.get("armMotor");
 
+
+        // TouchSensor touchSensor = null;
+
+        // Reverse the right side motors
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        armMotor.setDirection(CRServo.Direction.REVERSE);
-
-
-
-
-
+        armMotor.setDirection(CRServo.Direction.FORWARD);
+        pivotServo.setDirection(Servo.Direction.REVERSE);
     }
 
     @Override
+    public void init_loop() {
+        // Keep it Empty for Now
+    };
+
+    @Override
+    public void start() {
+        // Keep it Empty for Now
+    };
+
+    @Override
+    public void stop() {
+        // This will be the most useful
+        // to ensure that stat of the robot
+        // (e.g. ARM, etc. is in certain mode
+        // For now, Keep Empty
+    };
+    @Override
     public void loop() {
+        // pivotServoPos = pivotServo.getPosition();
+        previousStateForScorerGamePad.copy(currentStateForScorerGamePad);
 
-
+        // Store the current state for future iteration
+        currentStateForScorerGamePad.copy(gamepad2);
 
         double y = -gamepad1.left_stick_y; // REVERSED
         double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
         double rx = gamepad1.right_stick_x;
+
         // Denominator is the largest motor power (abs value) or 1
         // This makes sure that the ratio stays the same
         // but only when at least one is out of range [-1, 1]
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double denominator = max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
         double backLeftPower = (y - x + rx) / denominator;
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
-        if (gamepad1.right_trigger == 1.0F) {
-            // Fine controls
-            motorFrontLeft.setPower(frontLeftPower * 0.10);
-            motorBackLeft.setPower(backLeftPower * 0.10);
-            motorFrontRight.setPower(frontRightPower * 0.10);
-            motorBackRight.setPower(backRightPower * 0.10);
-        }
-        else {
-            // Reg speed
-            motorFrontLeft.setPower(frontLeftPower * 0.75);
-            motorBackLeft.setPower(backLeftPower * 0.75);
-            motorFrontRight.setPower(frontRightPower * 0.75);
-            motorBackRight.setPower(backRightPower * 0.75);
-        }
+        // Get the current position off the buffer
+        double pivotServoPos = pivotServo.getPosition();
 
+        telemetry.addLine("Servo Current : " + pivotServoPos);
+        telemetry.addLine("Servo PWN Enabled? : " + pivotServo.getController().getPwmStatus());
 
+        motorFrontLeft.setPower(frontLeftPower * 0.75);
+        motorBackLeft.setPower(backLeftPower * 0.75);
+        motorFrontRight.setPower(frontRightPower * 0.75);
+        motorBackRight.setPower(backRightPower * 0.75);
 
         if (gamepad2.left_bumper) {
             gripperServo1.setPosition(1);
-        } else if (gamepad2.right_bumper) {
+        } else if (gamepad2.left_trigger == 1.0F) {
             gripperServo1.setPosition(0.2);
         }
 
 
+        armMotor.setPower(gamepad2.left_stick_y * 0.35);
 
-        if (gamepad2.right_trigger == 1.0F) {
-            // Fine controls
-            armMotor.setPower(gamepad2.right_stick_y * 0.20);
-        }
-        else {
-            // Reg speed
-            armMotor.setPower(gamepad2.right_stick_y * 0.35);
+        if (currentStateForScorerGamePad.dpad_up && previousStateForScorerGamePad.dpad_up) {
+            telemetry.addLine("Servo Will go Up");
+            pivotServo.setPosition(pivotServo.getPosition() + 0.1);
         }
 
-        if (gamepad2.dpad_up) {
-            pivotServo.setPower(1);
+
+        if (currentStateForScorerGamePad.dpad_down && previousStateForScorerGamePad.dpad_down) {
+            telemetry.addLine("Servo Will go down");
+            pivotServo.setPosition(pivotServo.getPosition() - 0.1);
         }
-        else if (gamepad2.dpad_down) {
-            pivotServo.setPower(-1);
-        }
-        else {
-            pivotServo.setPower(0);
-        }
-
-        //pivotServo.setPower(gamepad2.right_stick_y);
-
-        /* if (gamepad2.a) {
-            armMotor.setPower(1);
-            if (touchSensor.isPressed()) {
-
-                armMotor.setPower(0);
-            }
-        } */
-
-
-        /* if (gamepad2.right_stick_y == 0) {
-            pivotServo.setPower(pivotServo.getPower());
-        } else {
-            pivotServo.setPower(gamepad2.right_stick_y);
-
-
-        }
-
-         */
     }
 }
 

@@ -2,37 +2,54 @@ package org.firstinspires.ftc.teamcode.mmcenterstage;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class ServoManualTest extends OpMode {
 
-    Servo servo1 = null;
-    Servo servo2 = null;
+    CRServo pivotServo = null;
+    Servo gripperServo1 = null;
+    Servo gripperServo2 = null;
 
     @Override
     public void init() {
-        servo1 = hardwareMap.get(Servo.class, "servo1");
-        servo2 = hardwareMap.get(Servo.class, "servo2");
+        pivotServo = hardwareMap.get(CRServo.class, "pivotServo");
+        gripperServo1 = hardwareMap.get(Servo.class, "gripperServo1");
+        gripperServo2 = hardwareMap.get(Servo.class, "gripperServo2");
     }
 
     @Override
     public void loop() {
 
         if (gamepad1.left_bumper) {
-            servo1.setPosition(1);
+            gripperServo1.setPosition(1);
         }
         else if (gamepad1.left_trigger == 1.0F) {
-            servo1.setPosition(0.2);
+            gripperServo1.setPosition(0.2);
         }
 
         if (gamepad1.right_bumper) {
-            servo2.setPosition(0.5);
+            gripperServo2.setPosition(0.5);
         }
         else if (gamepad1.right_trigger == 1.0F) {
-            servo2.setPosition(0.65);
+            gripperServo2.setPosition(0.65);
 
+            gripperServo2.setPosition(0.65);
         }
+
+        if(gamepad1.left_stick_y < 0) {
+            pivotServo.setPower(gamepad1.left_stick_y);
+        }
+        else if (gamepad1.left_stick_y > 0) {
+            pivotServo.setPower(gamepad1.left_stick_y);
+        }
+        else {
+            pivotServo.setPower(0);
+        }
+
+
+
 
     }
 }

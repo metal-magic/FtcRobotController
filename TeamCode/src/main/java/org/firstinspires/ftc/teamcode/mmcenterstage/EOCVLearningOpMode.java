@@ -14,6 +14,12 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 
@@ -104,7 +110,7 @@ public class EOCVLearningOpMode extends OpMode {
             if (leftavgfin > centeravgfin & leftavgfin > rightavgfin) {
                 telemetry.addLine("left");
             }
-            else if (centeravgfin > leftavgfin && centeravgfin > rightavgfin) {
+            else if (centeravgfin    > leftavgfin && centeravgfin > rightavgfin) {
                 telemetry.addLine("center");
             }
             else if (rightavgfin > leftavgfin && rightavgfin > centeravgfin) {
