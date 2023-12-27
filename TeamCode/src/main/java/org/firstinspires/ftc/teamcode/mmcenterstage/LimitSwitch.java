@@ -74,6 +74,7 @@ public class LimitSwitch extends OpMode {
 
     @Override
     public void loop() {
+        Limitswitch = hardwareMap.digitalChannel.get("limitSwitch");
         CRServo armMotor = hardwareMap.crservo.get("armMotor");
         armMotor.setDirection(CRServo.Direction.REVERSE);
         armMotor.setPower(gamepad2.left_stick_y);
