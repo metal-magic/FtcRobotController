@@ -1,17 +1,19 @@
 package org.firstinspires.ftc.teamcode.mmcenterstage;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-
+@Autonomous
 public class RedAutonomousRight extends LinearOpMode {
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    private Servo gripperServo1 = null;
+    Servo gripperServo1 = null;
+    Servo pivotServo = null;
     static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
@@ -26,6 +28,7 @@ public class RedAutonomousRight extends LinearOpMode {
     @Override
     public void runOpMode() {
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");
         /* Assign all the motors */
         leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
@@ -63,11 +66,14 @@ public class RedAutonomousRight extends LinearOpMode {
         moveStraightLine(24);
         rotate(90);
         moveStraightLine(27);
-        gripperServo1.setPosition(1);
+        pivotServo.setPosition(0.4);
+        sleep(1000);
+        gripperServo1.setPosition(0.2);
+        sleep(250);
+        pivotServo.setPosition(0);
+        sleep(250);
         moveStraightLine(-6);
-        rotate(90);
-        moveStraightLine(24);
-        rotate(-90);
+        strafe(24);
         moveStraightLine(24);
 
     }
@@ -82,7 +88,7 @@ public class RedAutonomousRight extends LinearOpMode {
         double strafeRevs = strafeInches / CIRCUMFERENCE_INCHES;
         if (strafeInches >= 0) {
             telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
-            telemetry.update();
+
             drive(SPEED,
                     1 * strafeRevs,
                     -1 * strafeRevs,
@@ -90,7 +96,7 @@ public class RedAutonomousRight extends LinearOpMode {
                     1 * strafeRevs);
         } else {
             telemetry.addData("Strafing towards Left by ", "%.3f inches", Math.abs(strafeInches));
-            telemetry.update();
+
             drive(SPEED,
                     -1 * strafeRevs,
                     1 * strafeRevs,
@@ -118,7 +124,7 @@ public class RedAutonomousRight extends LinearOpMode {
 
         if (degrees >= 0) {
             telemetry.addData("Rotating right by ", "%.3f inches", degrees);
-            telemetry.update();
+
             drive(SPEED,
                     1.0 * movementOfWheelsInRevs,
                     1.0 * movementOfWheelsInRevs,
@@ -127,7 +133,6 @@ public class RedAutonomousRight extends LinearOpMode {
         } else {
             // Moving negative means rotating left
             telemetry.addData("Rotating left by ", "%.3finches", Math.abs(degrees));
-            telemetry.update();
             drive(SPEED,
                     -1 * movementOfWheelsInRevs,
                     -1 * movementOfWheelsInRevs,
