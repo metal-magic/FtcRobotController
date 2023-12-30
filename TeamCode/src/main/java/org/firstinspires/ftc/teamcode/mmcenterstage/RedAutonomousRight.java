@@ -62,7 +62,8 @@ public class RedAutonomousRight extends LinearOpMode {
         THIS IS THE ACTUAL DRIVING
         ============================
        */
-
+        gripperServo1.setPosition(1);
+        sleep(250);
         moveStraightLine(24);
         rotate(90);
         moveStraightLine(27);
@@ -73,8 +74,8 @@ public class RedAutonomousRight extends LinearOpMode {
         pivotServo.setPosition(0);
         sleep(250);
         moveStraightLine(-6);
-        strafe(24);
-        moveStraightLine(24);
+        strafe(27);
+        moveStraightLine(20);
 
     }
 
