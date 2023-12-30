@@ -70,12 +70,12 @@ public class RedAutonomousRight extends LinearOpMode {
         pivotServo.setPosition(0.4);
         sleep(1000);
         gripperServo1.setPosition(0.2);
-        sleep(250);
+        sleep(1000);
         pivotServo.setPosition(0);
         sleep(250);
         moveStraightLine(-6);
         strafe(27);
-        moveStraightLine(20);
+        moveStraightLine(25);
 
     }
 
