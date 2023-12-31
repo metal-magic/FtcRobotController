@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.metalmagic23summer;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name="Robot: Auto Drive By Encoder THREE", group="Robot")
+@Disabled
 public class AutonomousWithEncoders extends LinearOpMode {
 
     /* Declare all motors as null */

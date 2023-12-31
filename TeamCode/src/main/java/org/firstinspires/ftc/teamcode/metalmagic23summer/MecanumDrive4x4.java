@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.metalmagic23summer;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -37,6 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 @TeleOp(name="Teleop: Mecanum Drive", group="Linear Opmode")
+@Disabled
 public class MecanumDrive4x4 extends LinearOpMode {
     @Override
     public void runOpMode() {
