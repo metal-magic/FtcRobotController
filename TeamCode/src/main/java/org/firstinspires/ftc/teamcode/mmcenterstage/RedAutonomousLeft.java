@@ -74,7 +74,7 @@ public class RedAutonomousLeft extends LinearOpMode {
         pivotServo.setPosition(0);
         sleep(250);
         moveStraightLine(-6);
-        strafe(27);
+        strafe(25.5);
         moveStraightLine(24);
 
     }
