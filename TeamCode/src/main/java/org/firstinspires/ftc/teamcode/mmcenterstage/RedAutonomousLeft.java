@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous
-public class RedAutonomousRight extends LinearOpMode {
+public class RedAutonomousLeft extends LinearOpMode {
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -66,7 +66,7 @@ public class RedAutonomousRight extends LinearOpMode {
         sleep(250);
         moveStraightLine(24);
         rotate(90);
-        moveStraightLine(27);
+        moveStraightLine(75);
         pivotServo.setPosition(0.4);
         sleep(1000);
         gripperServo1.setPosition(0.2);
