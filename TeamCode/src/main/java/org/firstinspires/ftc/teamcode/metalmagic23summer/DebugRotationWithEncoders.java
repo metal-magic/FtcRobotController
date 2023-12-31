@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.metalmagic23summer;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * that 1 Rev move 45 degrees, 2 revs rotates 90 degrees as so on.
  */
 @Autonomous(name="Debug Rotation using Encoders", group="Robot")
+@Disabled
     public class DebugRotationWithEncoders extends LinearOpMode {
 
         /* Declare all motors as null */

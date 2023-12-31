@@ -35,8 +35,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
+import java.util.Date;
 
 
 @TeleOp
@@ -49,9 +53,11 @@ public class MMCenterstageTeleOp extends OpMode {
 
     public Servo gripperServo1 = null;
     public Servo gripperServo2 = null;
-    public CRServo pivotServo = null;
+    public Servo pivotServo = null;
 
     public CRServo armMotor = null;
+
+    public Date previousTime = new Date();
 
     // TouchSensor touchSensor = null;
 
@@ -64,7 +70,7 @@ public class MMCenterstageTeleOp extends OpMode {
         motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
-        pivotServo = hardwareMap.crservo.get("pivotServo");
+        pivotServo = hardwareMap.servo.get("pivotServo");
 
         // TouchSensor touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
@@ -78,16 +84,14 @@ public class MMCenterstageTeleOp extends OpMode {
 
         armMotor.setDirection(CRServo.Direction.REVERSE);
 
-
-
+        ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
 
 
     }
 
     @Override
     public void loop() {
-
-
+        Date currentTime = new Date();
 
         double y = -gamepad1.left_stick_y; // REVERSED
         double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
@@ -101,70 +105,72 @@ public class MMCenterstageTeleOp extends OpMode {
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
+        double motorSpeed;
+
         if (gamepad1.right_trigger == 1.0F) {
             // Fine controls
-            motorFrontLeft.setPower(frontLeftPower * 0.10);
-            motorBackLeft.setPower(backLeftPower * 0.10);
-            motorFrontRight.setPower(frontRightPower * 0.10);
-            motorBackRight.setPower(backRightPower * 0.10);
-        }
-        else {
+            motorSpeed = 0.10;
+        } else {
             // Reg speed
-            motorFrontLeft.setPower(frontLeftPower * 0.75);
-            motorBackLeft.setPower(backLeftPower * 0.75);
-            motorFrontRight.setPower(frontRightPower * 0.75);
-            motorBackRight.setPower(backRightPower * 0.75);
+            motorSpeed = 0.75;
         }
 
-
+        motorFrontLeft.setPower(frontLeftPower * motorSpeed);
+        motorBackLeft.setPower(backLeftPower * motorSpeed);
+        motorFrontRight.setPower(frontRightPower * motorSpeed);
+        motorBackRight.setPower(backRightPower * motorSpeed);
 
         if (gamepad2.left_bumper) {
             gripperServo1.setPosition(1);
-        } else if (gamepad2.right_bumper) {
+        }
+        if (gamepad2.right_bumper) {
             gripperServo1.setPosition(0.2);
         }
 
-
+        double armMotorSpeed;
 
         if (gamepad2.right_trigger == 1.0F) {
             // Fine controls
-            armMotor.setPower(gamepad2.right_stick_y * 0.20);
-        }
-        else {
-            // Reg speed
-            armMotor.setPower(gamepad2.right_stick_y * 0.35);
-        }
-
-        if (gamepad2.dpad_up) {
-            pivotServo.setPower(1);
-        }
-        else if (gamepad2.dpad_down) {
-            pivotServo.setPower(-1);
-        }
-        else {
-            pivotServo.setPower(0);
-        }
-
-        //pivotServo.setPower(gamepad2.right_stick_y);
-
-        /* if (gamepad2.a) {
-            armMotor.setPower(1);
-            if (touchSensor.isPressed()) {
-
-                armMotor.setPower(0);
-            }
-        } */
-
-
-        /* if (gamepad2.right_stick_y == 0) {
-            pivotServo.setPower(pivotServo.getPower());
+            armMotorSpeed = 0.20;
         } else {
-            pivotServo.setPower(gamepad2.right_stick_y);
+            // Reg speed
+            armMotorSpeed = 0.35;
+        }
 
+        armMotor.setPower(gamepad2.right_stick_y * armMotorSpeed);
+
+
+        if (currentTime.getTime() - previousTime.getTime() > 100) {
+            double pivotIncrement;
+
+            if (gamepad2.left_trigger == 1.0F) {
+                pivotIncrement = 0.01;
+            } else {
+                pivotIncrement = 0.05;
+            }
+            if (gamepad2.dpad_up) {
+                telemetry.addLine("Servo Will go Up");
+                pivotServo.setPosition(pivotServo.getPosition() - pivotIncrement);
+            }
+
+
+            if (gamepad2.dpad_down) {
+                telemetry.addLine("Servo Will go down");
+                pivotServo.setPosition(pivotServo.getPosition() + pivotIncrement);
+            }
+
+            previousTime = currentTime;
 
         }
 
-         */
+        if (gamepad2.a) {
+            pivotServo.setPosition(0.4);
+        }
+        if (gamepad2.b) {
+            pivotServo.setPosition(0);
+        }
+        telemetry.addLine("pivotServo position:" + pivotServo.getPosition());
+
     }
 }
 

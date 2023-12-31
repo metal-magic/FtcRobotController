@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.metalmagic23summer;
+package org.firstinspires.ftc.teamcode.mmcenterstage;
 
 import android.icu.util.DateInterval;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -13,6 +14,7 @@ import java.time.Instant;
 import java.util.Date;
 
 @TeleOp
+@Disabled
 public class PivotServoTest  extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
