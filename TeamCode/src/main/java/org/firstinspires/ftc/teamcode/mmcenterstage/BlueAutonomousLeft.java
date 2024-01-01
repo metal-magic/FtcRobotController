@@ -74,7 +74,10 @@ public class BlueAutonomousLeft extends LinearOpMode {
         pivotServo.setPosition(0);
         sleep(250);
         moveStraightLine(-6);
-        strafe(-25.5);
+        rotate(-90);
+        moveStraightLine(25.5);
+        rotate(90);
+//        strafe(-25.5);
         moveStraightLine(24);
 
     }
