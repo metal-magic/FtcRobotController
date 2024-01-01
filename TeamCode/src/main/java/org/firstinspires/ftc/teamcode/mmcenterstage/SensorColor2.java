@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.mmcenterstage;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
+@Disabled
 public class SensorColor2 {
     private ColorSensor colorSensor;
     private DistanceSensor proximitySensor;

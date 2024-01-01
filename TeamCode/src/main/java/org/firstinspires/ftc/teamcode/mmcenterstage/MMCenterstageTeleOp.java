@@ -109,7 +109,7 @@ public class MMCenterstageTeleOp extends OpMode {
 
         if (gamepad1.right_trigger == 1.0F) {
             // Fine controls
-            motorSpeed = 0.10;
+            motorSpeed = 0.20;
         } else {
             // Reg speed
             motorSpeed = 0.75;
@@ -120,10 +120,10 @@ public class MMCenterstageTeleOp extends OpMode {
         motorFrontRight.setPower(frontRightPower * motorSpeed);
         motorBackRight.setPower(backRightPower * motorSpeed);
 
-        if (gamepad2.left_bumper) {
+        if (gamepad2.right_bumper) {
             gripperServo1.setPosition(1);
         }
-        if (gamepad2.right_bumper) {
+        if (gamepad2.left_bumper) {
             gripperServo1.setPosition(0.2);
         }
 

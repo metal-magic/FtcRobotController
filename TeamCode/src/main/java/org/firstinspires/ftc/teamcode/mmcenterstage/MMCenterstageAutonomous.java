@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.mmcenterstage;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.trajectorysequence.TrajectorySequence;
-
+@Disabled
 @Autonomous(name="MMCenterstageAutonomous", group="Robot")
 public class MMCenterstageAutonomous extends LinearOpMode{
     int Avik = 0;  //Avik iq level

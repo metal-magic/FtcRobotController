@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.mmcenterstage;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous()
+@Disabled
 public class ColorOpMode extends OpMode {
     SensorColor2 board = new SensorColor2();
 

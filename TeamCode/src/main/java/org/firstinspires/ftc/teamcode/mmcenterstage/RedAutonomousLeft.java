@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import java.util.Date;
+
 @Autonomous
 public class RedAutonomousLeft extends LinearOpMode {
     /* Declare all motors as null */
@@ -24,6 +27,7 @@ public class RedAutonomousLeft extends LinearOpMode {
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
     static final double SPEED = 0.5; // Motor Power setting
+    Date currentTime = new Date();
 
     @Override
     public void runOpMode() {
@@ -74,9 +78,15 @@ public class RedAutonomousLeft extends LinearOpMode {
         pivotServo.setPosition(0);
         sleep(250);
         moveStraightLine(-6);
-        strafe(25.5);
-        moveStraightLine(24);
-
+        strafe(24.75);
+        moveStraightLine(22);
+        //Termination
+        if (currentTime.getTime()>20000) {
+            leftBackDrive.setPower(0);
+            leftFrontDrive.setPower(0);
+            rightBackDrive.setPower(0);
+            rightFrontDrive.setPower(0);
+        }
     }
 
     /*

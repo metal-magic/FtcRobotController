@@ -5,9 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import java.util.Date;
+
 @Autonomous
 public class BlueAutonomousLeft extends LinearOpMode {
     /* Declare all motors as null */
+    Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
@@ -64,7 +68,7 @@ public class BlueAutonomousLeft extends LinearOpMode {
        */
         gripperServo1.setPosition(1);
         sleep(250);
-        moveStraightLine(24);
+        moveStraightLine(24);```
         rotate(-90);
         moveStraightLine(27);
         pivotServo.setPosition(0.4);
@@ -75,10 +79,17 @@ public class BlueAutonomousLeft extends LinearOpMode {
         sleep(250);
         moveStraightLine(-6);
         rotate(-90);
-        moveStraightLine(25.5);
+        moveStraightLine(23.5);
         rotate(90);
 //        strafe(-25.5);
-        moveStraightLine(24);
+        moveStraightLine(22);
+        //Termination
+        if (currentTime.getTime()>20000) {
+            leftBackDrive.setPower(0);
+            leftFrontDrive.setPower(0);
+            rightBackDrive.setPower(0);
+            rightFrontDrive.setPower(0);
+        }
 
     }
 
