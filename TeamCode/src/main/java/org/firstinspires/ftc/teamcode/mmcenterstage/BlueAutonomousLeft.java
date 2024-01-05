@@ -58,7 +58,7 @@ public class BlueAutonomousLeft extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        gripperServo1.setPosition(1);
         waitForStart();
 
       /*
@@ -68,7 +68,7 @@ public class BlueAutonomousLeft extends LinearOpMode {
        */
         gripperServo1.setPosition(1);
         sleep(250);
-        moveStraightLine(24);```
+        moveStraightLine(24);
         rotate(-90);
         moveStraightLine(27);
         pivotServo.setPosition(0.4);

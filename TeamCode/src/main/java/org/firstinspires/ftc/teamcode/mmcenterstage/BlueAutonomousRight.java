@@ -58,6 +58,8 @@ public class BlueAutonomousRight extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        gripperServo1.setPosition(1);
+
 
         waitForStart();
 
