@@ -19,7 +19,7 @@ public class AryanBALT extends LinearOpMode {
     Servo gripperServo1 = null;
     Servo pivotServo = null;
 
-    private CRServo armMotor = null;
+     CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
@@ -40,6 +40,7 @@ public class AryanBALT extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+        armMotor = hardwareMap.crservo.get("armMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -71,26 +72,30 @@ public class AryanBALT extends LinearOpMode {
         gripperServo1.setPosition(1);
         sleep(250);
         moveStraightLine(24);
-        rotate(-90);
-        moveStraightLine(45);
-        rotate(180);
+        rotate(90);
+        moveStraightLine(-36 );
         sleep(1000);
         long t= System.currentTimeMillis();
         long endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
-            armMotor.setPower(0.35);
+            armMotor.setPower(-0.35);
         }
         armMotor.setPower(0);
         sleep(1000);
         gripperServo1.setPosition(0.2);
         sleep(1000);
-        sleep(250);
-        moveStraightLine(-20);
+        t= System.currentTimeMillis();
+        endTimer = t+2000;
+        while(System.currentTimeMillis() < endTimer) {
+            armMotor.setPower(+0.35);
+        }
+        sleep(1000);
+        moveStraightLine(18);
         rotate(90);
-        moveStraightLine(23.5);
+        moveStraightLine(21);
         rotate(90);
 //        strafe(-25.5);
-        moveStraightLine(22);
+        moveStraightLine(23);
         //Termination
         if (currentTime.getTime()>20000) {
             leftBackDrive.setPower(0);

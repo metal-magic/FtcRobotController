@@ -107,7 +107,7 @@ public class MMCenterstageTeleOp extends OpMode {
 
         double motorSpeed;
 
-        if (gamepad1.right_trigger == 1.0F) {
+        if (gamepad1.right_trigger >= 0.3F) {
             // Fine controls
             motorSpeed = 0.20;
         } else {
@@ -129,7 +129,7 @@ public class MMCenterstageTeleOp extends OpMode {
 
         double armMotorSpeed;
 
-        if (gamepad2.right_trigger == 1.0F) {
+        if (gamepad2.right_trigger >= 0.3F) {
             // Fine controls
             armMotorSpeed = 0.20;
         } else {
@@ -143,7 +143,7 @@ public class MMCenterstageTeleOp extends OpMode {
         if (currentTime.getTime() - previousTime.getTime() > 100) {
             double pivotIncrement;
 
-            if (gamepad2.left_trigger == 1.0F) {
+            if (gamepad2.left_trigger >= 0.3F) {
                 pivotIncrement = 0.01;
             } else {
                 pivotIncrement = 0.05;

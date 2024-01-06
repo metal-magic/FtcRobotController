@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mmcenterstage;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -17,6 +18,7 @@ public class BlueAutonomousRight extends LinearOpMode {
     private DcMotor rightBackDrive = null;
     Servo gripperServo1 = null;
     Servo pivotServo = null;
+    CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
@@ -38,7 +40,7 @@ public class BlueAutonomousRight extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
-
+        armMotor = hardwareMap.crservo.get("armMotor");
         // Set all the right motor directions
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -71,20 +73,27 @@ public class BlueAutonomousRight extends LinearOpMode {
         gripperServo1.setPosition(1);
         sleep(250);
         moveStraightLine(24);
-        rotate(-90);
-        moveStraightLine(75);
-        pivotServo.setPosition(0.4);
+        rotate(90);
+        moveStraightLine(-84);
+        long t= System.currentTimeMillis();
+        long endTimer = t+2000;
+        while(System.currentTimeMillis() < endTimer) {
+            armMotor.setPower(-0.35);
+        }
+        armMotor.setPower(0);
         sleep(1000);
-        gripperServo1.setPosition(0.2);
-        sleep(1000);
-        pivotServo.setPosition(0);
+        gripperServo1.setPosition(0.2);        t= System.currentTimeMillis();
+        endTimer = t+2000;
+        while(System.currentTimeMillis() < endTimer) {
+            armMotor.setPower(+0.35);
+        }
         sleep(250);
-        moveStraightLine(-6);
-        rotate(-90);
-        moveStraightLine(23.5);
+        moveStraightLine(18);
+        rotate(90);
+        moveStraightLine(21);
         rotate(90);
 //        strafe(-25.5);
-        moveStraightLine(22);
+        moveStraightLine(23);
 
         //Termination
         if (currentTime.getTime()>20000) {
