@@ -28,7 +28,7 @@ public class BlueAutonomousRightV2 extends LinearOpMode {
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
-    static final double SPEED = 0.5; // Motor Power setting
+    static double SPEED = 0.5; // Motor Power setting
     Date currentTime = new Date();
 
     @Override
@@ -70,12 +70,15 @@ public class BlueAutonomousRightV2 extends LinearOpMode {
         THIS IS THE ACTUAL DRIVING
         ============================
        */
+        SPEED = 0.5;
         gripperServo1.setPosition(1);
         sleep(250);
         moveStraightLine(48);
         rotate(90);
+        SPEED = 1;
         moveStraightLine(-84);
-        strafe(24);
+        SPEED = 0.5;
+        strafe(32);
         sleep(250);
         long t= System.currentTimeMillis();
         long endTimer = t+2000;
