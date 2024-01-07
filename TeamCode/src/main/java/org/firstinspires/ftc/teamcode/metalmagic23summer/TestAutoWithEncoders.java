@@ -83,7 +83,7 @@ public class TestAutoWithEncoders extends LinearOpMode {
      */
     private void strafe(double strafeInches) {
         // We assume that strafing right means positive
-        double strafeRevs = strafeInches / CIRCUMFERENCE_INCHES;
+        double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
         if (strafeInches >= 0) {
             telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
             telemetry.update();
