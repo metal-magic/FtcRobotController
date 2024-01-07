@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.mmcenterstage;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.Date;
 
 @Autonomous
-public class RedAutonomousLeft extends LinearOpMode {
+public class RedAutonomousLeftV2 extends LinearOpMode {
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -72,9 +71,10 @@ public class RedAutonomousLeft extends LinearOpMode {
        */
         gripperServo1.setPosition(1);
         sleep(250);
-        moveStraightLine(24);
+        moveStraightLine(48);
         rotate(-90);
         moveStraightLine(-84);
+        strafe(-24);
         sleep(250);
         long t= System.currentTimeMillis();
         long endTimer = t+2000;
