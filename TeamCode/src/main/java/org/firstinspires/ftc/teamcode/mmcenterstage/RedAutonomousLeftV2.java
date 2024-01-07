@@ -75,7 +75,7 @@ public class RedAutonomousLeftV2 extends LinearOpMode {
         moveStraightLine(48);
         rotate(-90);
         SPEED = 1;
-        moveStraightLine(-84);
+        moveStraightLine(-80);
         SPEED = 0.5;
         strafe(-30);
         sleep(250);
@@ -93,7 +93,7 @@ public class RedAutonomousLeftV2 extends LinearOpMode {
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(+0.35);
         }
-        strafe(-24);
+        strafe(-15);
         moveStraightLine(-11);
         //Termination
         if (currentTime.getTime()>20000) {
