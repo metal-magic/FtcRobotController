@@ -38,20 +38,21 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import java.util.Date;
 
 /*
   =========================================
-  This OpMode was preserved because Om
+  This OpMode was created because Aditya
   wanted his fine controls to be controlled
-  with the trigger
+  with the D-Pad
   =========================================
  */
 
-@TeleOp(name = "Om's TeleOp 2023-2024 Centerstage")
-public class MMCenterstageTeleOp extends OpMode {
+// he kinda yelled at me to do it :'( lol - avik
+
+@TeleOp(name = "Aditya's TeleOp 2023-2024 Centerstage")
+public class MMCenterstageTeleOpAditya extends OpMode {
 
     public DcMotor motorFrontLeft = null;
     public DcMotor motorFrontRight = null;
@@ -111,21 +112,62 @@ public class MMCenterstageTeleOp extends OpMode {
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
-        double motorSpeed;
+        motorFrontLeft.setPower(frontLeftPower * 0.75);
+        motorBackLeft.setPower(backLeftPower * 0.75);
+        motorFrontRight.setPower(frontRightPower * 0.75);
+        motorBackRight.setPower(backRightPower * 0.75);
 
-        if (gamepad1.right_trigger >= 0.3F) {
-            // Fine controls
-            motorSpeed = 0.20;
-        } else {
-            // Reg speed
-            motorSpeed = 0.75;
+        // -------Drivetrain motor speed controls--------- (there is a lot)
+        if (gamepad1.dpad_up) {
+            // Drive forward at 20 percent normal speed
+            motorFrontLeft.setPower(0.20);
+            motorBackLeft.setPower(0.20);
+            motorFrontRight.setPower(0.20);
+            motorBackRight.setPower(0.20);
         }
 
-        motorFrontLeft.setPower(frontLeftPower * motorSpeed);
-        motorBackLeft.setPower(backLeftPower * motorSpeed);
-        motorFrontRight.setPower(frontRightPower * motorSpeed);
-        motorBackRight.setPower(backRightPower * motorSpeed);
+        if (gamepad1.dpad_down) {
+            // Drive backward at 20 percent normal speed
+            motorFrontLeft.setPower(-0.20);
+            motorBackLeft.setPower(-0.20);
+            motorFrontRight.setPower(-0.20);
+            motorBackRight.setPower(-0.20);
+        }
 
+        if (gamepad1.dpad_right) {
+            // Strafe right at 20 percent normal speed
+            motorFrontLeft.setPower(0.20);
+            motorBackLeft.setPower(-0.20);
+            motorFrontRight.setPower(-0.20);
+            motorBackRight.setPower(0.20);
+        }
+
+        if (gamepad1.dpad_left) {
+            // Strafe left at 20 percent normal speed
+            motorFrontLeft.setPower(-0.20);
+            motorBackLeft.setPower(0.20);
+            motorFrontRight.setPower(0.20);
+            motorBackRight.setPower(-0.20);
+        }
+
+        if (gamepad1.b) {
+            // Turn right at 20 percent normal speed
+            motorFrontLeft.setPower(0.20);
+            motorBackLeft.setPower(0.20);
+            motorFrontRight.setPower(-0.20);
+            motorBackRight.setPower(-0.20);
+        }
+
+        if (gamepad1.x) {
+            // Turn left at 20 percent normal speed
+            motorFrontLeft.setPower(-0.20);
+            motorBackLeft.setPower(-0.20);
+            motorFrontRight.setPower(0.20);
+            motorBackRight.setPower(0.20);
+        }
+
+
+        // Claw gripper controls
         if (gamepad2.right_bumper) {
             gripperServo1.setPosition(1);
         }
@@ -133,6 +175,7 @@ public class MMCenterstageTeleOp extends OpMode {
             gripperServo1.setPosition(0.2);
         }
 
+        // Arm motor speed controls
         double armMotorSpeed;
 
         if (gamepad2.right_trigger >= 0.3F) {
@@ -145,7 +188,7 @@ public class MMCenterstageTeleOp extends OpMode {
 
         armMotor.setPower(gamepad2.right_stick_y * armMotorSpeed);
 
-
+        // Pivot servo control code
         if (currentTime.getTime() - previousTime.getTime() > 100) {
             double pivotIncrement;
 
@@ -179,6 +222,7 @@ public class MMCenterstageTeleOp extends OpMode {
 
     }
 }
+
 
 
 
