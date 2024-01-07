@@ -112,7 +112,7 @@ public class BlueAutonomousRight extends LinearOpMode {
      */
     private void strafe(double strafeInches) {
         // We assume that strafing right means positive
-        double strafeRevs = strafeInches / CIRCUMFERENCE_INCHES;
+        double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
         telemetry.addLine("strafeInches = " + strafeInches);
         telemetry.addLine("strafeRevs = " + strafeRevs);
     if (strafeInches > 0) {
@@ -186,8 +186,6 @@ public class BlueAutonomousRight extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
 
         leftFrontDrive.setPower(speed);
         leftBackDrive.setPower(speed);

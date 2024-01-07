@@ -83,14 +83,14 @@ public class AryanBALT extends LinearOpMode {
         armMotor.setPower(0);
         sleep(250);
         gripperServo1.setPosition(0.2);
-        sleep(500);
+        sleep(750);
         t= System.currentTimeMillis();
         endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(+0.35);
         }
-        strafe(21);
-        moveStraightLine(-23);
+        strafe(24);
+        moveStraightLine(-13);
         //Termination
         if (currentTime.getTime()>20000) {
             leftBackDrive.setPower(0);

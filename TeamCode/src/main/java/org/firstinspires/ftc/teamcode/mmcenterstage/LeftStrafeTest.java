@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.mmcenterstage;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.Date;
 
 @Autonomous
-public class RedAutonomousRight extends LinearOpMode {
+public class LeftStrafeTest extends LinearOpMode {
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -40,7 +39,7 @@ public class RedAutonomousRight extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
-        armMotor = hardwareMap.crservo.get("armMotor");
+        armMotor= hardwareMap.crservo.get("armMotor");
         // Set all the right motor directions
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -69,30 +68,7 @@ public class RedAutonomousRight extends LinearOpMode {
         THIS IS THE ACTUAL DRIVING
         ============================
        */
-        gripperServo1.setPosition(1);
-        sleep(250);
-        moveStraightLine(24);
-        rotate(-90);
-        moveStraightLine(-36);
-        sleep(1000);
-        long t= System.currentTimeMillis();
-        long endTimer = t+2000;
-        while(System.currentTimeMillis() < endTimer) {
-            armMotor.setPower(-0.35);
-        }
-        armMotor.setPower(0);
-        sleep(1000);
-        gripperServo1.setPosition(0.2);        t= System.currentTimeMillis();
-        endTimer = t+2000;
-        while(System.currentTimeMillis() < endTimer) {
-            armMotor.setPower(+0.35);
-        }
-        sleep(250);
-        moveStraightLine(18);
-        rotate(-90);
-        moveStraightLine(21);
-        rotate(-90);
-        moveStraightLine(23);
+        strafe(-24);
         //Termination
         if (currentTime.getTime()>20000) {
             leftBackDrive.setPower(0);
@@ -100,7 +76,6 @@ public class RedAutonomousRight extends LinearOpMode {
             rightBackDrive.setPower(0);
             rightFrontDrive.setPower(0);
         }
-
     }
 
     /*
