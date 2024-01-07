@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.mmcenterstage;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -12,12 +11,14 @@ import java.util.Date;
 @Autonomous
 public class RedAutonomousRight extends LinearOpMode {
     /* Declare all motors as null */
+    Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
     Servo gripperServo1 = null;
     Servo pivotServo = null;
+
     CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
@@ -29,7 +30,6 @@ public class RedAutonomousRight extends LinearOpMode {
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
     static final double SPEED = 0.5; // Motor Power setting
-    Date currentTime = new Date();
 
     @Override
     public void runOpMode() {
@@ -41,6 +41,7 @@ public class RedAutonomousRight extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
         armMotor = hardwareMap.crservo.get("armMotor");
+
         // Set all the right motor directions
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -61,7 +62,6 @@ public class RedAutonomousRight extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gripperServo1.setPosition(1);
-
         waitForStart();
 
       /*
@@ -74,25 +74,23 @@ public class RedAutonomousRight extends LinearOpMode {
         moveStraightLine(24);
         rotate(-90);
         moveStraightLine(-36);
-        sleep(1000);
+        sleep(250);
         long t= System.currentTimeMillis();
         long endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(-0.35);
         }
         armMotor.setPower(0);
-        sleep(1000);
-        gripperServo1.setPosition(0.2);        t= System.currentTimeMillis();
+        sleep(250);
+        gripperServo1.setPosition(0.2);
+        sleep(750);
+        t= System.currentTimeMillis();
         endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(+0.35);
         }
-        sleep(250);
-        moveStraightLine(18);
-        rotate(-90);
-        moveStraightLine(21);
-        rotate(-90);
-        moveStraightLine(23);
+        strafe(-24);
+        moveStraightLine(-13);
         //Termination
         if (currentTime.getTime()>20000) {
             leftBackDrive.setPower(0);
@@ -110,7 +108,7 @@ public class RedAutonomousRight extends LinearOpMode {
      */
     private void strafe(double strafeInches) {
         // We assume that strafing right means positive
-        double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
+        double strafeRevs = strafeInches / CIRCUMFERENCE_INCHES;
         if (strafeInches >= 0) {
             telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
 
