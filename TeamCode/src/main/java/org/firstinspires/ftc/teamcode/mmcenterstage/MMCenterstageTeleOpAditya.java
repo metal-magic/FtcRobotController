@@ -169,7 +169,7 @@ public class MMCenterstageTeleOpAditya extends OpMode {
 
         // Claw gripper controls
         if (gamepad2.right_bumper) {
-            gripperServo1.setPosition(1);
+            gripperServo1.setPosition(0.6);
         }
         if (gamepad2.left_bumper) {
             gripperServo1.setPosition(0.2);
