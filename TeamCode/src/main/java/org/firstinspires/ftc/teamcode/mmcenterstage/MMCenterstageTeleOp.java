@@ -65,6 +65,7 @@ public class MMCenterstageTeleOp extends OpMode {
 
     public Date previousTime = new Date();
 
+    public float armSpeedCounter = 0;
     // TouchSensor touchSensor = null;
 
     @Override
@@ -134,14 +135,25 @@ public class MMCenterstageTeleOp extends OpMode {
         }
 
         double armMotorSpeed;
-
+        armMotorSpeed = 0.35;
         if (gamepad2.right_trigger >= 0.3F) {
             // Fine controls
             armMotorSpeed = 0.20;
         } else {
             // Reg speed
             armMotorSpeed = 0.35;
+
         }
+
+        if (gamepad2.x) {
+            armSpeedCounter +=1;
+            if (armSpeedCounter % 2 == 1) {
+                armMotorSpeed = 0.8;
+            }
+
+        }
+
+
 
         armMotor.setPower(gamepad2.right_stick_y * armMotorSpeed);
 

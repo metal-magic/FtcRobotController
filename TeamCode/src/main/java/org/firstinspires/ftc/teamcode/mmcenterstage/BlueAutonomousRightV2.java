@@ -73,15 +73,16 @@ public class BlueAutonomousRightV2 extends LinearOpMode {
         SPEED = 0.5;
         gripperServo1.setPosition(1);
         sleep(250);
-        moveStraightLine(48);
+        moveStraightLine(50);
         rotate(90);
         SPEED = 1;
-        moveStraightLine(-84);
+        moveStraightLine(-82);
         SPEED = 0.5;
-        strafe(32);
+        moveStraightLine(-1.5);
+        strafe(30);
         sleep(250);
         long t= System.currentTimeMillis();
-        long endTimer = t+2000;
+        long endTimer = t+2300;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(-0.35);
         }
@@ -90,11 +91,11 @@ public class BlueAutonomousRightV2 extends LinearOpMode {
         gripperServo1.setPosition(0.2);
         sleep(750);
         t= System.currentTimeMillis();
-        endTimer = t+2000;
+        endTimer = t+2300;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(+0.35);
         }
-        strafe(24);
+        strafe(26);
         moveStraightLine(-13);
         //Termination
         if (currentTime.getTime()>20000) {

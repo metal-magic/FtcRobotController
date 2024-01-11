@@ -73,6 +73,7 @@ public class RedAutonomousLeftV2 extends LinearOpMode {
         gripperServo1.setPosition(1);
         sleep(250);
         moveStraightLine(48);
+        sleep(500);
         rotate(-90);
         SPEED = 1;
         moveStraightLine(-82);
