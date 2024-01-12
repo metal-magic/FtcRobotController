@@ -62,7 +62,11 @@ public class MMCenterstageTeleOpAditya extends OpMode {
     public Servo gripperServo1 = null;
     public Servo pivotServo = null;
 
+    public Servo droneServo = null;
+
+
     public CRServo armMotor = null;
+
 
     public Date previousTime = new Date();
 
@@ -78,6 +82,8 @@ public class MMCenterstageTeleOpAditya extends OpMode {
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         pivotServo = hardwareMap.servo.get("pivotServo");
+
+        droneServo = hardwareMap.servo.get("droneServo");
 
         // TouchSensor touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
@@ -112,10 +118,10 @@ public class MMCenterstageTeleOpAditya extends OpMode {
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
-        motorFrontLeft.setPower(frontLeftPower * 0.75);
-        motorBackLeft.setPower(backLeftPower * 0.75);
-        motorFrontRight.setPower(frontRightPower * 0.75);
-        motorBackRight.setPower(backRightPower * 0.75);
+        motorFrontLeft.setPower(frontLeftPower * 0.85);
+        motorBackLeft.setPower(backLeftPower * 0.85);
+        motorFrontRight.setPower(frontRightPower * 0.85);
+        motorBackRight.setPower(backRightPower * 0.85);
 
         // -------Drivetrain motor speed controls--------- (there is a lot)
         if (gamepad1.dpad_up) {
@@ -217,6 +223,10 @@ public class MMCenterstageTeleOpAditya extends OpMode {
         }
         if (gamepad2.b) {
             pivotServo.setPosition(0);
+        }
+
+        if (gamepad2.y) {
+            droneServo.setPosition(0);
         }
         telemetry.addLine("pivotServo position:" + pivotServo.getPosition());
 

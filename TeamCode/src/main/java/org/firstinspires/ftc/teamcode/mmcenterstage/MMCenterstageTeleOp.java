@@ -61,6 +61,8 @@ public class MMCenterstageTeleOp extends OpMode {
     public Servo gripperServo1 = null;
     public Servo pivotServo = null;
 
+    public Servo droneServo = null;
+
     public CRServo armMotor = null;
 
     public Date previousTime = new Date();
@@ -77,6 +79,8 @@ public class MMCenterstageTeleOp extends OpMode {
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         pivotServo = hardwareMap.servo.get("pivotServo");
+
+        droneServo = hardwareMap.servo.get("droneServo");
 
         // TouchSensor touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
@@ -174,6 +178,10 @@ public class MMCenterstageTeleOp extends OpMode {
         }
         if (gamepad2.b) {
             pivotServo.setPosition(0);
+        }
+
+        if (gamepad2.y) {
+            droneServo.setPosition(0);
         }
         telemetry.addLine("pivotServo position:" + pivotServo.getPosition());
 

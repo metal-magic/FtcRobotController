@@ -14,9 +14,12 @@ public class EOCVLearningPipeline2 extends OpenCvPipeline {
     Mat centerCrop = new Mat();
     Mat rightCrop = new Mat();
 
-    public Scalar lowHSV = new Scalar(252,73,7);
-    public Scalar highHSV = new Scalar(253,135,61);
+    public Scalar lowHSV = new Scalar(56.7,106.3,49.6);
+    public Scalar highHSV = new Scalar(255,239,221);
 
+    Rect leftRect = new Rect(1, 1, 213, 479);
+    Rect centerRect = new Rect(213, 1, 213, 479);
+    Rect rightRect = new Rect(426, 1, 213, 479);
 
     @Override
     public Mat processFrame(Mat input) {
@@ -29,6 +32,15 @@ public class EOCVLearningPipeline2 extends OpenCvPipeline {
 
 
         Core.inRange(mat, lowHSV, highHSV, thresh);
+
+
+        Imgproc.rectangle(thresh, leftRect, new Scalar(255,255,255), 2);
+        Imgproc.rectangle(thresh, centerRect, new Scalar(255,255,255), 2);
+        Imgproc.rectangle(thresh, rightRect, new Scalar(255,255,255), 2);
+
+        leftCrop = thresh.submat(leftRect);
+        centerCrop = thresh.submat(centerRect);
+        rightCrop = thresh.submat(rightRect);
 
             /*
 

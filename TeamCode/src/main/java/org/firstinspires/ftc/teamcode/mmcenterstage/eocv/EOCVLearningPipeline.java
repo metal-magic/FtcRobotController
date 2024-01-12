@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmcenterstage;
+package org.firstinspires.ftc.teamcode.mmcenterstage.eocv;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -11,7 +11,6 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Disabled
 public class EOCVLearningPipeline extends OpenCvPipeline {
 
     Telemetry telemetry;

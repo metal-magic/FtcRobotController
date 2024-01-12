@@ -8,6 +8,7 @@
             <goBILDA5202SeriesMotor name="motorBackRight" port="3" />
             <RevSPARKMini name="armMotor" port="0" />
             <Servo name="gripperServo1" port="1" />
+            <Servo name="droneServo" port="2" />
             <Servo name="pivotServo" port="3" />
             <ControlHubImuBHI260AP name="imu" port="0" bus="0" />
         </LynxModule>
