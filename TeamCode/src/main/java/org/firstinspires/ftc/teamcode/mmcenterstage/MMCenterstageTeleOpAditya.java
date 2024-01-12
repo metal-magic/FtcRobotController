@@ -126,10 +126,10 @@ public class MMCenterstageTeleOpAditya extends OpMode {
         // -------Drivetrain motor speed controls--------- (there is a lot)
         if (gamepad1.dpad_up) {
             // Drive forward at 20 percent normal speed
-            motorFrontLeft.setPower(0.20);
-            motorBackLeft.setPower(0.20);
-            motorFrontRight.setPower(0.20);
-            motorBackRight.setPower(0.20);
+            motorFrontLeft.setPower(0.30);
+            motorBackLeft.setPower(0.30);
+            motorFrontRight.setPower(0.30);
+            motorBackRight.setPower(0.30);
         }
 
         if (gamepad1.dpad_down) {
