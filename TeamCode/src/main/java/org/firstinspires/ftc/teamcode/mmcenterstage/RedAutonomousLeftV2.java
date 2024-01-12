@@ -73,10 +73,12 @@ public class RedAutonomousLeftV2 extends LinearOpMode {
         gripperServo1.setPosition(1);
         sleep(250);
         moveStraightLine(48);
+        sleep(500);
         rotate(-90);
         SPEED = 1;
-        moveStraightLine(-80);
+        moveStraightLine(-82);
         SPEED = 0.5;
+        moveStraightLine(-1.5);
         strafe(-30);
         sleep(250);
         long t= System.currentTimeMillis();
@@ -93,7 +95,7 @@ public class RedAutonomousLeftV2 extends LinearOpMode {
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(+0.35);
         }
-        strafe(-15);
+        strafe(-18);
         moveStraightLine(-11);
         //Termination
         if (currentTime.getTime()>20000) {

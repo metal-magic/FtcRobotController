@@ -88,15 +88,15 @@ public class BlueAutonomousLeft extends LinearOpMode {
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(+0.35);
         }
-        strafe(24);
+        strafe(26);
         moveStraightLine(-13);
         //Termination
-        if (currentTime.getTime()>20000) {
+        /*if (currentTime.getTime()>20000) {
             leftBackDrive.setPower(0);
             leftFrontDrive.setPower(0);
             rightBackDrive.setPower(0);
             rightFrontDrive.setPower(0);
-        }
+        }*/
 
 
     }
