@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.mmcenterstage;
+package org.firstinspires.ftc.teamcode.mmcenterstage.other;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.DigitalChannelImpl;
@@ -7,6 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+
+@Disabled
 public class LimitSwitch extends OpMode {
 
     DigitalChannel Limitswitch = new DigitalChannel() {

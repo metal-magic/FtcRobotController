@@ -1,16 +1,15 @@
-package org.firstinspires.ftc.teamcode.mmcenterstage;
+package org.firstinspires.ftc.teamcode.mmcenterstage.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.Date;
 
-@Autonomous
-public class BlueAutonomousRight extends LinearOpMode {
+@Autonomous(name="Red: RIGHT of Gate", group="Autonomous")
+public class RedAutonomousRight extends LinearOpMode {
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -18,6 +17,7 @@ public class BlueAutonomousRight extends LinearOpMode {
     private DcMotor rightBackDrive = null;
     Servo gripperServo1 = null;
     Servo pivotServo = null;
+
     CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
@@ -29,7 +29,6 @@ public class BlueAutonomousRight extends LinearOpMode {
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
     static final double SPEED = 0.5; // Motor Power setting
-    Date currentTime = new Date();
 
     @Override
     public void runOpMode() {
@@ -41,6 +40,7 @@ public class BlueAutonomousRight extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
         armMotor = hardwareMap.crservo.get("armMotor");
+
         // Set all the right motor directions
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -61,8 +61,6 @@ public class BlueAutonomousRight extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gripperServo1.setPosition(1);
-
-
         waitForStart();
 
       /*
@@ -71,35 +69,38 @@ public class BlueAutonomousRight extends LinearOpMode {
         ============================
        */
         gripperServo1.setPosition(1);
-        sleep(250);
+        sleep(AutonomousUtility.SLEEP_TIME);
         moveStraightLine(24);
-        rotate(90);
-        moveStraightLine(-84);
-        sleep(250);
+        rotate(-90);
+        moveStraightLine(-36);
+
+        sleep(AutonomousUtility.SLEEP_TIME);
         long t= System.currentTimeMillis();
         long endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(-0.35);
         }
         armMotor.setPower(0);
-        sleep(250);
+
+        sleep(AutonomousUtility.SLEEP_TIME);
         gripperServo1.setPosition(0.2);
-        sleep(750);
+
+        sleep(AutonomousUtility.SLEEP_TIME * 3);
         t= System.currentTimeMillis();
         endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(+0.35);
         }
-        strafe(24);
+        strafe(-24);
         moveStraightLine(-13);
-        //Termination
-        if (currentTime.getTime()>20000) {
-            leftBackDrive.setPower(0);
-            leftFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-        }
 
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        sleep(AutonomousUtility.SLEEP_TIME);
 
     }
 
@@ -111,18 +112,16 @@ public class BlueAutonomousRight extends LinearOpMode {
     private void strafe(double strafeInches) {
         // We assume that strafing right means positive
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
-        telemetry.addLine("strafeInches = " + strafeInches);
-        telemetry.addLine("strafeRevs = " + strafeRevs);
-    if (strafeInches > 0) {
-            telemetry.addLine("Strafing towards right by " + "%.3f inches" + strafeInches);
+        if (strafeInches >= 0) {
+            telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
 
             drive(SPEED,
                     1 * strafeRevs,
                     -1 * strafeRevs,
                     -1 * strafeRevs,
                     1 * strafeRevs);
-        } else if (strafeInches < 0) {
-            //telemetry.addData("Strafing towards Left by ", "%.3f inches", Math.abs(strafeInches));
+        } else {
+            telemetry.addData("Strafing towards Left by ", "%.3f inches", Math.abs(strafeInches));
 
             drive(SPEED,
                     -1 * strafeRevs,
@@ -134,7 +133,7 @@ public class BlueAutonomousRight extends LinearOpMode {
 
     private void moveStraightLine(double movementInInches) {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
-        //telemetry.addData("Moving ", "%.3f inches", movementInInches);
+        telemetry.addData("Moving ", "%.3f inches", movementInInches);
         telemetry.update();
         drive(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
     }
@@ -185,23 +184,24 @@ public class BlueAutonomousRight extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+
         leftFrontDrive.setPower(speed);
         leftBackDrive.setPower(speed);
         rightFrontDrive.setPower(speed);
         rightBackDrive.setPower(speed);
 
         while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
-            telemetry.addLine("Current Position of the Motors");
-                    //.addData("Left Front  ", "%d", leftFrontDrive.getCurrentPosition())
-                    //.addData("Left Back ", "%d", leftBackDrive.getCurrentPosition())
-                    //.addData("Right Front ", "%d", rightFrontDrive.getCurrentPosition())
-                    //.addData("Right Back ", "%df", rightBackDrive.getCurrentPosition());
+            telemetry.addLine("Current Position of the Motors")
+                    .addData("Left Front  ", "%d", leftFrontDrive.getCurrentPosition())
+                    .addData("Left Back ", "%d", leftBackDrive.getCurrentPosition())
+                    .addData("Right Front ", "%d", rightFrontDrive.getCurrentPosition())
+                    .addData("Right Back ", "%df", rightBackDrive.getCurrentPosition());
 
-            telemetry.addLine("Target Positions of the Motors");
-                    //.addData("Left Front  ", "%d", LFdrivetarget)
-                    //.addData("Left Back ", "%d", LBdrivetarget)
-                    //.addData("Right Front ", "%d", RFdrivetarget)
-                    //.addData("Right Back ", "%df", RBdrivetarget);
+            telemetry.addLine("Target Positions of the Motors")
+                    .addData("Left Front  ", "%d", LFdrivetarget)
+                    .addData("Left Back ", "%d", LBdrivetarget)
+                    .addData("Right Front ", "%d", RFdrivetarget)
+                    .addData("Right Back ", "%df", RBdrivetarget);
 
             telemetry.update();
         }
@@ -210,14 +210,8 @@ public class BlueAutonomousRight extends LinearOpMode {
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
 
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
-
-        sleep(250);
+        sleep(AutonomousUtility.SLEEP_TIME);
     }
 
 }

@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode.mmcenterstage;
+package org.firstinspires.ftc.teamcode.mmcenterstage.HardwareTesting;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp
+
+@TeleOp (name="Test All Servos - ONLY IF NEEDED", group="Testing")
 public class ServoManualTest extends OpMode {
 
     CRServo pivotServo = null;

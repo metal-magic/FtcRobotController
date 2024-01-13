@@ -1,16 +1,15 @@
-package org.firstinspires.ftc.teamcode.mmcenterstage;
+package org.firstinspires.ftc.teamcode.mmcenterstage.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.Date;
 
-@Autonomous
-public class BlueAutonomousRightV2 extends LinearOpMode {
+@Autonomous(name="Red: UNDER Gate", group="Autonomous")
+public class RedAutonomousLeftV2 extends LinearOpMode {
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -72,40 +71,43 @@ public class BlueAutonomousRightV2 extends LinearOpMode {
        */
         SPEED = 0.5;
         gripperServo1.setPosition(1);
-        sleep(250);
-        moveStraightLine(50);
-        rotate(90);
+        sleep(AutonomousUtility.SLEEP_TIME);
+        moveStraightLine(48);
+        sleep(500);
+        rotate(-90);
         SPEED = 1;
         moveStraightLine(-82);
         SPEED = 0.5;
         moveStraightLine(-1.5);
-        strafe(30);
-        sleep(250);
+        strafe(-30);
+
+        sleep(AutonomousUtility.SLEEP_TIME);
         long t= System.currentTimeMillis();
-        long endTimer = t+2300;
+        long endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(-0.35);
         }
         armMotor.setPower(0);
-        sleep(250);
+
+        sleep(500);
         gripperServo1.setPosition(0.2);
-        sleep(750);
+        sleep(500);
+
+        sleep(AutonomousUtility.SLEEP_TIME);
         t= System.currentTimeMillis();
-        endTimer = t+2300;
+        endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(+0.35);
         }
-        strafe(26);
-        moveStraightLine(-13);
-        //Termination
-        if (currentTime.getTime()>20000) {
-            leftBackDrive.setPower(0);
-            leftFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-        }
+        strafe(-18);
+        moveStraightLine(-11);
 
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        sleep(AutonomousUtility.SLEEP_TIME);
     }
 
     /*
@@ -222,7 +224,7 @@ public class BlueAutonomousRightV2 extends LinearOpMode {
 
 
 
-        sleep(250);
+        sleep(AutonomousUtility.SLEEP_TIME);
     }
 
 }

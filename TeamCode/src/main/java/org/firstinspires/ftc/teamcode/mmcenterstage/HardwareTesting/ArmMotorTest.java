@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmcenterstage;
+package org.firstinspires.ftc.teamcode.mmcenterstage.HardwareTesting;
 
 import com.qualcomm.hardware.rev.RevSPARKMini;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptRevSPARKMini;
 
 
-@TeleOp
+@TeleOp (name = "Arm Motor Test - ONLY IF NEEDED", group = "Testing")
 public class ArmMotorTest extends OpMode {
 
     CRServo armMotor = null;

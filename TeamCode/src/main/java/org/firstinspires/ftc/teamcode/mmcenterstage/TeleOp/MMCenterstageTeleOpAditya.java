@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.mmcenterstage;
+package org.firstinspires.ftc.teamcode.mmcenterstage.TeleOp;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -219,7 +219,7 @@ public class MMCenterstageTeleOpAditya extends OpMode {
         }
 
         if (gamepad2.a) {
-            pivotServo.setPosition(0.4);
+            pivotServo.setPosition(0.36);
         }
         if (gamepad2.b) {
             pivotServo.setPosition(0);

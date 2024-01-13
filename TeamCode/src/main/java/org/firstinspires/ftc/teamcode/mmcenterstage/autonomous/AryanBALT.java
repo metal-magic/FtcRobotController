@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmcenterstage;
+package org.firstinspires.ftc.teamcode.mmcenterstage.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.Date;
 
-@Autonomous
+@Autonomous(name="Blue TEST ONLY: LEFT of Gate", group="Autonomous")
 public class AryanBALT extends LinearOpMode {
     /* Declare all motors as null */
     Date currentTime = new Date();
