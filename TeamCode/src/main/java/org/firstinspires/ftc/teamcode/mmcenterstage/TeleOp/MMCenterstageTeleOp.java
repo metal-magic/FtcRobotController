@@ -97,8 +97,12 @@ public class MMCenterstageTeleOp extends OpMode {
 
         ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
 
+        gripperServo1.setPosition(1);
+        droneServo.setPosition(0.10);
+
 
     }
+
 
     @Override
     public void loop() {
@@ -135,7 +139,7 @@ public class MMCenterstageTeleOp extends OpMode {
             gripperServo1.setPosition(0.6);
         }
         if (gamepad2.left_bumper) {
-            gripperServo1.setPosition(0.2);
+            gripperServo1.setPosition(0.3);
         }
 
         double armMotorSpeed;
@@ -186,14 +190,18 @@ public class MMCenterstageTeleOp extends OpMode {
         }
 
         if (gamepad2.a) {
+<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/mmcenterstage/TeleOp/MMCenterstageTeleOp.java
             pivotServo.setPosition(0.36);
+=======
+            pivotServo.setPosition(0.35);
+>>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/mmcenterstage/MMCenterstageTeleOp.java
         }
         if (gamepad2.b) {
             pivotServo.setPosition(0);
         }
 
         if (gamepad2.y) {
-            droneServo.setPosition(0);
+            droneServo.setPosition(0.20);
         }
         telemetry.addLine("pivotServo position:" + pivotServo.getPosition());
 

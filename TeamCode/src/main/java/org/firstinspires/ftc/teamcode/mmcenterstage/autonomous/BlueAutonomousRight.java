@@ -20,6 +20,7 @@ public class BlueAutonomousRight extends LinearOpMode {
     Servo gripperServo1 = null;
     Servo pivotServo = null;
     CRServo armMotor = null;
+    Servo droneServo = null;
     static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
@@ -42,6 +43,7 @@ public class BlueAutonomousRight extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
         armMotor = hardwareMap.crservo.get("armMotor");
+        droneServo = hardwareMap.servo.get("droneServo");
         // Set all the right motor directions
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -71,6 +73,7 @@ public class BlueAutonomousRight extends LinearOpMode {
         THIS IS THE ACTUAL DRIVING
         ============================
        */
+        droneServo.setPosition(0.10);
         gripperServo1.setPosition(1);
         sleep(AutonomousUtility.SLEEP_TIME);
         moveStraightLine(25);
@@ -83,9 +86,16 @@ public class BlueAutonomousRight extends LinearOpMode {
             armMotor.setPower(-0.35);
         }
         armMotor.setPower(0);
+<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/mmcenterstage/autonomous/BlueAutonomousRight.java
         sleep(AutonomousUtility.SLEEP_TIME);
         gripperServo1.setPosition(0.2);
         sleep(AutonomousUtility.SLEEP_TIME*3);
+=======
+        sleep(250);
+        gripperServo1.setPosition(0.3);
+        sleep(750);
+        gripperServo1.setPosition(1);
+>>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/mmcenterstage/BlueAutonomousRight.java
         t= System.currentTimeMillis();
         endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
