@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RoadRunner.drive.trajectorysequence.TrajectorySequence;
 @Disabled
 @Autonomous(name="MMCenterstageAutonomous", group="Robot")
 public class MMCenterstageAutonomous extends LinearOpMode{
