@@ -17,7 +17,6 @@ public class RedAutonomousRight extends LinearOpMode {
     private DcMotor rightBackDrive = null;
     Servo gripperServo1 = null;
     Servo pivotServo = null;
-    Servo droneServo = null;
 
     CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
@@ -35,7 +34,6 @@ public class RedAutonomousRight extends LinearOpMode {
     public void runOpMode() {
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         pivotServo = hardwareMap.servo.get("pivotServo");
-        droneServo = hardwareMap.servo.get("droneServo");
         /* Assign all the motors */
         leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
@@ -70,7 +68,6 @@ public class RedAutonomousRight extends LinearOpMode {
         THIS IS THE ACTUAL DRIVING
         ============================
        */
-        droneServo.setPosition(0.10);
         gripperServo1.setPosition(1);
         sleep(AutonomousUtility.SLEEP_TIME);
         moveStraightLine(24);
@@ -84,18 +81,11 @@ public class RedAutonomousRight extends LinearOpMode {
             armMotor.setPower(-0.35);
         }
         armMotor.setPower(0);
-<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/mmcenterstage/autonomous/RedAutonomousRight.java
 
         sleep(AutonomousUtility.SLEEP_TIME);
         gripperServo1.setPosition(0.2);
 
         sleep(AutonomousUtility.SLEEP_TIME * 3);
-=======
-        sleep(250);
-        gripperServo1.setPosition(0.3);
-        sleep(750);
-        gripperServo1.setPosition(1);
->>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/mmcenterstage/RedAutonomousRight.java
         t= System.currentTimeMillis();
         endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
