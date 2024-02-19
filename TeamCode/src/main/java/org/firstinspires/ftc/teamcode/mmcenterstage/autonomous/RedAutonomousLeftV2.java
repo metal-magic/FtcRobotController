@@ -94,15 +94,19 @@ public class RedAutonomousLeftV2 extends LinearOpMode {
             armMotor.setPower(-0.35);
         }
         armMotor.setPower(0);
+<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/mmcenterstage/autonomous/RedAutonomousLeftV2.java
+
         sleep(500);
         gripperServo1.setPosition(0.2);
         sleep(500);
 
         sleep(AutonomousUtility.SLEEP_TIME);
+=======
         sleep(250);
         gripperServo1.setPosition(0.3);
         sleep(750);
         gripperServo1.setPosition(1);
+>>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/mmcenterstage/RedAutonomousLeftV2.java
         t= System.currentTimeMillis();
         endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
