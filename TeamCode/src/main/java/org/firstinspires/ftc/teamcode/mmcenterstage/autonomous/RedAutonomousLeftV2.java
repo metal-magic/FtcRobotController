@@ -9,8 +9,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.Date;
 
+<<<<<<< Updated upstream:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/mmcenterstage/autonomous/RedAutonomousLeftV2.java
 @Autonomous(name="Red: UNDER Gate", group="Autonomous")
+=======
+@Autonomous
 @Disabled
+>>>>>>> Stashed changes:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/mmcenterstage/RedAutonomousLeftV2.java
 public class RedAutonomousLeftV2 extends LinearOpMode {
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;
