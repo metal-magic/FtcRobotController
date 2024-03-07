@@ -7,6 +7,8 @@ import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.RoadRunner.drive.util.Encoder;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,15 +34,15 @@ import java.util.List;
  *
  */
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
-    public static double TICKS_PER_REV = 0;
-    public static double WHEEL_RADIUS = 2; // in
+    public static double TICKS_PER_REV = 2000; // GoBilda Odometry Pods (https://www.gobilda.com/odometry-pod-43mm-width-48mm-wheel/)
+    public static double WHEEL_RADIUS = 0.944882; // in (24 mm)
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
     public static double PARALLEL_X = 0; // X is the up and down direction
     public static double PARALLEL_Y = 0; // Y is the strafe direction
 
-    public static double PERPENDICULAR_X = 0;
-    public static double PERPENDICULAR_Y = 0;
+    public static double PERPENDICULAR_X = -0.590551; // 15 mm
+    public static double PERPENDICULAR_Y = -3.70079; // 94 mm
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
