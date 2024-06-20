@@ -134,4 +134,40 @@ public class DriveTrainClass {
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
     }
+
+    public void strafeDiagonalLeft(double strafeLeftInches) {
+        double strafeLeftRevs = Math.abs(strafeLeftInches / CIRCUMFERENCE_INCHES);
+
+        if (strafeLeftInches >= 0) {
+            drive(SPEED,
+                    0,
+                    1 * strafeLeftRevs,
+                    1 * strafeLeftRevs,
+                    0);
+        } else {
+            drive(SPEED,
+                    0,
+                    -1 * strafeLeftRevs,
+                    -1 * strafeLeftRevs,
+                    0);
+        }
+    }
+
+    public void strafeDiagonalRight(double strafeLeftInches) {
+        double strafeLeftRevs = Math.abs(strafeLeftInches / CIRCUMFERENCE_INCHES);
+
+        if (strafeLeftInches >= 0) {
+            drive(SPEED,
+                    1 * strafeLeftRevs,
+                    0,
+                    0,
+                    1 * strafeLeftRevs);
+        } else {
+            drive(SPEED,
+                    -1 * strafeLeftRevs,
+                    0,
+                    0,
+                    -1 * strafeLeftRevs);
+        }
+    }
 }
