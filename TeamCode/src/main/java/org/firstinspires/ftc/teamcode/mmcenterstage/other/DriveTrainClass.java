@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import java.lang.Math;
 
 import org.firstinspires.ftc.teamcode.mmcenterstage.autonomous.AutonomousUtility;
 
@@ -169,5 +170,21 @@ public class DriveTrainClass {
                     0,
                     -1 * strafeLeftRevs);
         }
+    }
+
+    public void strafeAnyAngle(double strafeInches, double strafeAngleDegrees) {
+        if (strafeAngleDegrees > 0 && strafeAngleDegrees < 360) {
+            double strafeAngleRadians = Math.PI/180 * strafeAngleDegrees;
+            double strafeAnyRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
+
+            double strafeLeftFrontPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
+            double strafeLeftBackPower = Math.sin(strafeAngleRadians - Math.PI/4) * strafeAnyRevs;
+            double strafeRightFrontPower = Math.sin(strafeAngleRadians - Math.PI/4) * strafeAnyRevs;
+            double strafeRightBackPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
+
+
+            drive(SPEED, strafeLeftFrontPower, strafeLeftBackPower, strafeRightFrontPower, strafeRightBackPower);
+        }
+        
     }
 }
