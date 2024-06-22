@@ -42,7 +42,20 @@ public class EOCVLearningPipeline2 extends OpenCvPipeline {
         centerCrop = thresh.submat(centerRect);
         rightCrop = thresh.submat(rightRect);
 
-            /*
+        /*
+        for (int y = 0; y < imgROI.rows(); y++) {
+            for (int x = 0; x < imgROI.cols(); x++) {
+                double[] pixel = imgROI.get(y, x);
+
+                // Check if the pixel is close to white or black
+                if (isWhite(pixel)) {
+                    countWhite++;
+                } else if (isBlack(pixel)) {
+                    countBlack++;
+                }
+            }
+        }
+
 
             -----------------------------------
                          UNFINISHED
