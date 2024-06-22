@@ -27,7 +27,8 @@ public class DriveTrainClass {
     // the distance you drive with one turn of the wheel is the circumference of the wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
     static final double WHEEL_DIAMETER_INCHES = 96 / 25.4; // in Inches
-    static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
+    static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES;
+    // pi * the diameter of the wheels in inches
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
@@ -66,40 +67,40 @@ public class DriveTrainClass {
         leftBackDrive.setPower(0);
     }
 
-    private void moveStraightLine(double movementInInches) {
+    private void moveStraightLine(double movementInInches, double robotSpeed) {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
-        drive(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
+        drive(robotSpeed, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
     }
-    private void strafe(double strafeInches) {
+    private void strafe(double strafeInches, double robotSpeed) {
         // We assume that strafing right means positive
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
         if (strafeInches >= 0) {
-            drive(SPEED,
+            drive(robotSpeed,
                     1 * strafeRevs,
                     -1 * strafeRevs,
                     -1 * strafeRevs,
                     1 * strafeRevs);
         } else {
-            drive(SPEED,
+            drive(robotSpeed,
                     -1 * strafeRevs,
                     1 * strafeRevs,
                     1 * strafeRevs,
                     -1 * strafeRevs);
         }
     }
-    private void rotate(double degrees) {
+    private void rotate(double degrees, double robotSpeed) {
         // Assume positive degrees means moving towards the right
         double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
 
         if (degrees >= 0) {
-            drive(SPEED,
+            drive(robotSpeed,
                     1.0 * movementOfWheelsInRevs,
                     1.0 * movementOfWheelsInRevs,
                     -1 * movementOfWheelsInRevs,
                     -1 * movementOfWheelsInRevs);
         } else {
             // Moving negative means rotating left
-            drive(SPEED,
+            drive(robotSpeed,
                     -1 * movementOfWheelsInRevs,
                     -1 * movementOfWheelsInRevs,
                     1.0 * movementOfWheelsInRevs,
@@ -136,17 +137,17 @@ public class DriveTrainClass {
         rightBackDrive.setPower(0);
     }
 
-    public void strafeDiagonalLeft(double strafeLeftInches) {
+    public void strafeDiagonalLeft(double strafeLeftInches, double robotSpeed) {
         double strafeLeftRevs = Math.abs(strafeLeftInches / CIRCUMFERENCE_INCHES);
 
         if (strafeLeftInches >= 0) {
-            drive(SPEED,
+            drive(robotSpeed,
                     0,
                     1 * strafeLeftRevs,
                     1 * strafeLeftRevs,
                     0);
         } else {
-            drive(SPEED,
+            drive(robotSpeed,
                     0,
                     -1 * strafeLeftRevs,
                     -1 * strafeLeftRevs,
@@ -154,17 +155,17 @@ public class DriveTrainClass {
         }
     }
 
-    public void strafeDiagonalRight(double strafeLeftInches) {
+    public void strafeDiagonalRight(double strafeLeftInches, double robotSpeed) {
         double strafeLeftRevs = Math.abs(strafeLeftInches / CIRCUMFERENCE_INCHES);
 
         if (strafeLeftInches >= 0) {
-            drive(SPEED,
+            drive(robotSpeed,
                     1 * strafeLeftRevs,
                     0,
                     0,
                     1 * strafeLeftRevs);
         } else {
-            drive(SPEED,
+            drive(robotSpeed,
                     -1 * strafeLeftRevs,
                     0,
                     0,
@@ -172,7 +173,7 @@ public class DriveTrainClass {
         }
     }
 
-    public void strafeAnyAngle(double strafeInches, double strafeAngleDegrees) {
+    public void strafeAnyAngle(double strafeInches, double strafeAngleDegrees, double robotSpeed) {
         if (strafeAngleDegrees > 0 && strafeAngleDegrees < 360) {
             double strafeAngleRadians = Math.PI/180 * strafeAngleDegrees;
             double strafeAnyRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
@@ -183,8 +184,9 @@ public class DriveTrainClass {
             double strafeRightBackPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
 
 
-            drive(SPEED, strafeLeftFrontPower, strafeLeftBackPower, strafeRightFrontPower, strafeRightBackPower);
+            drive(robotSpeed, strafeLeftFrontPower, strafeLeftBackPower, strafeRightFrontPower, strafeRightBackPower);
         }
         
     }
+
 }
