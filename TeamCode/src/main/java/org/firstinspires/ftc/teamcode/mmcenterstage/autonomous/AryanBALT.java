@@ -69,28 +69,44 @@ public class AryanBALT extends LinearOpMode {
         THIS IS THE ACTUAL DRIVING
         ============================
        */
-        gripperServo1.setPosition(1);
+
+       /*
+        METAL MAGIC CEMTERSTAGE
+        THIS CODE STARTS ON THE LEFT SIDE OF THE BLUE SIDE (closer to backdrop)
+        STACKS PIXEL AND PARKS IN CORNER
+        THIS WAS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
+        */
+        //sleep lines are to avoid two lines of codes running at the same time
+        gripperServo1.setPosition(1); //close claw
         sleep(250);
-        moveStraightLine(24);
-        rotate(90);
-        moveStraightLine(-36);
+        moveStraightLine(24); //drive forward to align with backboard
+        rotate(90); //rotate away the backboard so arm can move back
+        moveStraightLine(-36); //move backwards
         sleep(250);
+
+        //next section of code moves arm backward on basis of time
         long t= System.currentTimeMillis();
         long endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(-0.35);
         }
         armMotor.setPower(0);
+
         sleep(250);
-        gripperServo1.setPosition(0.2);
+        gripperServo1.setPosition(0.2); //drop pixel (open claw)
         sleep(750);
+
+        //return arm back to standard position
         t= System.currentTimeMillis();
         endTimer = t+2000;
         while(System.currentTimeMillis() < endTimer) {
             armMotor.setPower(+0.35);
         }
+
+        //parking on side
         strafe(24);
         moveStraightLine(-13);
+
         //Termination
         if (currentTime.getTime()>20000) {
             leftBackDrive.setPower(0);
@@ -106,6 +122,15 @@ public class AryanBALT extends LinearOpMode {
     PROGRAMMING FUNCTIONS FOR THE SEPARATE MOVEMENT TYPES
     =====================================================
      */
+
+    /*
+    =====================================================
+    STRAFING FUNCTION
+    to call: 
+        strafe(# of inches);
+        positive # of inches is -> Right
+    =====================================================
+    */
     private void strafe(double strafeInches) {
         // We assume that strafing right means positive
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
@@ -128,6 +153,14 @@ public class AryanBALT extends LinearOpMode {
         }
     }
 
+    /*
+    =====================================================
+    MOVE IN STRAIGHT LINE FUNCTION
+    to call: 
+        moveStraightLine(# of inches);
+        positive # of inches -> forward
+    =====================================================
+    */
     private void moveStraightLine(double movementInInches) {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
         telemetry.addData("Moving ", "%.3f inches", movementInInches);
@@ -138,7 +171,7 @@ public class AryanBALT extends LinearOpMode {
 
     /**
      * Function to Rotate the 4-Wheel Robot by certain amount of degrees.
-     *
+     * to call: rotate(# of degrees);
      * @param degrees POSITIVE degrees means rotating **RIGHT**
      */
     private void rotate(double degrees) {
@@ -163,6 +196,17 @@ public class AryanBALT extends LinearOpMode {
                     1.0 * movementOfWheelsInRevs);
         }
     }
+
+    /*
+    =====================================================
+    DRIVE FUNCTION
+    mainly called in other functions, but can be used to move in any angle and speed for precision
+    to call: 
+        drive(speed, leftFrontRevs, leftBackRevs, rightFrontRevs, rightBackRevs);
+        leftFrontRevs, leftBackRevs, rightFrontRevs, rightBackRevs have range of [-1,1] inclusive
+        positive # of revs -> forward
+    =====================================================
+    */
 
     public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs) {
 
