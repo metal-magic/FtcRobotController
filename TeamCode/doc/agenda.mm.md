@@ -1,5 +1,5 @@
 ---
-title: Metal Megaic Software
+title: Metal Magic Software
 markmap:
   colorFreezeLevel: 5
 ---
