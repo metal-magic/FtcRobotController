@@ -5,5 +5,5 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 
 public class TelemetryUpdate {
-    telemetry.addLine();
+    //telemetry.addLine();
 }

@@ -38,7 +38,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 @TeleOp(name="Teleop: Mecanum Drive", group="Linear Opmode")
-@Disabled
 public class MecanumDrive4x4 extends LinearOpMode {
     @Override
     public void runOpMode() {
