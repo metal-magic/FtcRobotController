@@ -71,7 +71,7 @@ public class AryanBALT extends LinearOpMode {
        */
 
        /*
-        METAL MAGIC CEMTERSTAGE
+        METAL MAGIC CETERSTAGE
         THIS CODE STARTS ON THE LEFT SIDE OF THE BLUE SIDE (closer to backdrop)
         STACKS PIXEL AND PARKS IN CORNER
         THIS WAS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
