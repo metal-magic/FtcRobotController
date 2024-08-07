@@ -8,8 +8,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous()
 @Disabled
-public class ColorOpMode extends OpMode {
-    SensorColor2 board = new SensorColor2();
+public class OldColorOpMode extends OpMode {
+    OldSensorColor2 board = new OldSensorColor2();
 
     @Override
     public void init() {

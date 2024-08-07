@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @Disabled
-public class SensorColor2 {
+public class OldSensorColor2 {
     private ColorSensor colorSensor;
     private DistanceSensor proximitySensor;
     public void init(HardwareMap hwMap)  {

@@ -41,7 +41,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name = "Sensor: REV2mDistance", group = "Sensor")
 @Disabled
-public class DistanceSensor extends LinearOpMode {
+public class OldDistance extends LinearOpMode {
 
     private com.qualcomm.robotcore.hardware.DistanceSensor sensorDistance;
 
