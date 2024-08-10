@@ -78,6 +78,7 @@ public class DetectAprilTagNew extends LinearOpMode{
                 telemetry.addData("roll", tag.ftcPose.roll);
                 telemetry.addData("pitch", tag.ftcPose.pitch);
                 telemetry.addData("yaw", tag.ftcPose.yaw);
+                telemetry.addData("id", tag.id);
 
             }
             telemetry.update();
