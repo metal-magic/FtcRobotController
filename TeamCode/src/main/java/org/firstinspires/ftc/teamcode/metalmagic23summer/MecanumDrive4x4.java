@@ -68,10 +68,10 @@ public class MecanumDrive4x4 extends LinearOpMode {
             // This makes sure that the ratio stays the same
             // but only when at least one is out of range [-1, 1]
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
+            double frontLeftPower = (y + x + rx) / denominator * 0.35;
+            double backLeftPower = (y - x + rx) / denominator * 0.35;
+            double frontRightPower = (y - x - rx) / denominator * 0.35;
+            double backRightPower = (y + x - rx) / denominator * 0.35;
 
             motorFrontLeft.setPower(frontLeftPower);
             motorBackLeft.setPower(backLeftPower);
