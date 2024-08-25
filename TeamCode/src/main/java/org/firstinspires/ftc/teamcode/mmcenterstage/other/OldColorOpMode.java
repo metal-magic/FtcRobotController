@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous()
-@Disabled
 public class OldColorOpMode extends OpMode {
     OldSensorColor2 board = new OldSensorColor2();
 
@@ -19,6 +18,12 @@ public class OldColorOpMode extends OpMode {
     @Override
     public void loop() {
         telemetry.addData("RGB is ", board.getRGB());
+        if (board.getBlue() > 4000) {
+            telemetry.addLine("Object is blue");
+        }
+        else if (board.getRed() > 1000) {
+            telemetry.addLine("Object is red");
+        }
         telemetry.addData("Proximity is ", board.getProximity(DistanceUnit.INCH)  );
     }
 }

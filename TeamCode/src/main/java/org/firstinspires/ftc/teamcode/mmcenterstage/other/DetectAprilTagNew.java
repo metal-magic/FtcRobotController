@@ -12,7 +12,6 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-@Disabled
 @Autonomous
 public class DetectAprilTagNew extends LinearOpMode{
 
@@ -62,7 +61,7 @@ public class DetectAprilTagNew extends LinearOpMode{
         while (!isStopRequested() && opModeIsActive()) {
 
             //rotate robot until it detects an AprilTag
-            if ((tagProcessor.getDetections().size() != 0)&&(tagProcessor.getDetections().get(0).id == 1)) {
+            if ((tagProcessor.getDetections().size() != 0)&&((tagProcessor.getDetections().get(0).id % 2== 1))) {
                 rotateRobot(0);
             } else {
                 rotateRobot(0.2);
