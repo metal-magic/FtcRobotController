@@ -62,7 +62,11 @@ public class DetectAprilTagNew extends LinearOpMode{
 
             //rotate robot until it detects an AprilTag
             if ((tagProcessor.getDetections().size() != 0)&&((tagProcessor.getDetections().get(0).id % 2== 1))) {
-                rotateRobot(0);
+                if (tagProcessor.getDetections().get(0).ftcPose.z <= 50) {
+                    rotateRobot(0);
+                } else {
+                    rotateRobot(0.2);
+                }
             } else {
                 rotateRobot(0.2);
             }
