@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.team1234; // Replace with your own package name
+/*package org.firstinspires.ftc.teamcode.mmcenterstage.other;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
+@Disabled
 public class HarshalOdometry extends LinearOpMode {
     // Constants
     private static final double TICKS_PER_REV = 8192.0; // Replace with your encoder ticks per revolution
@@ -80,3 +81,4 @@ public class HarshalOdometry extends LinearOpMode {
     }
 }
 
+*/
