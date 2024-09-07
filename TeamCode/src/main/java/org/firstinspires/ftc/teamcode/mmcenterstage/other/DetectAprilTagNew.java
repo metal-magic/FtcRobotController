@@ -39,6 +39,7 @@ public class DetectAprilTagNew extends LinearOpMode{
                 .setDrawCubeProjection(true)
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
+                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
                 .build();
 
         //VisionPortal myBestVisionPortal;

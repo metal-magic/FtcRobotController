@@ -2,17 +2,19 @@ package org.firstinspires.ftc.teamcode.mmcenterstage.other;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-@Autonomous
 
+@Disabled
+@Autonomous
 
 public class EkanshDistSens extends LinearOpMode {
 
 
-    private DistanceSensor distanceSensor;
+    public DistanceSensor distanceSensor;
 
 
     @Override

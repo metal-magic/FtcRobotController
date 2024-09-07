@@ -53,7 +53,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @Disabled
 public class SensorREV2mDistance extends LinearOpMode {
 
-    private DistanceSensor sensorDistance;
+    public DistanceSensor sensorDistance;
 
     @Override
     public void runOpMode() {
