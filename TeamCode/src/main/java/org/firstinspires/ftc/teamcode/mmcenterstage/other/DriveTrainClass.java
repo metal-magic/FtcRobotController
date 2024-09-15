@@ -67,11 +67,11 @@ public class DriveTrainClass {
         leftBackDrive.setPower(0);
     }
 
-    private void moveStraightLine(double movementInInches, double robotSpeed) {
+    public void moveStraightLine(double movementInInches, double robotSpeed) {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
         drive(robotSpeed, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
     }
-    private void strafe(double strafeInches, double robotSpeed) {
+    public void strafe(double strafeInches, double robotSpeed) {
         // We assume that strafing right means positive
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
         if (strafeInches >= 0) {
@@ -88,7 +88,7 @@ public class DriveTrainClass {
                     -1 * strafeRevs);
         }
     }
-    private void rotate(double degrees, double robotSpeed) {
+    public void rotate(double degrees, double robotSpeed) {
         // Assume positive degrees means moving towards the right
         double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
 

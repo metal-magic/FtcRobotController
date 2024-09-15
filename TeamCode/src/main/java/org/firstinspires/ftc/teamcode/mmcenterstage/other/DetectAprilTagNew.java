@@ -110,4 +110,80 @@ public class DetectAprilTagNew extends LinearOpMode{
         motorBackRight.setPower(-1 * value);
     }
 
+    public void alignX(double minX, double maxX, int myTagID) {
+
+        //drawing information on the driver station camera screen
+        AprilTagProcessor tagProcessor = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagID(true)
+                .setDrawTagOutline(true)
+                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
+                .build();
+
+
+        //stating the webcam
+        VisionPortal visionPortal = new VisionPortal.Builder()
+                .addProcessor(tagProcessor)
+                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                .setCameraResolution(new Size(640, 480))
+                .build();
+
+
+        int theIndex = 6;
+        for (int i = 0; i <= 5; i++) {
+            if (tagProcessor.getDetections().get(i).id == myTagID) {
+                theIndex = myTagID;
+                break;
+            }
+        }
+
+        DriveTrainClass dtc = new DriveTrainClass();
+
+        while (tagProcessor.getDetections().get(theIndex).ftcPose.x < (-0.5-minX)) { //0.5 is buffer
+            dtc.strafe(-0.5, 0.5);
+        }
+        while (tagProcessor.getDetections().get(theIndex).ftcPose.x > (0.5 + maxX)) { //0.5 is buffer
+            dtc.strafe(-0.5, 0.5);
+        }
+    }
+
+    public void alignZ(double minZ, double maxZ, int myTagID) {
+
+        //drawing information on the driver station camera screen
+        AprilTagProcessor tagProcessor = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagID(true)
+                .setDrawTagOutline(true)
+                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
+                .build();
+
+
+        //stating the webcam
+        VisionPortal visionPortal = new VisionPortal.Builder()
+                .addProcessor(tagProcessor)
+                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                .setCameraResolution(new Size(640, 480))
+                .build();
+
+
+        int theIndex = 6;
+        for (int i = 0; i <= 5; i++) {
+            if (tagProcessor.getDetections().get(i).id == myTagID) {
+                theIndex = myTagID;
+                break;
+            }
+        }
+
+        DriveTrainClass dtc = new DriveTrainClass();
+
+        while (tagProcessor.getDetections().get(theIndex).ftcPose.z < (-0.5-minZ)) { //0.5 is buffer
+            dtc.moveStraightLine(-0.5, 0.5);
+        }
+        while (tagProcessor.getDetections().get(theIndex).ftcPose.z > (0.5 + maxZ)) { //0.5 is buffer
+            dtc.moveStraightLine(-0.5, 0.5);
+        }
+    }
+
 }
