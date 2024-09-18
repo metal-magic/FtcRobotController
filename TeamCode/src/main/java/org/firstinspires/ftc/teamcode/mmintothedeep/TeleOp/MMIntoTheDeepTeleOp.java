@@ -35,9 +35,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+
+import org.firstinspires.ftc.teamcode.mmcenterstage.other.OldSensorColor2;
 
 import java.util.Date;
 
@@ -58,16 +61,18 @@ public class MMIntoTheDeepTeleOp extends OpMode {
     public DcMotor motorBackRight = null;
 
     public Servo gripperServo1 = null;
+    public Servo gripperServo2 = null;
     public Servo pivotServo = null;
 
     public Servo droneServo = null;
 
-    public CRServo armMotor = null;
+    public CRServo linearSlideMotor = null;
 
     public Date previousTime = new Date();
 
     public float armSpeedCounter = 0;
     // TouchSensor touchSensor = null;
+    OldSensorColor2 board = new OldSensorColor2();
 
     @Override
     public void init() {
@@ -78,13 +83,14 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        gripperServo2 = hardwareMap.servo.get("gripperServo2");
         pivotServo = hardwareMap.servo.get("pivotServo");
 
         droneServo = hardwareMap.servo.get("droneServo");
 
         // TouchSensor touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
-        armMotor = hardwareMap.crservo.get("armMotor");
+        linearSlideMotor = hardwareMap.crservo.get("linearSlideMotor");
 
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -92,23 +98,24 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        armMotor.setDirection(CRServo.Direction.REVERSE);
+        linearSlideMotor.setDirection(CRServo.Direction.REVERSE);
 
         ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
-
+        board.init(hardwareMap);
 
     }
 
     @Override
     public void loop() {
-        Date currentTime = new Date();
 
+        Date currentTime = new Date();
+//
         double y = -gamepad1.left_stick_y; // REVERSED
         double x = gamepad1.left_stick_x;
         double rx = gamepad1.right_stick_x;
-        // Denominator is the largest motor power (abs value) or 1
-        // This makes sure that the ratio stays the same
-        // but only when at least one is out of range [-1, 1]
+//        // Denominator is the largest motor power (abs value) or 1
+//        // This makes sure that the ratio stays the same
+//        // but only when at least one is out of range [-1, 1]
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
         double backLeftPower = (y - x + rx) / denominator;
@@ -130,37 +137,49 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         motorFrontRight.setPower(frontRightPower * motorSpeed);
         motorBackRight.setPower(backRightPower * motorSpeed);
 
-        if (gamepad2.right_bumper) {
+        if ((board.getRed() > board.getBlue()) || (board.getGreen() > board.getBlue()))
+        {
             gripperServo1.setPosition(0.6);
-        }
-        if (gamepad2.left_bumper) {
-            gripperServo1.setPosition(0.2);
-        }
-
-        double armMotorSpeed;
-        armMotorSpeed = 0.35;
-        if (gamepad2.right_trigger >= 0.3F) {
-            // Fine controls
-            armMotorSpeed = 0.20;
+            gripperServo2.setPosition(0.6);
         } else {
-            // Reg speed
-            armMotorSpeed = 0.35;
-
-        }
-
-        if (gamepad2.x) {
-            armSpeedCounter +=1;
-            if (armSpeedCounter % 2 == 1) {
-                armMotorSpeed = 0.8;
+            if (gamepad2.right_bumper) {
+                gripperServo1.setPosition(0.6);
+                gripperServo2.setPosition(0.6);
             }
-
+            if (gamepad2.left_bumper) {
+                gripperServo1.setPosition(0.2);
+                gripperServo2.setPosition(0.2);
+            }
         }
 
-
-
-        armMotor.setPower(gamepad2.right_stick_y * armMotorSpeed);
-
-
+        if (gamepad1.x) {
+            //rotate motor for certain amount of seconds and use setPower
+            //remember motor is 312 rpm with 8mm diameter
+        }
+//        double armMotorSpeed;
+//        armMotorSpeed = 0.35;
+//        if (gamepad2.right_trigger >= 0.3F) {
+//            // Fine controls
+//            armMotorSpeed = 0.20;
+//        } else {
+//            // Reg speed
+//            armMotorSpeed = 0.35;
+//
+//        }
+//
+//        if (gamepad2.x) {
+//            armSpeedCounter +=1;
+//            if (armSpeedCounter % 2 == 1) {
+//                armMotorSpeed = 0.8;
+//            }
+//
+//        }
+//
+//
+//
+//        armMotor.setPower(gamepad2.right_stick_y * armMotorSpeed);
+//
+//
         if (currentTime.getTime() - previousTime.getTime() > 100) {
             double pivotIncrement;
 

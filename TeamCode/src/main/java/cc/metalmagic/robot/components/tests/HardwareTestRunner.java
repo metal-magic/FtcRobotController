@@ -1,5 +1,5 @@
 //package cc.metalmagic.robot.components.tests;
-//
+//THIS IS FOR DELETION 9/18
 //import static cc.metalmagic.robot.components.tests.internal.ComponentTest.Status.FAILED;
 //import static cc.metalmagic.robot.components.tests.internal.ComponentTest.Status.RUNNING;
 //

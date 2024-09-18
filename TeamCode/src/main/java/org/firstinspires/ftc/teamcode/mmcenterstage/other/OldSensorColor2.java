@@ -25,6 +25,11 @@ public class OldSensorColor2 {
     public Integer getBlue() {
         return colorSensor.blue();
     }
+
+    public Integer getGreen() {
+        return colorSensor.green();
+    }
+
     public String getProximity(DistanceUnit du) {
         return "Proximity from object is " + proximitySensor.getDistance(du)+" inches";
     }
