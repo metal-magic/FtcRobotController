@@ -52,7 +52,7 @@ import java.util.Date;
   =========================================
  */
 
-@TeleOp(name = "Om's TeleOp 2023-2024 Centerstage")
+@TeleOp(name = "New TeleOp1 Into The Deep")
 public class MMIntoTheDeepTeleOp extends OpMode {
 
     public DcMotor motorFrontLeft = null;

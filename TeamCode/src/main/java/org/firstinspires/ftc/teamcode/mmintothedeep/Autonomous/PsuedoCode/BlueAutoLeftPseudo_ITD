@@ -1,0 +1,61 @@
+package …;
+import …;
+
+@Autonomous(name="Blue: LEFT of Center", group="Autonomous")
+public class [blue auto left] extends LinearOpMode {
+
+	//Motor Declaration...
+	@Override
+        public void runOpMode() {
+            //Assign all the motors, Set all the right motor directions, Reset encoders positions, THE ENCODERS AND MOTOR ARE NOW RESET...
+            /*
+            ============================
+            THIS IS THE ACTUAL DRIVING
+            ============================
+            */
+            int n = 2 moving aligning factor; //can be changed. it is 2 for now
+            //PHASE 1: SCORE SPECIMEN ON HIGH CHAMBER
+            gripperServo1.setPosition(1);
+            moveStraightLine(24);
+            strafe(36); //arriving to chamber
+            linearStackTemp.move(28); //raise to slightly above chamber (chamber is 26")
+            moveStraightLine(n); //move the robot into the chamber so specimen is right above
+            linearStackTemp.move(-2); //move slide down to lower specimen
+            gripperServo1.setPosition(0.2); //open claw
+            moveStraightLine(-n); //move back away from chamber
+            linearStackTemp.move(-26); //lower slide
+
+            //PHASE 2: SCORING SAMPLE ON HIGH BUCKET
+            //now robot is picking up sample from the tapes
+            strafe(-48) //in front of tape
+
+            //align with AprilTag
+            rotate(-90); //camera face AprilTag
+            AprilTagClass.alignX([range min] -1,[range max] 1, [tagID] 13);
+            AprilTagClass.alignY([range min] 23,[range max] 25, [tagID] 13);
+            rotate(90); //robot face box thingy
+            moveStraightLine(n); //move to align claw with sample
+            gripperServo1.setPosition(1); //close claw
+
+            //aligning with basket
+            moveStraightLine(-n);
+
+            //align with AprilTag
+            rotate(-90); //camera face AprilTag
+            AprilTagClass.alignX([range min] -1,[range max] 1, [tagID] 13);
+            AprilTagClass.alignY([range min] 11,[range max] 13, [tagID] 13);
+
+            //basket aligning again
+            strafe(-24)
+            rotate(-45);
+
+            //score on basket
+            linearStackTemp.move(28); //raise to slightly above basket (basket is 26")
+            moveStraightLine(n); //move the robot into the basket so sample is right above
+            gripperServo1.setPosition(0.2); //open claw
+            moveStraightLine(-n); //move back away from chamber
+            linearStackTemp.move(-26); //lower slide
+
+	}
+
+}
