@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera.eocv1;
+package org.firstinspires.ftc.teamcode.mmintothedeep.autonomous;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
