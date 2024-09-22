@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera.eocv1;
 
 import android.graphics.Canvas;
 
