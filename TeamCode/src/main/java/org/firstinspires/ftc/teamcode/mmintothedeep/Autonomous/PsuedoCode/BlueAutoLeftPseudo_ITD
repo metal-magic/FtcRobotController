@@ -32,7 +32,7 @@ public class [blue auto left] extends LinearOpMode {
             //align with AprilTag
             rotate(-90); //camera face AprilTag
             AprilTagClass.alignX([range min] -1,[range max] 1, [tagID] 13);
-            AprilTagClass.alignY([range min] 23,[range max] 25, [tagID] 13);
+            AprilTagClass.alignZ([range min] 23,[range max] 25, [tagID] 13);
             rotate(90); //robot face box thingy
             moveStraightLine(n); //move to align claw with sample
             gripperServo1.setPosition(1); //close claw
@@ -43,8 +43,36 @@ public class [blue auto left] extends LinearOpMode {
             //align with AprilTag
             rotate(-90); //camera face AprilTag
             AprilTagClass.alignX([range min] -1,[range max] 1, [tagID] 13);
-            AprilTagClass.alignY([range min] 11,[range max] 13, [tagID] 13);
+            AprilTagClass.alignZ([range min] 11,[range max] 13, [tagID] 13);
 
+            //basket aligning again
+            strafe(-24)
+            rotate(-45);
+
+            //score on basket
+            linearStackTemp.move(28); //raise to slightly above basket (basket is 26")
+            moveStraightLine(n); //move the robot into the basket so sample is right above
+            gripperServo1.setPosition(0.2); //open claw
+            moveStraightLine(-n); //move back away from chamber
+            linearStackTemp.move(-26); //lower slide
+
+            //second cycle
+
+            //move to other pixel
+            rotate(45);
+            strafe(24);
+            AprilTagClass.alignX([range min] -1,[range max] 1, [tagID] 13);
+            AprilTagClass.alignZ([range min] 11,[range max] 13, [tagID] 13);
+            //give some error so we dont knock into pixel
+            strafe(-10);
+            rotate(90);
+            moveStraightLine(10);
+            gripperServo1.setPosition(1);
+            //going to basket
+            rotate(-90);
+            AprilTagClass.alignX([range min] -1,[range max] 1, [tagID] 13);
+            AprilTagClass.alignZ([range min] 11,[range max] 13, [tagID] 13);
+            
             //basket aligning again
             strafe(-24)
             rotate(-45);

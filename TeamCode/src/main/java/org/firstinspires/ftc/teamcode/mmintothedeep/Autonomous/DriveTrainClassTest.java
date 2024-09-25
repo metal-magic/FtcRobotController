@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+// TESTING THE DRIVE TRAIN CLASS AND APRIL TAG ALIGNMENT
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -6,12 +7,13 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera.AprilTagClass;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainFunctions;
 
 import java.util.Date;
 
-@Autonomous(name="Blue TEST ONLY: LEFT of Gate", group="Autonomous")
-public class BlueAutoLeftTest extends LinearOpMode {
+@Autonomous(name="Test: Drive Train Classes", group="Autonomous")
+public class DriveTrainClassTest extends LinearOpMode {
     /* Declare all motors as null */
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
@@ -68,6 +70,8 @@ public class BlueAutoLeftTest extends LinearOpMode {
 
         //Object creation for DriveTrainFunctions
         DriveTrainFunctions dtf = new DriveTrainFunctions();
+        //Object creation for AprilTagClass
+        AprilTagClass apriltag = new AprilTagClass();
 
 
       /*
@@ -76,42 +80,16 @@ public class BlueAutoLeftTest extends LinearOpMode {
         ============================
        */
 
-       /*
-        METAL MAGIC CENTERSTAGE
-        THIS CODE STARTS ON THE LEFT SIDE OF THE BLUE SIDE (closer to backdrop)
-        STACKS PIXEL AND PARKS IN CORNER
-        THIS WAS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
-        */
-        //sleep lines are to avoid two lines of codes running at the same time
-        gripperServo1.setPosition(1); //close claw
-        sleep(250);
-        dtf.moveStraightLine(24, SPEED); //drive forward to align with backboard
-        dtf.rotate(90, SPEED); //rotate away the backboard so arm can move back
-        dtf.moveStraightLine(-36, SPEED); //move backwards
-        sleep(250);
+        dtf.moveStraightLine(5, SPEED);
+        dtf.moveStraightLine(-5, SPEED);
+        dtf.rotate(90, SPEED);
+        dtf.rotate(-90, SPEED);
+        dtf.strafe(5, SPEED);
+        dtf.strafe(-5, SPEED);
+        dtf.strafeAnyAngle(5, 50, SPEED);
+        apriltag.alignX(-1, 1, 1);
+        apriltag.alignZ(-5, 5, 1);
 
-        //next section of code moves arm backward on basis of time
-        long t = System.currentTimeMillis();
-        long endTimer = t + 2000;
-        while (System.currentTimeMillis() < endTimer) {
-            armMotor.setPower(-0.35);
-        }
-        armMotor.setPower(0);
-
-        sleep(250);
-        gripperServo1.setPosition(0.2); //drop pixel (open claw)
-        sleep(750);
-
-        //return arm back to standard position
-        t = System.currentTimeMillis();
-        endTimer = t + 2000;
-        while (System.currentTimeMillis() < endTimer) {
-            armMotor.setPower(+0.35);
-        }
-
-        //parking on side
-        dtf.strafe(24, SPEED);
-        dtf.moveStraightLine(-13, SPEED);
 
         //Termination
         if (currentTime.getTime() > 20000) {
@@ -124,9 +102,3 @@ public class BlueAutoLeftTest extends LinearOpMode {
     }
 
 }
-
-    /*
-    =====================================================
-    PROGRAMMING FUNCTIONS FOR THE SEPARATE MOVEMENT TYPES
-    =====================================================
-     */
