@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.autonomous;
 // TESTING THE DRIVE TRAIN CLASS AND APRIL TAG ALIGNMENT
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -20,10 +20,10 @@ public class DriveTrainClassTest extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    Servo gripperServo1 = null;
-    Servo pivotServo = null;
+    /*Servo gripperServo1 = null;
+    Servo pivotServo = null;*/
 
-    CRServo armMotor = null;
+    //CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
@@ -33,18 +33,18 @@ public class DriveTrainClassTest extends LinearOpMode {
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
-    static final double SPEED = 0.5; // Motor Power setting
+    static final double SPEED = 1; // Motor Power setting
 
     @Override
     public void runOpMode() {
-        gripperServo1 = hardwareMap.servo.get("gripperServo1");
-        pivotServo = hardwareMap.servo.get("pivotServo");
+        /*gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");*/
         /* Assign all the motors */
         leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
-        armMotor = hardwareMap.crservo.get("armMotor");
+        //armMotor = hardwareMap.crservo.get("armMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -65,13 +65,14 @@ public class DriveTrainClassTest extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        gripperServo1.setPosition(1);
+        //gripperServo1.setPosition(1);
         waitForStart();
 
         //Object creation for DriveTrainFunctions
         DriveTrainFunctions dtf = new DriveTrainFunctions();
         //Object creation for AprilTagClass
-        AprilTagClass apriltag = new AprilTagClass();
+        //AprilTagClass apriltag = new AprilTagClass();
+        dtf.initializeDriveTrainClass(hardwareMap);
 
 
       /*
@@ -81,14 +82,20 @@ public class DriveTrainClassTest extends LinearOpMode {
        */
 
         dtf.moveStraightLine(5, SPEED);
+        /*sleep(100);
         dtf.moveStraightLine(-5, SPEED);
+        sleep(2000);
         dtf.rotate(90, SPEED);
+        sleep(100);
         dtf.rotate(-90, SPEED);
+        sleep(100);
         dtf.strafe(5, SPEED);
+        sleep(100);
         dtf.strafe(-5, SPEED);
+        sleep(100);
         dtf.strafeAnyAngle(5, 50, SPEED);
-        apriltag.alignX(-1, 1, 1);
-        apriltag.alignZ(-5, 5, 1);
+        //apriltag.alignX(-1, 1, 1);
+        //apriltag.alignZ(-5, 5, 1);*/
 
 
         //Termination
