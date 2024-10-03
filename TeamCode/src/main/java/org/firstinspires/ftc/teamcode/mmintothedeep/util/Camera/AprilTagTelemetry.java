@@ -117,7 +117,7 @@ public class AprilTagTelemetry extends LinearOpMode{
 
         while (!isStopRequested() && opModeIsActive()) {
 
-
+            //these lines are sending telemetry
             if (tagProcessor.getDetections().size() > 0) {
                 AprilTagDetection tag = tagProcessor.getDetections().get(0);
                 //sending telemetry values to the driver station
