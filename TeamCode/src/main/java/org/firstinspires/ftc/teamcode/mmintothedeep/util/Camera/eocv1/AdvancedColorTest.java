@@ -25,9 +25,7 @@ import android.graphics.Color;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -109,7 +107,7 @@ public class AdvancedColorTest extends LinearOpMode
         VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorSensor)
                 .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                .setCamera(hardwareMap.get(WebcamName.class, "1"))
                 .build();
 
         telemetry.setMsTransmissionInterval(50);  // Speed up telemetry updates, Just use for debugging.

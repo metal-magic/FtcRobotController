@@ -24,25 +24,14 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera.eocv1;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.SortOrder;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.opencv.core.RotatedRect;
-import android.graphics.Canvas;
-
-import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
-import org.firstinspires.ftc.vision.VisionProcessor;
-
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
 
 
 import java.util.List;
@@ -122,8 +111,8 @@ public class AdvancedColorBlobsTest extends LinearOpMode
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
                 .setBlurSize(5)                               // Smooth the transitions between different colors in image
-                .setErodeSize(6)
-                .setDilateSize(6)
+                //.setErodeSize(6)
+                //.setDilateSize(6)
                 .build();
 
         /*
@@ -141,20 +130,21 @@ public class AdvancedColorBlobsTest extends LinearOpMode
         VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorLocator)
                 .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                .setCamera(hardwareMap.get(WebcamName.class, "1"))
                 .build();
 
         telemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
-        telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
 
         // WARNING:  To be able to view the stream preview on the Driver Station, this code runs in INIT mode.
         while (opModeIsActive() || opModeInInit())
         {
-            telemetry.addData("preview on/off", "... Camera Stream\n");
+            // telemetry.addData("preview on/off", "... Camera Stream\n");
 
             // Read the current list
-            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+            // List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
 
+            // telemetry.addLine(String.valueOf(blobs.size()));
+            // telemetry.addLine(blobs.toString());
             /*
              * The list of Blobs can be filtered to remove unwanted Blobs.
              *   Note:  All contours will be still displayed on the Stream Preview, but only those that satisfy the filter
@@ -175,7 +165,7 @@ public class AdvancedColorBlobsTest extends LinearOpMode
              *   A blob's Aspect ratio is the ratio of boxFit long side to short side.
              *   A perfect Square has an aspect ratio of 1.  All others are > 1
              */
-            ColorBlobLocatorProcessor.Util.filterByArea(50, 20000, blobs);  // filter out very small blobs.
+            // ColorBlobLocatorProcessor.Util.filterByArea(50, 20000, blobs);  // filter out very small blobs.
 
             /*
              * The list of Blobs can be sorted using the same Blob attributes as listed above.
@@ -185,18 +175,22 @@ public class AdvancedColorBlobsTest extends LinearOpMode
              *     ColorBlobLocatorProcessor.Util.sortByAspectRatio(SortOrder.DESCENDING, blobs);
              */
 
-            telemetry.addLine(" Area Density Aspect  Center");
+            // telemetry.addLine(" Area Density Aspect  Center");
 
             // Display the size (area) and center location for each Blob.
-            for(ColorBlobLocatorProcessor.Blob b : blobs)
-            {
-                RotatedRect boxFit = b.getBoxFit();
-                telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
-                        b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
-            }
+            // for(ColorBlobLocatorProcessor.Blob b : blobs)
+            // {
+                // RotatedRect boxFit = b.getBoxFit();
+                // telemetry.addLine(String.valueOf(b.getContourArea()));
+                // telemetry.addLine(String.valueOf(b.getDensity()));
+                // telemetry.addLine(String.valueOf(b.getAspectRatio()));
+                // telemetry.addLine(String.valueOf((int) boxFit.center.x));
+                // telemetry.addLine(String.valueOf((int) boxFit.center.y));
+            // }
 
-            telemetry.update();
-            sleep(50);
+            // telemetry.addLine("HI");
+            // telemetry.update();
+            sleep(20);
         }
     }
 }

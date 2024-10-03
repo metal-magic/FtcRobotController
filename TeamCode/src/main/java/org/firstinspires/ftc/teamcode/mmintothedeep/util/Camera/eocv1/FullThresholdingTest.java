@@ -23,6 +23,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera.eocv1;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import android.graphics.Color;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -73,12 +74,16 @@ import java.util.List;
 public class FullThresholdingTest extends OpenCvPipeline
 {
 
+
     Telemetry telemetry;
 
     public FullThresholdingTest(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
-//
+
+
+
+
 //    public void runOpMode()
 //    {
 //        /* Build a "Color Locator" vision processor based on the ColorBlobLocatorProcessor class.
@@ -204,36 +209,51 @@ public class FullThresholdingTest extends OpenCvPipeline
 //    }
 
 
-    ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
-            .setTargetColorRange(ColorRange.BLUE)         // use a predefined color match
-            .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-            .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
-            .setDrawContours(true)                        // Show contours on the Stream Preview
-            .setBlurSize(5)                               // Smooth the transitions between different colors in image
-            .setErodeSize(6)
-            .setDilateSize(6)
+//    ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
+//            .setTargetColorRange(ColorRange.YELLOW)         // use a predefined color match
+//            .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+//            .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
+//            .setDrawContours(true)                        // Show contours on the Stream Preview
+//            .setBlurSize(0)                               // Smooth the transitions between different colors in image
+//            .build();
+
+    PredominantColorProcessor colorSensor = new PredominantColorProcessor.Builder()
+            .setRoi(ImageRegion.asUnityCenterCoordinates(-0.2, 0.2, 0.2, -0.2))
+            .setSwatches(
+                    PredominantColorProcessor.Swatch.RED,
+                    PredominantColorProcessor.Swatch.BLUE,
+                    PredominantColorProcessor.Swatch.YELLOW)
             .build();
+
+//    VisionPortal portal = new VisionPortal.Builder()
+//            .addProcessor(colorLocator)
+//            .setCameraResolution(new Size(640, 480))
+//            .build();
+
+    public void init(int width, int height, CameraCalibration calibration) {
+        // Not useful in this case, but we do need to implement it either way
+    }
 
     @Override
     public Mat processFrame(Mat input) {
-        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-        ColorBlobLocatorProcessor.Util.filterByArea(50, 20000, blobs);  // filter out very small blobs.
-        telemetry.addLine(" Area Density Aspect  Center");
+//        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+//        ColorBlobLocatorProcessor.Util.filterByArea(50, 20000, blobs);  // filter out very small blobs.
+//        telemetry.addLine(" Area Density Aspect  Center");
+//
+//        // Display the size (area) and center location for each Blob.
+//        for(ColorBlobLocatorProcessor.Blob b : blobs)
+//        {
+//            RotatedRect boxFit = b.getBoxFit();
+//            telemetry.addLine(String.valueOf(b.getContourArea()));
+//            telemetry.addLine("YAYAYAY");
+//        }
 
-        // Display the size (area) and center location for each Blob.
-        for(ColorBlobLocatorProcessor.Blob b : blobs)
-        {
-            RotatedRect boxFit = b.getBoxFit();
-            telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
-                    b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
-        }
+        PredominantColorProcessor.Result result = colorSensor.getAnalysis();
 
+        // Display the Color Sensor result.
+        telemetry.addData("Best Match:", result.closestSwatch);
+        telemetry.addLine(String.format("R %3d, G %3d, B %3d", Color.red(result.rgb), Color.green(result.rgb), Color.blue(result.rgb)));
         telemetry.update();
-        try {
-            telemetry.wait(1);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
         return input;
     }

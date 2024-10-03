@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.Date;
 
 @Autonomous
-public class AprilTagClass extends LinearOpMode{
+public class AprilTagTelemetry extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
@@ -116,27 +116,6 @@ public class AprilTagClass extends LinearOpMode{
 
 
         while (!isStopRequested() && opModeIsActive()) {
-
-            //alignX(-1, 1, 12);
-            if (tagProcessor.getDetections().size() > 0) {
-                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 - 1)) { //0.5 is buffer
-                    strafe(2);
-                }
-                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + 1)) { //0.5 is buffer
-                    strafe(-2);
-                }
-            }
-
-            //rotate robot until it detects an AprilTag
-            /*if ((tagProcessor.getDetections().size() != 0)&&((tagProcessor.getDetections().get(0).id % 2== 1))) {
-                if (tagProcessor.getDetections().get(0).ftcPose.z <= 50) {
-                    rotateRobot(0);
-                } else {
-                    rotateRobot(0.2);
-                }
-            } else {
-                rotateRobot(0.2);
-            }*/
 
 
             if (tagProcessor.getDetections().size() > 0) {

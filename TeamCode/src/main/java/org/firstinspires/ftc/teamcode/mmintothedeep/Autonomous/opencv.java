@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
