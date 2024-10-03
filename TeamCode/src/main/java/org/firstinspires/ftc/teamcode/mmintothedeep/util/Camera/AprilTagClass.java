@@ -121,10 +121,10 @@ public class AprilTagClass extends LinearOpMode{
             //alignX(-1, 1, 12);
             if (tagProcessor.getDetections().size() > 0) {
                 if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 - 1)) { //0.5 is buffer
-                    strafe(2);
+                    strafe(1);
                 }
                 if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + 1)) { //0.5 is buffer
-                    strafe(-2);
+                    strafe(-1);
                 }
             }
 
