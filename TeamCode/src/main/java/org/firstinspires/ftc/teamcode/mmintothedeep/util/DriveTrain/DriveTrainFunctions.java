@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import java.lang.Math;
 
 import org.firstinspires.ftc.teamcode.mmcenterstage.autonomous.AutonomousUtility;
+import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 
 import java.util.Date;
 
@@ -26,7 +27,7 @@ public class DriveTrainFunctions {
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
-    static final double WHEEL_DIAMETER_INCHES = 104 / 25.4; // in Inches
+    static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES;
     // pi * the diameter of the wheels in inches
 
