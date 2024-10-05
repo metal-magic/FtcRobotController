@@ -89,6 +89,8 @@ public class AdvancedColorTest extends LinearOpMode
                 .setSwatches(
                         PredominantColorProcessor.Swatch.RED,
                         PredominantColorProcessor.Swatch.BLUE,
+                        PredominantColorProcessor.Swatch.BLACK,
+                        PredominantColorProcessor.Swatch.WHITE,
                         PredominantColorProcessor.Swatch.YELLOW)
                 .build();
 
@@ -107,7 +109,7 @@ public class AdvancedColorTest extends LinearOpMode
         VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorSensor)
                 .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "1"))
+                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
                 .build();
 
         telemetry.setMsTransmissionInterval(50);  // Speed up telemetry updates, Just use for debugging.

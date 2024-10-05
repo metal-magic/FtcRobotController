@@ -41,20 +41,20 @@ public class AprilTagClass extends LinearOpMode{
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
-    static final double SPEED = 1; // Motor Power setting
+    static final double SPEED = 0.2; // Motor Power setting
     @Override
 
     public void runOpMode() throws InterruptedException {
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-
-        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+//        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
+//        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+//        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
+//        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+//
+//        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+//        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+//
+//        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+//        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         /* Assign all the motors */
@@ -118,13 +118,53 @@ public class AprilTagClass extends LinearOpMode{
 
         while (!isStopRequested() && opModeIsActive()) {
 
+            double rotateNew;
+            double targetRotate = 0;
+
+            if (tagProcessor.getDetections().size() > 0) {
+                rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw;
+
+                if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + targetRotate)) { //0.5 is buffer
+                    //strafe(1);
+                    rotate(-rotateNew, 1);
+                }
+                if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + targetRotate)) { //0.5 is buffer
+                    //strafe(-1);
+                    rotate(-rotateNew, 1);
+                }
+            }
+
+            double xPosNew;
+            double targetX = 0;
             //alignX(-1, 1, 12);
             if (tagProcessor.getDetections().size() > 0) {
-                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 - 1)) { //0.5 is buffer
-                    strafe(1);
+                xPosNew = tagProcessor.getDetections().get(0).ftcPose.x;
+
+                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5)) { //0.5 is buffer
+                    //strafe(1);
+                    strafe(-1*xPosNew);
                 }
-                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + 1)) { //0.5 is buffer
-                    strafe(-1);
+                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5)) { //0.5 is buffer
+                    //strafe(-1);
+                    strafe(-1*xPosNew);
+                }
+            }
+
+            double yPosNew;
+            double targetY = 16.0;
+            //double moveInRevs;
+            //alignX(-1, 1, 12);
+            if (tagProcessor.getDetections().size() > 0) {
+                yPosNew = tagProcessor.getDetections().get(0).ftcPose.y-targetY;
+                 //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
+
+                if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + targetY)) { //0.5 is buffer
+                    //strafe(1);
+                    moveStraightLine(-1*yPosNew);
+                }
+                if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + targetY)) { //0.5 is buffer
+                    //strafe(-1);
+                    moveStraightLine(-1*yPosNew);
                 }
             }
 
@@ -285,6 +325,25 @@ public class AprilTagClass extends LinearOpMode{
             dtc.moveStraightLine(-0.5, 0.5);
         }
     }
+    public void rotate(double degrees, double robotSpeed) {
+        // Assume positive degrees means moving towards the right
+        double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
+
+        if (degrees >= 0) {
+            drive(robotSpeed,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs);
+        } else {
+            // Moving negative means rotating left
+            drive(robotSpeed,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs);
+        }
+    }
 
     private void strafe(double strafeInches) {
         // We assume that strafing right means positive
@@ -318,7 +377,7 @@ public class AprilTagClass extends LinearOpMode{
     */
     private void moveStraightLine(double movementInInches) {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
-        //telemetry.addData("Moving ", "%.3f inches", movementInInches);
+        telemetry.addData("Moving ", "%.3f inches", movementInInches);
         telemetry.update();
         drive(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
     }
