@@ -23,7 +23,7 @@ public class DriveTrainFunctions {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
+    static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
@@ -36,7 +36,6 @@ public class DriveTrainFunctions {
     static final double SPEED = 0.5; // Motor Power setting
 
     HardwareMap hardwareMap = null;
-    //SUBSCRIBE TO ARYAN CR
 
     public void initializeDriveTrainClass(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -173,7 +172,7 @@ public class DriveTrainFunctions {
                     -1 * strafeLeftRevs);
         }
     }
-
+    
     public void strafeAnyAngle(double strafeInches, double strafeAngleDegrees, double robotSpeed) {
         if (strafeAngleDegrees > 0 && strafeAngleDegrees < 360) {
             double strafeAngleRadians = Math.PI/180 * strafeAngleDegrees;

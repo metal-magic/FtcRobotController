@@ -18,162 +18,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-//KING PHILI    //KING PHILIP    //KING PHILIP    //KING PHILIP    //KING PHILIP    //KING PHILIP    //KING PHILIP    //KING PHILIP    //KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-// P
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-//KING PHILIP
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera.eocv1;
 
@@ -219,6 +63,7 @@ public class AdvancedColorTest extends LinearOpMode
     @Override
     public void runOpMode()
     {
+
         /* Build a "Color Sensor" vision processor based on the PredominantColorProcessor class.
          *
          * - Focus the color sensor by defining a RegionOfInterest (ROI) which you want to inspect.
@@ -261,14 +106,14 @@ public class AdvancedColorTest extends LinearOpMode
          *      .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))  .....   for a webcam
          *  or
          *      .setCamera(BuiltinCameraDirection.BACK)    ... for a Phone Camera
-         */    //KING PHILIP
+         */
 
         VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorSensor)
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
                 .build();
-    //KING PHILIP
+
         telemetry.setMsTransmissionInterval(50);  // Speed up telemetry updates, Just use for debugging.
 
         // WARNING:  To be able to view the stream preview on the Driver Station, this code runs in INIT mode.

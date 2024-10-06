@@ -10,8 +10,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 
 import java.util.Date;
 
-//KING PHILIP
-@Autonomous(name="Blue TEST ONLY: LEFT of Gate", group="Autonomous")
+@Autonomous(name="move forward test")
 public class MoveForwardTest extends LinearOpMode {
     /* Declare all motors as null */
     Date currentTime = new Date();
@@ -19,7 +18,6 @@ public class MoveForwardTest extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    //KING PHILIP
     static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
@@ -66,7 +64,9 @@ public class MoveForwardTest extends LinearOpMode {
         ============================
        */
 
-        moveStraightLine(1);
+        moveStraightLine(3);
+        sleep(5000);
+        moveStraightLine(5);
 
 
         //Termination
@@ -82,7 +82,7 @@ public class MoveForwardTest extends LinearOpMode {
     /*
     =====================================================
     PROGRAMMING FUNCTIONS FOR THE SEPARATE MOVEMENT TYPES
-    ================================//KING PHILIP=====================
+    =====================================================
      */
 
     /*
@@ -98,7 +98,6 @@ public class MoveForwardTest extends LinearOpMode {
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
         if (strafeInches >= 0) {
             telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
-//KING PHILIP
             drive(SPEED,
                     1 * strafeRevs,
                     -1 * strafeRevs,
@@ -122,7 +121,7 @@ public class MoveForwardTest extends LinearOpMode {
         moveStraightLine(# of inches);
         positive # of inches -> forward
     =====================================================
-    *///KING PHILIP
+    */
     private void moveStraightLine(double movementInInches) {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
         telemetry.addData("Moving ", "%.3f inches", movementInInches);
@@ -135,7 +134,7 @@ public class MoveForwardTest extends LinearOpMode {
      * Function to Rotate the 4-Wheel Robot by certain amount of degrees.
      * to call: rotate(# of degrees);
      * @param degrees POSITIVE degrees means rotating **RIGHT**
-     *///KING PHILIP
+     */
     private void rotate(double degrees) {
         // Assume positive degrees means moving towards the right
         double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
@@ -194,7 +193,7 @@ public class MoveForwardTest extends LinearOpMode {
         leftBackDrive.setPower(speed);
         rightFrontDrive.setPower(speed);
         rightBackDrive.setPower(speed);
-//KING PHILIP
+
         while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
             telemetry.addLine("Current Position of the Motors")
                     .addData("Left Front  ", "%d", leftFrontDrive.getCurrentPosition())

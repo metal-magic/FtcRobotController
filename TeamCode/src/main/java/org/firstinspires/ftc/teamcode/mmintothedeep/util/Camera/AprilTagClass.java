@@ -70,7 +70,6 @@ public class AprilTagClass extends LinearOpMode{
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-
         // Reset encoders positions
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -88,6 +87,7 @@ public class AprilTagClass extends LinearOpMode{
 
         //MyDriveTrain m = new MyDriveDrain();
         //m.rotate(90);
+
 
 
         //drawing information on the driver station camera screen
