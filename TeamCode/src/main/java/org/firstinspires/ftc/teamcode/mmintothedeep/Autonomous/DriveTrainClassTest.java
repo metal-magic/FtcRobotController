@@ -3,13 +3,11 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera.AprilTagClass;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainFunctions;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
+import org.slf4j.helpers.Util;
 
 import java.util.Date;
 
@@ -25,7 +23,7 @@ public class DriveTrainClassTest extends LinearOpMode {
     Servo pivotServo = null;*/
 
     //CRServo armMotor = null;
-    static final double MOTOR_TICK_COUNTS = 537.7; // goBILDA 5203 series Yellow Jacket
+    static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
@@ -106,6 +104,7 @@ public class DriveTrainClassTest extends LinearOpMode {
             rightBackDrive.setPower(0);
             rightFrontDrive.setPower(0);
         }
+
 
     }
 
