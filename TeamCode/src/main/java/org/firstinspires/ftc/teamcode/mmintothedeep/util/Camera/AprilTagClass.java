@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainFunctions;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -41,20 +43,25 @@ public class AprilTagClass extends LinearOpMode{
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
-    static final double SPEED = 0.2; // Motor Power setting
+    static final double SPEED = 1; // Motor Power setting
+
+    private AprilTagProcessor tagProcessor;
+    private VisionPortal visionPortal;
+    private boolean USE_WEBCAM = true;
+    private boolean REFRESH_WEBCAM = true;
     @Override
 
     public void runOpMode() throws InterruptedException {
-//        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-//        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-//        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-//        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-//
-//        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-//        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-//
-//        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-//        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+
+        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         /* Assign all the motors */
@@ -70,6 +77,7 @@ public class AprilTagClass extends LinearOpMode{
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
+
         // Reset encoders positions
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -83,15 +91,18 @@ public class AprilTagClass extends LinearOpMode{
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //gripperServo1.setPosition(1);
-        waitForStart();
 
-        //MyDriveTrain m = new MyDriveDrain();
-        //m.rotate(90);
+
+
+
+        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+        //telemetry.addData(">", "Touch START to start OpMode");
+        telemetry.update();
 
 
 
         //drawing information on the driver station camera screen
-        AprilTagProcessor tagProcessor = new AprilTagProcessor.Builder()
+        tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
                 .setDrawTagID(true)
@@ -104,20 +115,45 @@ public class AprilTagClass extends LinearOpMode{
 
 
         //stating the webcam
-        VisionPortal visionPortal = new VisionPortal.Builder()
-                .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
+//        visionPortal = new VisionPortal.Builder()
+//                .addProcessor(tagProcessor)
+//                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+//                .setCameraResolution(new Size(640, 480))
+//                .build();
 
+        VisionPortal.Builder builder = new VisionPortal.Builder();
 
+        // Set the camera (webcam vs. built-in RC phone camera).
+        if (USE_WEBCAM) {
+                builder.setCamera(hardwareMap.get(WebcamName.class, "testWebcam"));
+        } else {
+            builder.setCamera(BuiltinCameraDirection.BACK);
+        }
+        builder.addProcessor(tagProcessor);
 
+        visionPortal = builder.build();
 
         waitForStart();
 
-
         while (!isStopRequested() && opModeIsActive()) {
 
+            telemetry.update();
+
+            // Save CPU resources; can resume streaming when needed.
+            if (REFRESH_WEBCAM) {
+                visionPortal.resumeStreaming();
+            } else {
+                if (gamepad1.dpad_down) {
+                    visionPortal.stopStreaming();
+                } else if (gamepad1.dpad_up) {
+                    visionPortal.resumeStreaming();
+                }
+            }
+
+            // Share the CPU.
+            sleep(20);
+
+            //these lines are sending telemetry
             double rotateNew;
             double targetRotate = 0;
 
@@ -156,7 +192,7 @@ public class AprilTagClass extends LinearOpMode{
             //alignX(-1, 1, 12);
             if (tagProcessor.getDetections().size() > 0) {
                 yPosNew = tagProcessor.getDetections().get(0).ftcPose.y-targetY;
-                 //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
+                //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
 
                 if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + targetY)) { //0.5 is buffer
                     //strafe(1);
@@ -167,19 +203,7 @@ public class AprilTagClass extends LinearOpMode{
                     moveStraightLine(-1*yPosNew);
                 }
             }
-
-            //rotate robot until it detects an AprilTag
-            /*if ((tagProcessor.getDetections().size() != 0)&&((tagProcessor.getDetections().get(0).id % 2== 1))) {
-                if (tagProcessor.getDetections().get(0).ftcPose.z <= 50) {
-                    rotateRobot(0);
-                } else {
-                    rotateRobot(0.2);
-                }
-            } else {
-                rotateRobot(0.2);
-            }*/
-
-
+            
             if (tagProcessor.getDetections().size() > 0) {
                 AprilTagDetection tag = tagProcessor.getDetections().get(0);
                 //sending telemetry values to the driver station
@@ -193,10 +217,9 @@ public class AprilTagClass extends LinearOpMode{
 
             }
             telemetry.update();
-
-
-
         }
+
+        visionPortal.close();
 
     }
 
@@ -325,25 +348,6 @@ public class AprilTagClass extends LinearOpMode{
             dtc.moveStraightLine(-0.5, 0.5);
         }
     }
-    public void rotate(double degrees, double robotSpeed) {
-        // Assume positive degrees means moving towards the right
-        double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
-
-        if (degrees >= 0) {
-            drive(robotSpeed,
-                    1.0 * movementOfWheelsInRevs,
-                    1.0 * movementOfWheelsInRevs,
-                    -1 * movementOfWheelsInRevs,
-                    -1 * movementOfWheelsInRevs);
-        } else {
-            // Moving negative means rotating left
-            drive(robotSpeed,
-                    -1 * movementOfWheelsInRevs,
-                    -1 * movementOfWheelsInRevs,
-                    1.0 * movementOfWheelsInRevs,
-                    1.0 * movementOfWheelsInRevs);
-        }
-    }
 
     private void strafe(double strafeInches) {
         // We assume that strafing right means positive
@@ -377,9 +381,29 @@ public class AprilTagClass extends LinearOpMode{
     */
     private void moveStraightLine(double movementInInches) {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
-        telemetry.addData("Moving ", "%.3f inches", movementInInches);
+        //telemetry.addData("Moving ", "%.3f inches", movementInInches);
         telemetry.update();
         drive(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
+    }
+
+    public void rotate(double degrees, double robotSpeed) {
+        // Assume positive degrees means moving towards the right
+        double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
+
+        if (degrees >= 0) {
+            drive(robotSpeed,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs);
+        } else {
+            // Moving negative means rotating left
+            drive(robotSpeed,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs);
+        }
     }
 
     public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs) {
