@@ -1,5 +1,7 @@
 //package org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain;
 //
+//import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 //import com.qualcomm.robotcore.hardware.DcMotor;
 //import com.qualcomm.robotcore.hardware.HardwareMap;
 //import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -15,7 +17,7 @@
 //
 //import java.lang.Math;
 //
-//
+//@Autonomous
 //public class DriveTrainDriver {
 //    // Declare all motors as null
 //    private DcMotor leftFrontDrive = null;

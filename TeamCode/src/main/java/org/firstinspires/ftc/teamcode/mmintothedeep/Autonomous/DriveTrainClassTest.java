@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 // TESTING THE DRIVE TRAIN CLASS AND APRIL TAG ALIGNMENT
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;

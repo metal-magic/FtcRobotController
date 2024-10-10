@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainFunctions;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -42,6 +44,9 @@ public class AprilTagTelemetry extends LinearOpMode{
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
     static final double SPEED = 1; // Motor Power setting
+
+    private AprilTagProcessor tagProcessor;
+    private VisionPortal visionPortal;
     @Override
 
     public void runOpMode() throws InterruptedException {
@@ -84,14 +89,18 @@ public class AprilTagTelemetry extends LinearOpMode{
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //gripperServo1.setPosition(1);
-        waitForStart();
 
-        //MyDriveTrain m = new MyDriveDrain();
-        //m.rotate(90);
+
+
+
+        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+        //telemetry.addData(">", "Touch START to start OpMode");
+        telemetry.update();
+
 
 
         //drawing information on the driver station camera screen
-        AprilTagProcessor tagProcessor = new AprilTagProcessor.Builder()
+        tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
                 .setDrawTagID(true)
@@ -104,19 +113,40 @@ public class AprilTagTelemetry extends LinearOpMode{
 
 
         //stating the webcam
-        VisionPortal visionPortal = new VisionPortal.Builder()
-                .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
+//        visionPortal = new VisionPortal.Builder()
+//                .addProcessor(tagProcessor)
+//                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+//                .setCameraResolution(new Size(640, 480))
+//                .build();
 
+        VisionPortal.Builder builder = new VisionPortal.Builder();
 
+        boolean USE_WEBCAM = true;
+        // Set the camera (webcam vs. built-in RC phone camera).
+        if (USE_WEBCAM) {
+            builder.setCamera(hardwareMap.get(WebcamName.class, "testWebcam"));
+        } else {
+            builder.setCamera(BuiltinCameraDirection.BACK);
+        }
+        builder.addProcessor(tagProcessor);
 
+        visionPortal = builder.build();
 
         waitForStart();
 
-
         while (!isStopRequested() && opModeIsActive()) {
+
+            telemetry.update();
+
+            // Save CPU resources; can resume streaming when needed.
+            if (gamepad1.dpad_down) {
+                visionPortal.stopStreaming();
+            } else if (gamepad1.dpad_up) {
+                visionPortal.resumeStreaming();
+            }
+
+            // Share the CPU.
+            sleep(20);
 
             //these lines are sending telemetry
             if (tagProcessor.getDetections().size() > 0) {
@@ -132,10 +162,9 @@ public class AprilTagTelemetry extends LinearOpMode{
 
             }
             telemetry.update();
-
-
-
         }
+
+        visionPortal.close();
 
     }
 

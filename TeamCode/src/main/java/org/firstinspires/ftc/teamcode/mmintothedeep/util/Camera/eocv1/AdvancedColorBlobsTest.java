@@ -109,7 +109,7 @@ public class AdvancedColorBlobsTest extends LinearOpMode
         ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(ColorRange.RED)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.6875, 0.7083, 0.6875, -0.7083))  // search central 1/4 of camera view
                 // .setDrawContours(true)                        // Show contours on the Stream Preview
                 .setBlurSize(5)                               // Smooth the transitions between different colors in image
                 //.setErodeSize(6)
@@ -131,7 +131,7 @@ public class AdvancedColorBlobsTest extends LinearOpMode
         VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorLocator)
                 .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                .setCamera(hardwareMap.get(WebcamName.class, "1"))
                 .build();
 
         telemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
@@ -167,7 +167,7 @@ public class AdvancedColorBlobsTest extends LinearOpMode
              *   A blob's Aspect ratio is the ratio of boxFit long side to short side.
              *   A perfect Square has an aspect ratio of 1.  All others are > 1
              */
-            ColorBlobLocatorProcessor.Util.filterByArea(500, 100000, blobs);  // filter out very small blobs.
+            ColorBlobLocatorProcessor.Util.filterByArea(500, 500000, blobs);  // filter out very small blobs.
 
             /*
              * The list of Blobs can be sorted using the same Blob attributes as listed above.
@@ -178,7 +178,7 @@ public class AdvancedColorBlobsTest extends LinearOpMode
              */
 
             telemetry.addLine(" Area Density Aspect  Center");
-
+            sleep(200);
             // Display the size (area) and center location for each Blob.
             for(ColorBlobLocatorProcessor.Blob b : blobs)
              {

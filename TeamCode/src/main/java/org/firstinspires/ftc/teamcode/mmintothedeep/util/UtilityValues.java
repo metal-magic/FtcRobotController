@@ -4,6 +4,6 @@ public class UtilityValues {
 
     public static int wheelDiameter = 96;
     public static double motorTicks = 537.7; // goBILDA 5203 series Yellow Jacket
-
+    public static String webCamName = "testWebcam";
 
 }
