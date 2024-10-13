@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
@@ -64,7 +65,7 @@ public class MoveForwardTest extends LinearOpMode {
         ============================
        */
 
-        moveStraightLine(3);
+        moveStraightLine(10);
         sleep(5000);
         moveStraightLine(5);
 

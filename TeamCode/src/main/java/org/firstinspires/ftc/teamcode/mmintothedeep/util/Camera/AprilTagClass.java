@@ -56,7 +56,7 @@ public class AprilTagClass extends LinearOpMode{
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
-    static final double SPEED = 1; // Motor Power setting
+    static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
     private AprilTagProcessor tagProcessor;
     private VisionPortal visionPortal;
@@ -223,11 +223,11 @@ public class AprilTagClass extends LinearOpMode{
 
             if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + targetDegrees)) { //0.5 is buffer
                 //strafe(1);
-                rotate(-rotateNew, 1);
+                rotate(-1*rotateNew, 1);
             }
             if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + targetDegrees)) { //0.5 is buffer
                 //strafe(-1);
-                rotate(-rotateNew, 1);
+                rotate(-1*rotateNew, 1);
             }
         }
 
@@ -242,15 +242,14 @@ public class AprilTagClass extends LinearOpMode{
         double xPosNew;
         //alignX(-1, 1, 12);
         if (!tagProcessor.getDetections().isEmpty()) {
-            xPosNew = tagProcessor.getDetections().get(0).ftcPose.x;
-
+            xPosNew = tagProcessor.getDetections().get(0).ftcPose.x-targetX;
             if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + targetX)) { //0.5 is buffer
                 //strafe(1);
-                strafe(-1 * xPosNew);
+                strafe(1 * xPosNew);
             }
             if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + targetX)) { //0.5 is buffer
                 //strafe(-1);
-                strafe(-1 * xPosNew);
+                strafe(1 * xPosNew);
             }
         }
 
@@ -270,11 +269,11 @@ public class AprilTagClass extends LinearOpMode{
 
             if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + targetY)) { //0.5 is buffer
                 //strafe(1);
-                moveStraightLine(-1 * yPosNew);
+                moveStraightLine(1 * yPosNew);
             }
             if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + targetY)) { //0.5 is buffer
                 //strafe(-1);
-                moveStraightLine(-1 * yPosNew);
+                moveStraightLine(1 * yPosNew);
             }
         }
     }

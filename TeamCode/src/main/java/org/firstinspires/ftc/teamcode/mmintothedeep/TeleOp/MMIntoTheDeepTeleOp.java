@@ -5,7 +5,7 @@
  * the following conditions are met:
  *
  * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
+ *] of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright notice, this
  * list of conditions and the following disclaimer in the documentation and/or
@@ -106,7 +106,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
 //        ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         board.init(hardwareMap);
-
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     @Override
@@ -143,7 +143,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
 //        if ((board.getRed() > board.getBlue()) || (board.getGreen() > board.getBlue()))
 //        {
-//            gripperServo1.setPosition(0.6);
+//            gripperServo1.setPosition(0.6);linearSlideMotor.setPower(0);
 //            gripperServo2.setPosition(0.6);
 //        } else {
 //            if (gamepad2.right_bumper) {
@@ -158,91 +158,42 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         //Slide limit = 696 mm
         //Slide limit converted to ticks calculation = 537.7*5.7
         //Limit is ROUNDED DOWN
-    if (linearSlideMotor.getCurrentPosition() < 3064) {
-        if (gamepad2.x) {
+        //3064 max
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (linearSlideMotor.getCurrentPosition() < 3000 && gamepad2.x) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-            linearSlideMotor.setTargetPosition(1220);
-            linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                /*while (linearSlideMotor.getCurrentPosition() < 3000) {
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    linearSlideMotor.setPower(1);
+                }*/
+            //linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             linearSlideMotor.setPower(1);
-        }
-        if (gamepad2.b) {
-            linearSlideMotor.setDirection(DcMotor.Direction.REVERSE);
-            linearSlideMotor.setTargetPosition(2440);
-            linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linearSlideMotor.setPower(1);
-        }
-        if (!(gamepad2.b || gamepad2.x)) {
+        } else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad2.b) {
+            telemetry.addData("b pressed", true);
+            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+            //linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            linearSlideMotor.setPower(-1);
+            /*while (linearSlideMotor.getCurrentPosition() > 0) {
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                linearSlideMotor.setPower(1);
+            }*/
+        } else {
+            //linearSlideMotor.setPower(0);
+            while (linearSlideMotor.getCurrentPosition() > 3000) {
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(-0.2);
+            }
+            while (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(0.2);
+            }
             linearSlideMotor.setPower(0);
         }
-    } else {
-        linearSlideMotor.setPower(0);
-    }
+        telemetry.addData("Position: ", linearSlideMotor.getCurrentPosition());
+        telemetry.update();
 
-
-
-
-//        if (linearSlideMotor.getCurrentPosition() >= 3064) {
-//            linearSlideMotor.setPower(0);
-//        } else {
-//            //20 inches = 507/(120/577.7)
-//            if ((gamepad2.x) && (linearSlideMotor.getCurrentPosition() < 3064)) {
-//                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-//                linearSlideMotor.setTargetPosition(2440);
-//                linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                linearSlideMotor.setPower(1);
-//            }
-//
-//            if (gamepad2.b) {
-//                linearSlideMotor.setDirection(DcMotor.Direction.REVERSE);
-//                linearSlideMotor.setTargetPosition(2440);
-//                linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                linearSlideMotor.setPower(1);
-//            }
-//        }
-
-        //Max height = 199/((8*pi)/384.5) ticks
-//        if (linearActuatorMotor.getCurrentPosition()>=3044) {
-//            linearActuatorMotor.setPower(0);
-//        } else {
-//            //18 inches = 100/((8*pi)/384.5) ticks
-//            if ((gamepad2.y) || (linearActuatorMotor.getCurrentPosition()<3044)){
-//                linearActuatorMotor.setDirection(DcMotor.Direction.FORWARD);
-//                linearActuatorMotor.setTargetPosition(1529);
-//                linearActuatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                linearActuatorMotor.setPower(1);
-//            }
-//
-//            if (gamepad2.a) {
-//                linearActuatorMotor.setDirection(DcMotor.Direction.REVERSE);
-//                linearActuatorMotor.setTargetPosition(1529);
-//                linearActuatorMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                linearActuatorMotor.setPower(1);
-//            }
-//        }
-//        double armMotorSpeed;
-//        armMotorSpeed = 0.35;
-//        if (gamepad2.right_trigger >= 0.3F) {
-//            // Fine controls
-//            armMotorSpeed = 0.20;
-//        } else {
-//            // Reg speed
-//            armMotorSpeed = 0.35;
-//
-//        }
-//
-//        if (gamepad2.x) {
-//            armSpeedCounter +=1;
-//            if (armSpeedCounter % 2 == 1) {
-//                armMotorSpeed = 0.8;
-//            }
-//
-//        }
-//
-//
-//
-//        armMotor.setPower(gamepad2.right_stick_y * armMotorSpeed);
-//
-//
         if (currentTime.getTime() - previousTime.getTime() > 100) {
             double pivotIncrement;
 
