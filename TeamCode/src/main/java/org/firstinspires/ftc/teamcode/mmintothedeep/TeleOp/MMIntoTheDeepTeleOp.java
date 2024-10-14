@@ -40,7 +40,9 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.teamcode.mmcenterstage.HardwareTesting.LeftStrafeTest;
 import org.firstinspires.ftc.teamcode.mmcenterstage.other.OldSensorColor2;
+import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 
 import java.util.Date;
 
@@ -159,38 +161,30 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         //Slide limit converted to ticks calculation = 537.7*5.7
         //Limit is ROUNDED DOWN
         //3064 max
+        double up;
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (linearSlideMotor.getCurrentPosition() < 3000 && gamepad2.x) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                /*while (linearSlideMotor.getCurrentPosition() < 3000) {
-                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    linearSlideMotor.setPower(1);
-                }*/
-            //linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setPower(1);
-        } else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad2.b) {
-            telemetry.addData("b pressed", true);
-            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-            //linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setPower(-1);
-            /*while (linearSlideMotor.getCurrentPosition() > 0) {
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                linearSlideMotor.setPower(1);
-            }*/
+            //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
+            up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+            linearSlideMotor.setPower(UtilityValues.LSSPEED * up);
+        } else if (linearSlideMotor.getCurrentPosition() > 100 && gamepad2.b) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                linearSlideMotor.setPower(-1* UtilityValues.LSSPEED*up);
         } else {
-            //linearSlideMotor.setPower(0);
-            while (linearSlideMotor.getCurrentPosition() > 3000) {
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(-0.2);
+            if (linearSlideMotor.getCurrentPosition() > 3064) {
+                linearSlideMotor.setPower(-0.3);
+            } else if (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setPower(0.3);
+            } else {
+                linearSlideMotor.setPower(0);
             }
-            while (linearSlideMotor.getCurrentPosition() < 0) {
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(0.2);
-            }
-            linearSlideMotor.setPower(0);
         }
+
         telemetry.addData("Position: ", linearSlideMotor.getCurrentPosition());
         telemetry.update();
 
