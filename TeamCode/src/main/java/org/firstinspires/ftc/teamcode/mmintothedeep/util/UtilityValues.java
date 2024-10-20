@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.util;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 public class UtilityValues {
 
     public static int wheelDiameter = 96;
@@ -18,5 +21,13 @@ public class UtilityValues {
     public static final double SPEED = 0.3;
 
     public static final double LSSPEED = 0.5;
+
+    public static final DcMotorSimple.Direction leftFrontDirection = DcMotor.Direction.FORWARD;
+
+    public static final DcMotorSimple.Direction leftBackDirection = DcMotor.Direction.REVERSE;
+
+    public static final DcMotorSimple.Direction rightFrontDirection = DcMotor.Direction.FORWARD;
+
+    public static final DcMotorSimple.Direction rightBackDirection = DcMotor.Direction.FORWARD;
 
 }

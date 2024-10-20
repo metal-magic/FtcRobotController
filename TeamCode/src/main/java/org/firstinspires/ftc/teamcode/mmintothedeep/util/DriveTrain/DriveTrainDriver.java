@@ -39,7 +39,7 @@ public class DriveTrainDriver {
 
     /*
     ==============DriveTrainDriver Constructor==============
-    fLeft, bLeft, fRight, bRight are for a specific motor
+    fLeft, bLeft, fRight, bRight are for specific motors
     ========================================================
      */
     public DriveTrainDriver(HardwareMap hardwareMap, boolean fLeft, boolean bLeft, boolean fRight, boolean bRight) {

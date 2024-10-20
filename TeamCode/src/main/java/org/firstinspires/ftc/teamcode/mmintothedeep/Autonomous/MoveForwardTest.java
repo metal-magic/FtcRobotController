@@ -39,7 +39,7 @@ public class MoveForwardTest extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
 
         // Set all the right motor directions
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
