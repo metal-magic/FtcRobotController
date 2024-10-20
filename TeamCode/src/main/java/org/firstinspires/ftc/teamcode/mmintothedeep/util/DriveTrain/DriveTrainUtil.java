@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.configuration.Utility;
 
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
+import org.slf4j.helpers.Util;
 
 public class DriveTrainUtil {
 
@@ -31,10 +34,10 @@ public class DriveTrainUtil {
 
     /**
      * default constructor
-     * ?
+     *
      */
-    public DriveTrainUtil () {
-        //myOpMode = opmode;
+    public DriveTrainUtil (LinearOpMode opmode) {
+        myOpMode = opmode;
     }
 
     /**
@@ -44,17 +47,17 @@ public class DriveTrainUtil {
      * All of the hardware devices are accessed via the hardware map, and initialized.
      */
     public void init() {
-        this.hardwareMap = hardwareMap;
+        //this.hardwareMap = hardwareMap;
 
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+        leftFrontDrive = myOpMode.hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        leftBackDrive = myOpMode.hardwareMap.get(DcMotor.class, "motorBackLeft");
+        rightFrontDrive = myOpMode.hardwareMap.get(DcMotor.class, "motorFrontRight");
+        rightBackDrive = myOpMode.hardwareMap.get(DcMotor.class, "motorBackRight");
         // Set all the right motor directions
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(UtilityValues.leftFrontDirection);
+        leftBackDrive.setDirection(UtilityValues.leftBackDirection);
+        rightFrontDrive.setDirection(UtilityValues.rightFrontDirection);
+        rightBackDrive.setDirection(UtilityValues.rightBackDirection);
 
         // Reset encoders positions
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -152,6 +155,7 @@ public class DriveTrainUtil {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         leftFrontDrive.setPower(speed);
         leftBackDrive.setPower(speed);
