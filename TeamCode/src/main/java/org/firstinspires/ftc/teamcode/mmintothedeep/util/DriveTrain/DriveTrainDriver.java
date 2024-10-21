@@ -46,28 +46,28 @@ public class DriveTrainDriver {
         this.hardwareMap = hardwareMap;
         if (fLeft) {
             leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
-            leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+            leftFrontDrive.setDirection(UtilityValues.leftFrontDirection);
             leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             leftFrontDrive.setPower(0);
         }
         if (bLeft) {
             leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
-            leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+            leftBackDrive.setDirection(UtilityValues.leftBackDirection);
             leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             leftBackDrive.setPower(0);
         }
         if (fRight) {
             rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
-            rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+            rightFrontDrive.setDirection(UtilityValues.rightFrontDirection);
             rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             rightFrontDrive.setPower(0);
         }
         if (bRight) {
             rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
-            rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+            rightBackDrive.setDirection(UtilityValues.rightBackDirection);
             rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             rightBackDrive.setPower(0);
@@ -78,6 +78,7 @@ public class DriveTrainDriver {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
         drive(robotSpeed, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
     }
+
     public void strafe(double strafeInches, double robotSpeed) {
         // We assume that strafing right means positive
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);

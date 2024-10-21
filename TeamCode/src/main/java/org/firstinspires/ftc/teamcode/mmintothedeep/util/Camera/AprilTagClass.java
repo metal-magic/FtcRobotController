@@ -102,11 +102,11 @@ public class AprilTagClass extends LinearOpMode{
         DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
         DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
 
-        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorFrontRight.setDirection(UtilityValues.rightFrontDirection);
+        motorBackRight.setDirection(UtilityValues.rightBackDirection);
 
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontLeft.setDirection(UtilityValues.leftFrontDirection);
+        motorBackLeft.setDirection(UtilityValues.leftBackDirection);
 
 
         /* Assign all the motors */
@@ -221,13 +221,12 @@ public class AprilTagClass extends LinearOpMode{
         if (!tagProcessor.getDetections().isEmpty()) {
             rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw;
 
-            if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + targetDegrees)) { //0.5 is buffer
+            if (rotateNew < (-0.5 + targetDegrees)) { //0.5 is buffer
                 //strafe(1);
-                rotate(-1*rotateNew, 1);
-            }
-            if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + targetDegrees)) { //0.5 is buffer
+                rotate((targetDegrees-rotateNew), 1);
+            }else if (rotateNew > (0.5 + targetDegrees)) { //0.5 is buffer
                 //strafe(-1);
-                rotate(-1*rotateNew, 1);
+                rotate((targetDegrees-rotateNew), 1);
             }
         }
 
@@ -246,10 +245,9 @@ public class AprilTagClass extends LinearOpMode{
             if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + targetX)) { //0.5 is buffer
                 //strafe(1);
                 strafe(1 * xPosNew);
-            }
-            if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + targetX)) { //0.5 is buffer
+            } else if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + targetX)) { //0.5 is buffer
                 //strafe(-1);
-                strafe(1 * xPosNew);
+                strafe(-1 * xPosNew);
             }
         }
 
@@ -276,23 +274,6 @@ public class AprilTagClass extends LinearOpMode{
                 moveStraightLine(1 * yPosNew);
             }
         }
-    }
-
-    private void rotateRobot(double value) {
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        motorFrontLeft.setPower(value);
-        motorBackLeft.setPower(value);
-        motorFrontRight.setPower(-1 * value);
-        motorBackRight.setPower(-1 * value);
     }
 
     private void strafe(double strafeInches) {

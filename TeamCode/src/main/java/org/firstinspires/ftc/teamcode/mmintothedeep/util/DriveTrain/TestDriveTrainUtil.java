@@ -25,21 +25,29 @@ public class TestDriveTrainUtil extends LinearOpMode {
         robot.init();
         waitForStart();
 
-        while (!isStopRequested() && opModeIsActive()) {
+        //move forward and back 5 in
+        robot.moveStraightLine(5);
+        sleep(250);
+        robot.moveStraightLine(-5);
+        sleep(250);
 
-            //move forward and back 5 in
-            robot.moveStraightLine(5);
-            robot.moveStraightLine(-5);
+        //strafe left and right 5 in
+        robot.strafe(5);
+        sleep(250);
+        robot.strafe(5);
+        sleep(250);
 
-            //strafe left and right 5 in
-            robot.strafe(5);
-            robot.strafe(5);
+        //rotate left and right 90 degrees
+        robot.rotate(-90);
+        sleep(250);
+        robot.rotate(90);
+        sleep(250);
 
-            //rotate left and right 90 degrees
-            robot.rotate(-90);
-            robot.rotate(90);
-
-        }
+//        while (!isStopRequested() && opModeIsActive()) {
+//
+//
+//
+//        }
 
     }
 

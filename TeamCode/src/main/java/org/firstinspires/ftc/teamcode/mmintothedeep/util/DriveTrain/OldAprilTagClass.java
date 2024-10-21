@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
+package org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain;
 
 import android.util.Size;
 
@@ -65,7 +65,7 @@ public class OldAprilTagClass extends LinearOpMode{
         //armMotor = hardwareMap.crservo.get("armMotor");
 
         // Set all the right motor directions
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
