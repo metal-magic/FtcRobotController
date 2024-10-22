@@ -17,7 +17,7 @@ public class TestDriveTrainUtil extends LinearOpMode {
 
     // Created a Drive object to be used to access robot hardware.
     // Prefix any hardware functions with "robot." to access this class.
-    DriveTrainUtil robot = new DriveTrainUtil(this);
+    DriveTrainUtil robot = new DriveTrainUtil();
 
     @Override
     public void runOpMode() {
