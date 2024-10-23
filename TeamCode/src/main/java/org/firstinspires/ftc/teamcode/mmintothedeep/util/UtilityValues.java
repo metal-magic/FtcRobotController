@@ -20,7 +20,7 @@ public class UtilityValues {
 
     public static final double SPEED = 0.3;
 
-    public static final double LSSPEED = 0.5;
+    public static final double LSSPEED = 0.7;
 
     public static final DcMotorSimple.Direction leftFrontDirection = DcMotor.Direction.FORWARD;
 
