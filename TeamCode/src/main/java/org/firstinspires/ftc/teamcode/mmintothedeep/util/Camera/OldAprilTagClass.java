@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain;
+package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -122,7 +121,7 @@ public class OldAprilTagClass extends LinearOpMode{
             double targetRotate = 0;
 
             if (tagProcessor.getDetections().size() > 0) {
-                rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw;
+                rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw-targetRotate;
 
                 if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + targetRotate)) { //0.5 is buffer
                     //strafe(1);
@@ -138,15 +137,15 @@ public class OldAprilTagClass extends LinearOpMode{
             double targetX = 0;
             //alignX(-1, 1, 12);
             if (tagProcessor.getDetections().size() > 0) {
-                xPosNew = tagProcessor.getDetections().get(0).ftcPose.x;
+                xPosNew = tagProcessor.getDetections().get(0).ftcPose.x-targetX;
 
-                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5)) { //0.5 is buffer
+                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5+targetX)) { //0.5 is buffer
                     //strafe(1);
-                    strafe(-1*xPosNew);
+                    strafe(1*xPosNew);
                 }
-                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5)) { //0.5 is buffer
+                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5+targetX)) { //0.5 is buffer
                     //strafe(-1);
-                    strafe(-1*xPosNew);
+                    strafe(1*xPosNew);
                 }
             }
 
@@ -160,11 +159,11 @@ public class OldAprilTagClass extends LinearOpMode{
 
                 if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + targetY)) { //0.5 is buffer
                     //strafe(1);
-                    moveStraightLine(-1*yPosNew);
+                    moveStraightLine(1*yPosNew);
                 }
                 if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + targetY)) { //0.5 is buffer
                     //strafe(-1);
-                    moveStraightLine(-1*yPosNew);
+                    moveStraightLine(1*yPosNew);
                 }
             }
 
