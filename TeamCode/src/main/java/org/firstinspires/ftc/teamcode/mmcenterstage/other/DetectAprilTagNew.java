@@ -13,6 +13,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Autonomous
+@Disabled
 public class DetectAprilTagNew extends LinearOpMode{
 
     @Override

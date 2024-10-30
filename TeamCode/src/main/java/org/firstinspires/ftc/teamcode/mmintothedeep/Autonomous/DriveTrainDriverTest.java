@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainDriver;
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainDr
 import java.util.Date;
 
 @Autonomous
+@Disabled
 public class DriveTrainDriverTest extends LinearOpMode {
     Date currentTime = new Date();
     static final double SPEED = 0.5; // Motor Power setting

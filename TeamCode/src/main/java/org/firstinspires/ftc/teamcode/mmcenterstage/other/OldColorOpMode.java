@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous()
+@Disabled
 public class OldColorOpMode extends OpMode {
     OldSensorColor2 board = new OldSensorColor2();
 

@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.mmcenterstage.eocv;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
-
+@Disabled
 public class EOCVLearningPipeline2 extends OpenCvPipeline {
     Mat mat = new Mat();
     Mat thresh = new Mat();

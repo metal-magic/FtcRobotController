@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -19,9 +20,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.Date;
+import java.util.Objects;
 
-@TeleOp
-public class UpdatedAprilTagClass extends LinearOpMode{
+@TeleOp(name="Tag Self Align TeleOp", group="AprilTag")
+@Disabled
+public class TeleOpAprilTag extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
@@ -62,13 +65,7 @@ public class UpdatedAprilTagClass extends LinearOpMode{
              * ===============
              */
             if (gamepad2.dpad_left) {
-                alignRotate(0);
-
-                alignX(0);
-
-                alignY(16.0);
-
-                //align(50, 16, 180);
+                align(0, 16, 0);
             }
             if (gamepad2.dpad_right) {
                 align(-50,16,90);
@@ -77,6 +74,30 @@ public class UpdatedAprilTagClass extends LinearOpMode{
 
             tagTelemetry();
             telemetry.update();
+        }
+
+    }
+
+    public void alignTo(String s, int tagID) {
+
+        if (tagID == 12) {
+            if (Objects.equals(s, "basket")) {
+                align(55, 16, 45);
+
+            }
+            if (Objects.equals(s, "chamber")) {
+                align(0, 26, 180);
+            }
+        }
+
+        if (tagID == 13) {
+            if (Objects.equals(s, "basket")) {
+                alignRotate(0);
+                alignY(16);
+                alignX(-16);
+                alignRotate(-45);
+
+            }
         }
 
     }
@@ -244,7 +265,7 @@ public class UpdatedAprilTagClass extends LinearOpMode{
         motorBackRight.setPower(-1 * value);
     }
 
-    public void alignX(double minX, double maxX, int myTagID) {
+    public void alignX1(double minX, double maxX, int myTagID) {
 
         //drawing information on the driver station camera screen
         AprilTagProcessor tagProcessor1 = new AprilTagProcessor.Builder()
@@ -319,6 +340,7 @@ public class UpdatedAprilTagClass extends LinearOpMode{
             dtc.moveStraightLine(-0.5, 0.5);
         }
     }
+
     public void rotate(double degrees, double robotSpeed) {
         // Assume positive degrees means moving towards the right
         double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);

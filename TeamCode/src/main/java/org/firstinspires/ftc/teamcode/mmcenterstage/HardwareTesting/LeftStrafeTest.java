@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.Date;
 
 @Autonomous (name = "Left Strafe Test - ONLY IF NEEDED", group = "Testing")
+@Disabled
 public class LeftStrafeTest extends LinearOpMode {
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;

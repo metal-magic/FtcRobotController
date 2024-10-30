@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mmcenterstage.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 
 @Autonomous(name="Blue: LEFT of Gate", group="Autonomous")
+@Disabled
 public class BlueAutonomousLeft extends LinearOpMode {
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;

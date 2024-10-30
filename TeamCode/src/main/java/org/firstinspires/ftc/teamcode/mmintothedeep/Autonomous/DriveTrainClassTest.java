@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 // TESTING THE DRIVE TRAIN CLASS AND APRIL TAG ALIGNMENT
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -12,6 +13,7 @@ import org.slf4j.helpers.Util;
 import java.util.Date;
 
 @Autonomous(name="Test: Drive Train Classes", group="Autonomous")
+@Disabled
 public class DriveTrainClassTest extends LinearOpMode {
     /* Declare all motors as null */
     Date currentTime = new Date();

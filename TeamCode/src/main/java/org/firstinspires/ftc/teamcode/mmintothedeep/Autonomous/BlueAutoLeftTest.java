@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 import java.util.Date;
 
 @Autonomous(name="Blue TEST ONLY: LEFT of Gate", group="Autonomous")
+@Disabled
 public class BlueAutoLeftTest extends LinearOpMode {
     /* Declare all motors as null */
     Date currentTime = new Date();

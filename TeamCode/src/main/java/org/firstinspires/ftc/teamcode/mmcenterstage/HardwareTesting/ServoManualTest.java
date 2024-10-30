@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp (name="Test All Servos - ONLY IF NEEDED", group="Testing")
+@Disabled
 public class ServoManualTest extends OpMode {
 
     CRServo pivotServo = null;

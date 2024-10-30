@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mmcenterstage.other;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -15,7 +16,7 @@ import java.lang.Math;
 import org.firstinspires.ftc.teamcode.mmcenterstage.autonomous.AutonomousUtility;
 
 import java.util.Date;
-
+@Disabled
 public class DriveTrainClass {
     /* Declare all motors as null */
     private DcMotor leftFrontDrive = null;

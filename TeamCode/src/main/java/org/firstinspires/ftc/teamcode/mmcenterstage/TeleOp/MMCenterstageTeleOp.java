@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.mmcenterstage.TeleOp;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -51,6 +52,7 @@ import java.util.Date;
  */
 
 @TeleOp(name = "Om's TeleOp 2023-2024 Centerstage")
+@Disabled
 public class MMCenterstageTeleOp extends OpMode {
 
     public DcMotor motorFrontLeft = null;

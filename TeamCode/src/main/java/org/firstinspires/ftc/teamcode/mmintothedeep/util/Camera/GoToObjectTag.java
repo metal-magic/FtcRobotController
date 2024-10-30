@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -27,6 +28,7 @@ import java.util.Objects;
  */
 
 @Autonomous
+@Disabled
 public class GoToObjectTag extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();

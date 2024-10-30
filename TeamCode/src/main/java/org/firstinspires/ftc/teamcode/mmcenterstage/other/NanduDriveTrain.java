@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.mmcenterstage.other;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-
+@Disabled
 public class NanduDriveTrain {
     private DcMotor frontLeftDrive = null;
     private DcMotor backLeftDrive = null;
