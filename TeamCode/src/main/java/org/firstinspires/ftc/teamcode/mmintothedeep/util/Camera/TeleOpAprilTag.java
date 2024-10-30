@@ -65,7 +65,7 @@ public class TeleOpAprilTag extends LinearOpMode{
              * ===============
              */
             if (gamepad2.dpad_left) {
-                align(0, 16, 0);
+                alignToDefault("basket");
             }
             if (gamepad2.dpad_right) {
                 align(-50,16,90);
@@ -78,14 +78,35 @@ public class TeleOpAprilTag extends LinearOpMode{
 
     }
 
+    public void alignToDefault(String s) {
+        if (Objects.equals(s, "basket")) {
+            if (tagProcessor.getDetections().get(0).id == 11) {
+                align(0, 120, 180);
+                align(0, 16, -45); //now with tag 13
+            }
+            if (tagProcessor.getDetections().get(0).id == 11) {
+                align(50, 16, 90);
+                align(0, 16, -45); //now with tag 13
+            }
+            if (tagProcessor.getDetections().get(0).id == 13) {
+                align(0, 16, -45);
+            }
+        }
+
+        if (Objects.equals(s, "chamber")) {}
+    }
+
     public void alignTo(String s, int tagID) {
 
-        if (tagID == 12) {
-            if (Objects.equals(s, "basket")) {
+        if (Objects.equals(s, "basket")) {
+            if (tagID == 12) {
                 align(55, 16, 45);
-
             }
-            if (Objects.equals(s, "chamber")) {
+
+        }
+
+        if (Objects.equals(s, "chamber")) {
+            if (tagID == 12) {
                 align(0, 26, 180);
             }
         }
