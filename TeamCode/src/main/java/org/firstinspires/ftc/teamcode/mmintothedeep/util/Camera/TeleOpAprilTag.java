@@ -82,7 +82,7 @@ public class TeleOpAprilTag extends LinearOpMode{
     public void alignToDefault(String s) {
         if (Objects.equals(s, "basket")) {
             if (tagProcessor.getDetections().get(0).id == 11) {
-                align(0, 120, 180);
+                align(0, 70, 180);
                 align(0, 16, -45); //now with tag 13
             }
             else if (tagProcessor.getDetections().get(0).id == 12) {
