@@ -45,7 +45,7 @@ public class TeleOpAprilTag extends LinearOpMode{
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
-    static final double SPEED = 0.2; // Motor Power setting
+    static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
     VisionPortal visionPortal;
     AprilTagProcessor tagProcessor;

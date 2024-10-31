@@ -18,7 +18,7 @@ public class UtilityValues {
 
     public static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
-    public static final double SPEED = 0.3;
+    public static final double SPEED = 0.7;
 
     public static final double LSSPEED = 0.7;
 
