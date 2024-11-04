@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 
 import android.util.Size;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -25,7 +23,7 @@ import java.util.Objects;
 @TeleOp//(name="Tag Self Align TeleOp", group="AprilTag")
 //@Disabled.
 
-public class TeleOpAprilTag extends LinearOpMode{
+public class TeleOpAprilTag2 extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
@@ -69,6 +67,10 @@ public class TeleOpAprilTag extends LinearOpMode{
                 if (!tagProcessor.getDetections().isEmpty()) {
                     alignToDefault("basket");
                 }
+            }
+            if (gamepad1.dpad_right) {
+                align(-50,16,90);
+                align(0, 16, -45);
             }
 
             tagTelemetry();
@@ -183,7 +185,7 @@ public class TeleOpAprilTag extends LinearOpMode{
         //stating the webcam
         visionPortal = new VisionPortal.Builder()
                 .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                .setCamera(hardwareMap.get(WebcamName.class, "diddyCam"))
                 .setCameraResolution(new Size(640, 480))
                 .build();
 

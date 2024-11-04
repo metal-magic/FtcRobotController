@@ -110,8 +110,8 @@ public class AdvancedColorBlobsTest extends LinearOpMode
                 .setTargetColorRange(ColorRange.RED)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.6875, 0.7083, 0.6875, -0.7083))  // search central 1/4 of camera view
-                // .setDrawContours(true)                        // Show contours on the Stream Preview
-                .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                // .setDrawContours(true) (DO NOT UNCOMMENT)                       // Show contours on the Stream Preview
+                .setBlurSize(3)                               // Smooth the transitions between different colors in image
                 //.setErodeSize(6)
                 //.setDilateSize(6)
                 .build();
@@ -131,8 +131,9 @@ public class AdvancedColorBlobsTest extends LinearOpMode
         VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorLocator)
                 .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "1"))
+                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
                 .build();
+
 
         telemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
@@ -190,7 +191,6 @@ public class AdvancedColorBlobsTest extends LinearOpMode
                  telemetry.addLine(String.valueOf((int) boxFit.center.y));
              }
 
-            // telemetry.addLine("HI");
             telemetry.update();
             sleep(20);
         }

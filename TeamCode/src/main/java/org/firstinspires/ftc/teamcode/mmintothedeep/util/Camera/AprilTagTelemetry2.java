@@ -1,31 +1,31 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 
-import android.util.Size;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainFunctions;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.Date;
-import java.util.Objects;
 
-@TeleOp//(name="Tag Self Align TeleOp", group="AprilTag")
-//@Disabled.
+/**
+ * ===============================================================
+ * CLASS TO DETECT APRIL TAG AND GET THE TELEMETRY VALUES:
+ * x, y, z, roll, pitch, yaw
+ * ===============================================================
+ */
 
-public class TeleOpAprilTag extends LinearOpMode{
+@Autonomous
+public class AprilTagTelemetry2 extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
@@ -34,105 +34,64 @@ public class TeleOpAprilTag extends LinearOpMode{
     private DcMotor rightBackDrive = null;
     Servo gripperServo1 = null;
     Servo pivotServo = null;
-
     CRServo armMotor = null;
+
+    /*
+     * ==============================================================
+     *
+     * below values also available in UtilityValues Class
+     *
+     * ==============================================================
+     */
     static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
-
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
+    static final double SPEED = 1; // Motor Power setting
 
-    static final double SPEED = UtilityValues.SPEED; // Motor Power setting
-
-    VisionPortal visionPortal;
-    AprilTagProcessor tagProcessor;
-
+    private AprilTagProcessor tagProcessor;
+    private VisionPortal visionPortal;
+    private boolean USE_WEBCAM = true;
+    private boolean REFRESH_WEBCAM = false;
     @Override
 
     public void runOpMode() throws InterruptedException {
 
-        initMotor();
-        initPortal();
+        initMotors();
+        initAprilTag();
+
+        telemetry.addData("DS preview on/off", "3 dots, Camera Stream");
+        telemetry.addData(">", "Touch START to start OpMode");
+        telemetry.update();
+
         waitForStart();
 
-
         while (!isStopRequested() && opModeIsActive()) {
-            /*
-             * ===============
-             * ACTUAL DRIVING
-             * ===============
-             */
-            if (gamepad1.dpad_left) {
-                if (!tagProcessor.getDetections().isEmpty()) {
-                    alignToDefault("basket");
-                }
-            }
+            //telemetry.update();
 
-            tagTelemetry();
+            telemetryAprilTag();
             telemetry.update();
         }
 
-    }
-
-    public void alignToDefault(String s) {
-        if (Objects.equals(s, "basket")) {
-            if (tagProcessor.getDetections().get(0).id == 11) {
-                align(0, 70, 180);
-                align(0, 16, -45); //now with tag 13
-            }
-            else if (tagProcessor.getDetections().get(0).id == 12) {
-                align(-50, 16, 90);
-                align(0, 16, -45); //now with tag 13
-            }
-            else if (tagProcessor.getDetections().get(0).id == 13) {
-                align(0, 16, -45);
-            }
-        }
-
-        if (Objects.equals(s, "chamber")) {}
-    }
-
-    public void alignTo(String s, int tagID) {
-
-        if (Objects.equals(s, "basket")) {
-            if (tagID == 12) {
-                align(55, 16, 45);
-            }
-
-        }
-
-        if (Objects.equals(s, "chamber")) {
-            if (tagID == 12) {
-                align(0, 26, 180);
-            }
-        }
-
-        if (tagID == 13) {
-            if (Objects.equals(s, "basket")) {
-                alignRotate(0);
-                alignY(16);
-                alignX(-16);
-                alignRotate(-45);
-
-            }
-        }
+        visionPortal.close();
 
     }
 
-    public void initMotor() {
-        //        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-//        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-//        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-//        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-//
-//        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-//        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-//
-//        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-//        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+    private void initMotors() {
+
+        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
+        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
+        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
+
+        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         /* Assign all the motors */
@@ -143,10 +102,11 @@ public class TeleOpAprilTag extends LinearOpMode{
         //armMotor = hardwareMap.crservo.get("armMotor");
 
         // Set all the right motor directions
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
 
         // Reset encoders positions
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -162,11 +122,9 @@ public class TeleOpAprilTag extends LinearOpMode{
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //gripperServo1.setPosition(1);
 
-        //MyDriveTrain m = new MyDriveDrain();
-        //m.rotate(90);
     }
 
-    public void initPortal() {
+    private void initAprilTag() {
         //drawing information on the driver station camera screen
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
@@ -181,16 +139,30 @@ public class TeleOpAprilTag extends LinearOpMode{
 
 
         //stating the webcam
-        visionPortal = new VisionPortal.Builder()
-                .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
+//        visionPortal = new VisionPortal.Builder()
+//                .addProcessor(tagProcessor)
+//                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+//                .setCameraResolution(new Size(640, 480))
+//                .build();
 
+        VisionPortal.Builder builder = new VisionPortal.Builder();
+
+        // Set the camera (webcam vs. built-in RC phone camera).
+        if (USE_WEBCAM) {
+            builder.setCamera(hardwareMap.get(WebcamName.class, "diddyCam"));
+        } else {
+            builder.setCamera(BuiltinCameraDirection.BACK);
+        }
+        builder.addProcessor(tagProcessor);
+
+        visionPortal = builder.build();
     }
 
-    public void tagTelemetry() {
-        if (tagProcessor.getDetections().size() > 0) {
+    /**
+     * used to update the telemetry with x,y,z,roll,pitch,yaw,id of AprilTag if detected
+     */
+    private void telemetryAprilTag() {
+        if (!tagProcessor.getDetections().isEmpty()) {
             AprilTagDetection tag = tagProcessor.getDetections().get(0);
             //sending telemetry values to the driver station
             telemetry.addData("x", tag.ftcPose.x);
@@ -202,27 +174,43 @@ public class TeleOpAprilTag extends LinearOpMode{
             telemetry.addData("id", tag.id);
 
         }
+        //telemetry.update(); already in the while loop for start
     }
 
-    public void align(int x, int y, int dir) {
-        alignRotate(0);
-        alignY(y);
-        alignX(x);
-        rotate(dir, UtilityValues.SPEED);
+    /**
+     * streams camera image to DS
+     */
+    private void streamWebcamRefresh() {
+        // Save CPU resources; can resume streaming when needed.
+        if (REFRESH_WEBCAM) {
+            visionPortal.resumeStreaming();
+        } else {
+            if (gamepad1.dpad_down) {
+                visionPortal.stopStreaming();
+            } else if (gamepad1.dpad_up) {
+                visionPortal.resumeStreaming();
+            }
+        }
+        // Share the CPU.
+        sleep(20);
     }
 
-    public void alignRotate(int dir) {
+    /**
+     * align the rotation based on position relative to AprilTAG
+     * @param targetDegrees - what heading (relative to AprilTAG) the robot should rotate
+     */
+    private void alignRotate(double targetDegrees) {
 
         double rotateNew;
 
-        if (tagProcessor.getDetections().size() > 0) {
-            rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw-dir;
+        if (!tagProcessor.getDetections().isEmpty()) {
+            rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw;
 
-            if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
+            if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + targetDegrees)) { //0.5 is buffer
                 //strafe(1);
                 rotate(-rotateNew, 1);
             }
-            if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
+            if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + targetDegrees)) { //0.5 is buffer
                 //strafe(-1);
                 rotate(-rotateNew, 1);
             }
@@ -230,40 +218,48 @@ public class TeleOpAprilTag extends LinearOpMode{
 
     }
 
-    public void alignX(double x) {
+    /**
+     * align the X position based on position relative to AprilTAG
+     * @param targetX - what X position (relative to AprilTAG) the robot should move to
+     */
+    private void alignX(double targetX) {
 
         double xPosNew;
         //alignX(-1, 1, 12);
-        if (tagProcessor.getDetections().size() > 0) {
-            xPosNew = tagProcessor.getDetections().get(0).ftcPose.x-x;
+        if (!tagProcessor.getDetections().isEmpty()) {
+            xPosNew = tagProcessor.getDetections().get(0).ftcPose.x;
 
-            if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5+x)) { //0.5 is buffer
+            if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + targetX)) { //0.5 is buffer
                 //strafe(1);
-                strafe(1*xPosNew);
+                strafe(-1 * xPosNew);
             }
-            if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5+x)) { //0.5 is buffer
+            if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + targetX)) { //0.5 is buffer
                 //strafe(-1);
-                strafe(1*xPosNew);
+                strafe(-1 * xPosNew);
             }
         }
 
     }
 
-    public void alignY(double y) {
+    /**
+     * align the Y position based on position relative to AprilTAG
+     * @param targetY - what Y position (relative to AprilTAG) the robot should move to
+     */
+    private void alignY(double targetY) {
         double yPosNew;
         //double moveInRevs;
         //alignX(-1, 1, 12);
-        if (tagProcessor.getDetections().size() > 0) {
-            yPosNew = tagProcessor.getDetections().get(0).ftcPose.y-y;
+        if (!tagProcessor.getDetections().isEmpty()) {
+            yPosNew = tagProcessor.getDetections().get(0).ftcPose.y - targetY;
             //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
 
-            if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + y)) { //0.5 is buffer
+            if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + targetY)) { //0.5 is buffer
                 //strafe(1);
-                moveStraightLine(1*yPosNew);
+                moveStraightLine(-1 * yPosNew);
             }
-            if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + y)) { //0.5 is buffer
+            if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + targetY)) { //0.5 is buffer
                 //strafe(-1);
-                moveStraightLine(1*yPosNew);
+                moveStraightLine(-1 * yPosNew);
             }
         }
     }
@@ -283,102 +279,6 @@ public class TeleOpAprilTag extends LinearOpMode{
         motorBackLeft.setPower(value);
         motorFrontRight.setPower(-1 * value);
         motorBackRight.setPower(-1 * value);
-    }
-
-    public void alignX1(double minX, double maxX, int myTagID) {
-
-        //drawing information on the driver station camera screen
-        AprilTagProcessor tagProcessor1 = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
-                .build();
-
-
-        //stating the webcam
-        VisionPortal visionPortal = new VisionPortal.Builder()
-                .addProcessor(tagProcessor1)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
-
-
-        int theIndex = 6;
-        for (int i = 0; i <= 5; i++) {
-            if (tagProcessor1.getDetections().get(i).id == myTagID) {
-                theIndex = myTagID;
-                break;
-            }
-        }
-
-        DriveTrainFunctions dtc = new DriveTrainFunctions();
-
-        while (tagProcessor1.getDetections().get(theIndex).ftcPose.x < (-0.5-minX)) { //0.5 is buffer
-            dtc.strafe(2, 0.5);
-        }
-        while (tagProcessor1.getDetections().get(theIndex).ftcPose.x > (0.5 + maxX)) { //0.5 is buffer
-            dtc.strafe(2, 0.5);
-        }
-    }
-
-    public void alignZ(double minZ, double maxZ, int myTagID) {
-
-        //drawing information on the driver station camera screen
-        AprilTagProcessor tagProcessor = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
-                .build();
-
-
-        //stating the webcam
-        VisionPortal visionPortal = new VisionPortal.Builder()
-                .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
-
-
-        int theIndex = 6;
-        for (int i = 0; i <= 5; i++) {
-            if (tagProcessor.getDetections().get(i).id == myTagID) {
-                theIndex = myTagID;
-                break;
-            }
-        }
-
-        DriveTrainFunctions dtc = new DriveTrainFunctions();
-
-        while (tagProcessor.getDetections().get(theIndex).ftcPose.z < (-0.5-minZ)) { //0.5 is buffer
-            dtc.moveStraightLine(0.5, 0.5);
-        }
-        while (tagProcessor.getDetections().get(theIndex).ftcPose.z > (0.5 + maxZ)) { //0.5 is buffer
-            dtc.moveStraightLine(-0.5, 0.5);
-        }
-    }
-
-    public void rotate(double degrees, double robotSpeed) {
-        // Assume positive degrees means moving towards the right
-        double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
-
-        if (degrees >= 0) {
-            drive(robotSpeed,
-                    1.0 * movementOfWheelsInRevs,
-                    1.0 * movementOfWheelsInRevs,
-                    -1 * movementOfWheelsInRevs,
-                    -1 * movementOfWheelsInRevs);
-        } else {
-            // Moving negative means rotating left
-            drive(robotSpeed,
-                    -1 * movementOfWheelsInRevs,
-                    -1 * movementOfWheelsInRevs,
-                    1.0 * movementOfWheelsInRevs,
-                    1.0 * movementOfWheelsInRevs);
-        }
     }
 
     private void strafe(double strafeInches) {
@@ -403,19 +303,31 @@ public class TeleOpAprilTag extends LinearOpMode{
         }
     }
 
-    /*
-    =====================================================
-    MOVE IN STRAIGHT LINE FUNCTION
-    to call:
-        moveStraightLine(# of inches);
-        positive # of inches -> forward
-    =====================================================
-    */
     private void moveStraightLine(double movementInInches) {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
-        telemetry.addData("Moving ", "%.3f inches", movementInInches);
+        //telemetry.addData("Moving ", "%.3f inches", movementInInches);
         telemetry.update();
         drive(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
+    }
+
+    public void rotate(double degrees, double robotSpeed) {
+        // Assume positive degrees means moving towards the right
+        double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
+
+        if (degrees >= 0) {
+            drive(robotSpeed,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs);
+        } else {
+            // Moving negative means rotating left
+            drive(robotSpeed,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs);
+        }
     }
 
     public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs) {
