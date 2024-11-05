@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-import android.gesture.OrientedBoundingBox;
 import android.graphics.Color;
 import android.util.Size;
 
@@ -58,18 +57,14 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 
-@TeleOp//(name="Align camera to colored sample", group = "Concept")
+@Autonomous//(name="Align camera to colored sample", group = "Concept")
 // @Disabled
-public class ColorAutoAlign extends LinearOpMode
+public class ColorAutonomous extends LinearOpMode
 {
     private VisionPortal visionPortal = null;        // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private int myExposure;
-    private int minExposure;
-    private int maxExposure;
     private int myGain;
-    private int minGain;
-    private int maxGain;
 
     boolean thisExpUp = false;
     boolean thisExpDn = false;
@@ -157,7 +152,7 @@ public class ColorAutoAlign extends LinearOpMode
         getCameraSetting();
         // myExposure = Math.min(5, minExposure);
         myExposure = 26;
-        myGain = maxGain;
+        myGain = 255;
         setManualExposure(myExposure, myGain);
 
         // Wait for the match to begin.
@@ -183,8 +178,8 @@ public class ColorAutoAlign extends LinearOpMode
             else
                 telemetry.addData("Tag", "----------- none - ----------");
             */
-            telemetry.addData("Exposure","%d  (%d - %d)", myExposure, minExposure, maxExposure);
-            telemetry.addData("Gain","%d  (%d - %d)", myGain, minGain, maxGain);
+            telemetry.addData("Exposure","%d  (%d - %d)", myExposure);
+            telemetry.addData("Gain","%d  (%d - %d)", myGain);
             telemetry.addData("DS preview on/off", "3 dots, Camera Stream\n");
 
             // Request the most recent color analysis.
@@ -223,13 +218,10 @@ public class ColorAutoAlign extends LinearOpMode
 //                }
 //            }
 
-
-
             if (!blobs.isEmpty()) {
                 RotatedRect boxFit = blobs.get(0).getBoxFit();
                 int currX = (int) boxFit.center.x;
                 double error = 320 - currX;
-                double sampleHeightPx = boxFit.angle;
                 if (Math.abs((currX) - 320) <= 20) {
                     telemetry.addLine("CENTERED");
                 }
@@ -237,44 +229,12 @@ public class ColorAutoAlign extends LinearOpMode
                     strafe(-1 * error/20);
                 }
                 telemetry.addLine(String.valueOf((int) boxFit.center.x));
-                telemetry.addLine(String.valueOf(1638/sampleHeightPx));
             }
 
 
 
             sleep(20);
             telemetry.update();
-
-            // check to see if we need to change exposure or gain.
-            thisExpUp = gamepad1.left_bumper;
-            thisExpDn = gamepad1.left_trigger > 0.25;
-            thisGainUp = gamepad1.right_bumper;
-            thisGainDn = gamepad1.right_trigger > 0.25;
-
-            // look for clicks to change exposure
-            if (thisExpUp && !lastExpUp) {
-                myExposure = Range.clip(myExposure + 1, minExposure, maxExposure);
-                setManualExposure(myExposure, myGain);
-            } else if (thisExpDn && !lastExpDn) {
-                myExposure = Range.clip(myExposure - 1, minExposure, maxExposure);
-                setManualExposure(myExposure, myGain);
-            }
-
-            // look for clicks to change the gain
-            if (thisGainUp && !lastGainUp) {
-                myGain = Range.clip(myGain + 1, minGain, maxGain );
-                setManualExposure(myExposure, myGain);
-            } else if (thisGainDn && !lastGainDn) {
-                myGain = Range.clip(myGain - 1, minGain, maxGain );
-                setManualExposure(myExposure, myGain);
-            }
-
-            lastExpUp = thisExpUp;
-            lastExpDn = thisExpDn;
-            lastGainUp = thisGainUp;
-            lastGainDn = thisGainDn;
-
-            sleep(20);
         }
     }
 
@@ -493,10 +453,6 @@ public class ColorAutoAlign extends LinearOpMode
         }
     }
 
-    /*
-        Read this camera's minimum and maximum Exposure and Gain settings.
-        Can only be called AFTER calling initAprilTag();
-     */
     private void getCameraSetting() {
         // Ensure Vision Portal has been setup.
         if (visionPortal == null) {
@@ -514,16 +470,6 @@ public class ColorAutoAlign extends LinearOpMode
             telemetry.update();
         }
 
-        // Get camera control values unless we are stopping.
-        if (!isStopRequested()) {
-            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            minExposure = (int)exposureControl.getMinExposure(TimeUnit.MILLISECONDS) + 1;
-            maxExposure = (int)exposureControl.getMaxExposure(TimeUnit.MILLISECONDS);
-
-            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-            minGain = gainControl.getMinGain();
-            maxGain = gainControl.getMaxGain();
-        }
     }
 
     private void strafe(double strafeInches) {

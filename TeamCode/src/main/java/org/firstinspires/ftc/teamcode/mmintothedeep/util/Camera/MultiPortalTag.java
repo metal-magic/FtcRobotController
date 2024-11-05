@@ -73,8 +73,8 @@ public class MultiPortalTag extends LinearOpMode{
                 }
             }
             if (gamepad1.dpad_right) {
-                if (!tagProcessor.getDetections().isEmpty()) {
-                    alignToDefault("basket", 2);
+                if (!tagProcessor2.getDetections().isEmpty()) {
+                    alignToDefault("chamber", 2);
                 }
             }
 
@@ -86,21 +86,29 @@ public class MultiPortalTag extends LinearOpMode{
     }
 
     public void alignToDefault(String s, int vision) {
-        if (Objects.equals(s, "basket")) {
-            if (tagProcessor.getDetections().get(0).id == 11) {
-                align(0, 70, 180, vision);
-                align(0, 16, -45, vision); //now with tag 13
+        if (vision == 1) {
+            if (Objects.equals(s, "basket")) {
+                if (tagProcessor.getDetections().get(0).id == 11) {
+                    align(0, 70, 180, vision);
+                    align(0, 16, -45, vision); //now with tag 13
+                } else if (tagProcessor.getDetections().get(0).id == 12) {
+                    align(-50, 16, 90, vision);
+                    align(0, 16, -45, vision); //now with tag 13
+                } else if (tagProcessor.getDetections().get(0).id == 13) {
+                    align(0, 16, -45, vision);
+                }
             }
-            else if (tagProcessor.getDetections().get(0).id == 12) {
-                align(-50, 16, 90, vision);
-                align(0, 16, -45, vision); //now with tag 13
+
+            if (Objects.equals(s, "chamber")) {
             }
-            else if (tagProcessor.getDetections().get(0).id == 13) {
-                align(0, 16, -45, vision);
+        } else if (vision == 2) {
+            if (Objects.equals(s, "chamber")) {
+                if (tagProcessor2.getDetections().get(0).id == 12) {
+                    align(0, 16, 0, 2);
+                    moveStraightLine(5);
+                }
             }
         }
-
-        if (Objects.equals(s, "chamber")) {}
     }
 
     public void alignTo(String s, int tagID, int vision) {
@@ -201,7 +209,7 @@ public class MultiPortalTag extends LinearOpMode{
                 .setDrawCubeProjection(true)
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
-                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
+                .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
                 .build();
 
         //stating the webcam
@@ -313,11 +321,11 @@ public class MultiPortalTag extends LinearOpMode{
 
                 if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
                     //strafe(1);
-                    strafe(1 * xPosNew);
+                    strafe(-1 * xPosNew);
                 }
                 if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
                     //strafe(-1);
-                    strafe(1 * xPosNew);
+                    strafe(-1 * xPosNew);
                 }
             }
         }
@@ -348,106 +356,13 @@ public class MultiPortalTag extends LinearOpMode{
 
                 if (tagProcessor2.getDetections().get(0).ftcPose.y < (-0.5 + y)) { //0.5 is buffer
                     //strafe(1);
-                    moveStraightLine(1 * yPosNew);
+                    moveStraightLine(-1 * yPosNew);
                 }
                 if (tagProcessor2.getDetections().get(0).ftcPose.y > (0.5 + y)) { //0.5 is buffer
                     //strafe(-1);
-                    moveStraightLine(1 * yPosNew);
+                    moveStraightLine(-1 * yPosNew);
                 }
             }
-        }
-    }
-
-    private void rotateRobot(double value) {
-        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        motorFrontLeft.setPower(value);
-        motorBackLeft.setPower(value);
-        motorFrontRight.setPower(-1 * value);
-        motorBackRight.setPower(-1 * value);
-    }
-
-    public void alignX1(double minX, double maxX, int myTagID) {
-
-        //drawing information on the driver station camera screen
-        AprilTagProcessor tagProcessor1 = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
-                .build();
-
-
-        //stating the webcam
-        VisionPortal visionPortal = new VisionPortal.Builder()
-                .addProcessor(tagProcessor1)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
-
-
-        int theIndex = 6;
-        for (int i = 0; i <= 5; i++) {
-            if (tagProcessor1.getDetections().get(i).id == myTagID) {
-                theIndex = myTagID;
-                break;
-            }
-        }
-
-        DriveTrainFunctions dtc = new DriveTrainFunctions();
-
-        while (tagProcessor1.getDetections().get(theIndex).ftcPose.x < (-0.5-minX)) { //0.5 is buffer
-            dtc.strafe(2, 0.5);
-        }
-        while (tagProcessor1.getDetections().get(theIndex).ftcPose.x > (0.5 + maxX)) { //0.5 is buffer
-            dtc.strafe(2, 0.5);
-        }
-    }
-
-    public void alignZ(double minZ, double maxZ, int myTagID) {
-
-        //drawing information on the driver station camera screen
-        AprilTagProcessor tagProcessor = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
-                .build();
-
-
-        //stating the webcam
-        VisionPortal visionPortal = new VisionPortal.Builder()
-                .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
-
-
-        int theIndex = 6;
-        for (int i = 0; i <= 5; i++) {
-            if (tagProcessor.getDetections().get(i).id == myTagID) {
-                theIndex = myTagID;
-                break;
-            }
-        }
-
-        DriveTrainFunctions dtc = new DriveTrainFunctions();
-
-        while (tagProcessor.getDetections().get(theIndex).ftcPose.z < (-0.5-minZ)) { //0.5 is buffer
-            dtc.moveStraightLine(0.5, 0.5);
-        }
-        while (tagProcessor.getDetections().get(theIndex).ftcPose.z > (0.5 + maxZ)) { //0.5 is buffer
-            dtc.moveStraightLine(-0.5, 0.5);
         }
     }
 

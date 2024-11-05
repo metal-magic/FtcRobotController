@@ -60,7 +60,7 @@ import java.util.Locale;
  */
 
 @TeleOp(name = "Utility: Camera Frame Capture", group = "Utility")
-@Disabled
+//@Disabled
 public class UtilityCameraFrameCapture_ITD extends LinearOpMode
 {
     /*
@@ -84,7 +84,7 @@ public class UtilityCameraFrameCapture_ITD extends LinearOpMode
         if (USING_WEBCAM)
         {
             portal = new VisionPortal.Builder()
-                    .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                    .setCamera(hardwareMap.get(WebcamName.class, "diddyCam"))
                     .setCameraResolution(new Size(RESOLUTION_WIDTH, RESOLUTION_HEIGHT))
                     .build();
         }
