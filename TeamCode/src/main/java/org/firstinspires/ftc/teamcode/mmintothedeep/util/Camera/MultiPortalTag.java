@@ -268,22 +268,33 @@ public class MultiPortalTag extends LinearOpMode{
     public void alignRotate(int dir, int vision) {
 
         double rotateNew;
+        double originalY;
+        double rotateRadians;
+        double correctX;
+
         if (vision == 1) {
             if (tagProcessor.getDetections().size() > 0) {
                 rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw - dir;
+                originalY = tagProcessor.getDetections().get(0).ftcPose.y;
 
                 if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
                     //strafe(1);
                     rotate(-rotateNew, 1);
                 }
-                if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
+                else if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
                     //strafe(-1);
                     rotate(-rotateNew, 1);
                 }
+
+                rotateRadians = Math.toRadians(rotateNew);
+                correctX = rotateRadians * originalY;
+                strafe(correctX);
+
             }
         } else if (vision == 2) {
             if (tagProcessor2.getDetections().size() > 0) {
                 rotateNew = tagProcessor2.getDetections().get(0).ftcPose.yaw - dir;
+                originalY = tagProcessor2.getDetections().get(0).ftcPose.y;
 
                 if (tagProcessor2.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
                     //strafe(1);
@@ -293,6 +304,10 @@ public class MultiPortalTag extends LinearOpMode{
                     //strafe(-1);
                     rotate(-rotateNew, 1);
                 }
+
+                rotateRadians = Math.toRadians(rotateNew);
+                correctX = rotateRadians * originalY;
+                strafe(-1*correctX);
             }
         }
 
