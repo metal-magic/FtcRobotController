@@ -214,8 +214,8 @@ public class MultiPortalTag extends LinearOpMode{
 
         visionPortal2 = new VisionPortal.Builder()
                 .setLiveViewContainerId(portal2ViewId)
-                .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                .addProcessor(tagProcessor2)
+                .setCamera(hardwareMap.get(WebcamName.class, "diddyCam"))
                 .setCameraResolution(new Size(640, 480))
                 .build();
 
