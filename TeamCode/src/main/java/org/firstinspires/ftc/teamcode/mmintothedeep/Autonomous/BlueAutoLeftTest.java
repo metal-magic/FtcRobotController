@@ -49,39 +49,13 @@ public class BlueAutoLeftTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        gripperServo1 = hardwareMap.servo.get("gripperServo1");
-        pivotServo = hardwareMap.servo.get("pivotServo");
-        /* Assign all the motors */
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
-        armMotor = hardwareMap.crservo.get("armMotor");
-
-        // Set all the right motor directions
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-
-        // Reset encoders positions
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
-
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        gripperServo1.setPosition(1);
-        waitForStart();
 
         //Object creation for DriveTrainFunctions
         DriveTrainFunctions dtf = new DriveTrainFunctions();
+
+        initPortal();
+
+        waitForStart();
 
 
       /*
@@ -189,30 +163,21 @@ public class BlueAutoLeftTest extends LinearOpMode {
     }
 
     public void initMotor() {
-        //        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-//        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-//        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-//        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-//
-//        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-//        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-//
-//        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-//        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-
+        gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");
         /* Assign all the motors */
         leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
-        //armMotor = hardwareMap.crservo.get("armMotor");
+        armMotor = hardwareMap.crservo.get("armMotor");
 
         // Set all the right motor directions
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
 
         // Reset encoders positions
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -226,10 +191,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //gripperServo1.setPosition(1);
-
-        //MyDriveTrain m = new MyDriveDrain();
-        //m.rotate(90);
+        gripperServo1.setPosition(1);
     }
 
     public void initPortal() {
