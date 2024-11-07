@@ -55,7 +55,7 @@ import java.util.Date;
  */
 
 @TeleOp(name = "New TeleOp1 Into The Deep")
-public class MMIntoTheDeepTeleOp extends OpMode {
+public class actuatorTest extends OpMode {
 
     public DcMotor motorFrontLeft = null;
     public DcMotor motorFrontRight = null;
@@ -63,12 +63,12 @@ public class MMIntoTheDeepTeleOp extends OpMode {
     public DcMotor motorBackRight = null;
 
     public Servo gripperServo1 = null;
-//    public Servo gripperServo2 = null;
+    //    public Servo gripperServo2 = null;
     public Servo pivotServo = null;
 
 //    public Servo droneServo = null;
 
-    public DcMotor linearSlideMotor = null;
+//    public DcMotor linearSlideMotor = null;
     public DcMotor linearActuatorMotor = null;
 
     public Date previousTime = new Date();
@@ -99,8 +99,9 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        linearActuatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        linearSlideMotor.setDirection(CRServo.Direction.REVERSE);
+ //       linearSlideMotor.setDirection(CRServo.Direction.REVERSE);
 
         ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
 //        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -197,18 +198,21 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         //435/60 = 7.2 revolutions per second
         //1.31 (time it takes to full extend linear actuator at full speed) * 7.2 = 9.36 revolutions per second
         //384.5 * 9.36 = 3595 ticks (little less than actual calculation to be safe)
-        if (gamepad1.right_bumper && (linearActuatorMotor.getCurrentPosition()<3595)) {
-            linearActuatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        if (gamepad1.right_bumper && (linearActuatorMotor.getCurrentPosition()<9100)) {
             linearActuatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearActuatorMotor.setPower(1);
+            linearActuatorMotor.setPower(2);
         } else if (gamepad1.left_bumper && (linearActuatorMotor.getCurrentPosition() > 100)){
-            linearActuatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             linearActuatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearActuatorMotor.setPower(1);
+            linearActuatorMotor.setPower(-1);
         } else {
             linearActuatorMotor.setPower(0);
         }
 
+        if (gamepad1.dpad_down) {
+            linearActuatorMotor.setPower(-0.5);
+        } else if (gamepad1.dpad_up) {
+            linearActuatorMotor.setPower(0.5);
+        }
 
         telemetry.addData("Claw Position,", gripperServo1.getPosition());
 //        telemetry.addData("Linear Slide Position", linearSlideMotor.getCurrentPosition());
