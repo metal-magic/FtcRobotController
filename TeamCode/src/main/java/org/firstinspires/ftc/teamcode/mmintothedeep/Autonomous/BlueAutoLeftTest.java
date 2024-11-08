@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainFunctions;
@@ -27,8 +29,10 @@ public class BlueAutoLeftTest extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    Servo gripperServo1 = null;
-    Servo pivotServo = null;
+    public Servo gripperServo1 = null;
+    public Servo pivotServo = null;
+    public DcMotor linearSlideMotor = null;
+    public DcMotor linearActuatorMotor = null;
 
     CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
@@ -54,6 +58,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
         DriveTrainFunctions dtf = new DriveTrainFunctions();
 
         initPortal();
+        initMotor();
 
         waitForStart();
 
@@ -74,7 +79,8 @@ public class BlueAutoLeftTest extends LinearOpMode {
 
         strafeDiagonalLeft(5);
         alignToDefault("chamber", 2);
-        rotate(90);
+        rotate(-90);
+
         align(0, 16, 0, 1);
         alignToDefault("basket", 1);
         returnBackTo13Basket(); //returning to apriltag 13 for scanning
@@ -163,20 +169,24 @@ public class BlueAutoLeftTest extends LinearOpMode {
     }
 
     public void initMotor() {
-        gripperServo1 = hardwareMap.servo.get("gripperServo1");
-        pivotServo = hardwareMap.servo.get("pivotServo");
         /* Assign all the motors */
+        //drivetrain
         leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
-        armMotor = hardwareMap.crservo.get("armMotor");
+
+        //claw
+        gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");
+
+        linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
 
         // Set all the right motor directions
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
+        leftBackDrive.setDirection(UtilityValues.finalLeftBackDirection);
+        rightFrontDrive.setDirection(UtilityValues.finalRightFrontDirection);
+        rightBackDrive.setDirection(UtilityValues.finalLeftBackDirection);
 
 
         // Reset encoders positions
@@ -184,6 +194,14 @@ public class BlueAutoLeftTest extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        linearSlideMotor.setDirection(CRServo.Direction.REVERSE);
+
+        ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
+        linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(0);
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
 
@@ -390,6 +408,35 @@ public class BlueAutoLeftTest extends LinearOpMode {
                     moveStraightLine(-1 * yPosNew);
                 }
             }
+        }
+    }
+
+    public void moveLinearSlide(double y) {
+        double up;
+        if (y > 0) {
+            while (linearSlideMotor.getCurrentPosition() < 3000 && linearSlideMotor.getCurrentPosition() < y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() > 3064) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        } else if (y < 0) {
+            while (linearSlideMotor.getCurrentPosition() > 100 && linearSlideMotor.getCurrentPosition() > y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
         }
     }
 
