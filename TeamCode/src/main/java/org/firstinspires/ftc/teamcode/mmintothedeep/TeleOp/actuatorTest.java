@@ -63,13 +63,11 @@ public class actuatorTest extends OpMode {
     public DcMotor motorBackRight = null;
 
     public Servo gripperServo1 = null;
-    //    public Servo gripperServo2 = null;
     public Servo pivotServo = null;
 
-//    public Servo droneServo = null;
-
-//    public DcMotor linearSlideMotor = null;
+    public DcMotor linearSlideMotor = null;
     public DcMotor linearActuatorMotor = null;
+    public DcMotor linearActuatorMotor2 = null;
 
     public Date previousTime = new Date();
 
@@ -81,126 +79,26 @@ public class actuatorTest extends OpMode {
 
     @Override
     public void init() {
-
-        motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-        motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-        motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-        motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-
-        gripperServo1 = hardwareMap.servo.get("gripperServo1");
-//        gripperServo2 = hardwareMap.servo.get("gripperServo2");
-        pivotServo = hardwareMap.servo.get("pivotServo");
-
-//        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
         linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
+        linearActuatorMotor2 = hardwareMap.dcMotor.get("linearActuatorMotor2");
 
-        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         linearActuatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        linearActuatorMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
 
  //       linearSlideMotor.setDirection(CRServo.Direction.REVERSE);
 
         ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
-//        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(0);
+        linearActuatorMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearActuatorMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
     public void loop() {
-        double y = -gamepad1.left_stick_y; // REVERSED
-        double x = gamepad1.left_stick_x;
-        double rx = gamepad1.right_stick_x;
-        // Denominator is the largest motor power (abs value) or 1
-        // This makes sure that the ratio stays the same
-        // but only when at least one is out of range [-1, 1]
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = (y + x + rx) / denominator;
-        double backLeftPower = (y - x + rx) / denominator;
-        double frontRightPower = (y - x - rx) / denominator;
-        double backRightPower = (y + x - rx) / denominator;
-        boolean CutPower = false;
-        double motorSpeed;
-
-        if (gamepad1.back && !CutPower) {
-            //Button cuts all power except linear slides/actuators
-            CutPower = true;
-        }
-        if (gamepad1.back && CutPower) {
-            CutPower = false;
-        }
-
-        if (!CutPower) {
-            if (gamepad1.right_trigger >= 0.3F) {
-                // Fine controls
-                motorSpeed = 0.20;
-            } else {
-                // Reg speed
-                motorSpeed = 0.75;
-            }
-
-            motorFrontLeft.setPower(frontLeftPower * motorSpeed);
-            motorBackLeft.setPower(backLeftPower * motorSpeed);
-            motorFrontRight.setPower(frontRightPower * motorSpeed);
-            motorBackRight.setPower(backRightPower * motorSpeed);
-
-            if (gamepad2.right_bumper) {
-                gripperServo1.setPosition(0.3);
-            }
-            if (gamepad2.left_bumper) {
-                gripperServo1.setPosition(0.1);
-            }
-            if (gamepad2.dpad_up) {
-                gripperServo1.setPosition(0);
-            }
-
-            if (gamepad2.y) {
-                pivotServo.setPosition(0.5);
-            }
-            if (gamepad2.a) {
-                pivotServo.setPosition(0);
-            }
-        }
-//        Slide limit = 696 mm
-//        Slide limit converted to ticks calculation = 537.7*5.7
-//        Limit is ROUNDED DOWN
-//        3064 max
-        double up;
-//        if (linearSlideMotor.getCurrentPosition() < 3000 && gamepad2.right_trigger >= 0.1F) {
-//            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-//            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
-//            up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
-//            linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
-//        } else if (linearSlideMotor.getCurrentPosition() > 100 && gamepad2.left_trigger >= 0.1F) {
-//            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-//            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
-//            up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
-//            linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
-//        } else {
-//            if (linearSlideMotor.getCurrentPosition() > 3064) {
-//                linearSlideMotor.setPower(-0.3);
-//            } else if (linearSlideMotor.getCurrentPosition() < 0) {
-//                linearSlideMotor.setPower(0.3);
-//            } else {
-//                linearSlideMotor.setPower(0);
-//            }
-//
-//        }
-        //linear slide limit calculations
-        //435/60 = 7.2 revolutions per second
-        //1.31 (time it takes to full extend linear actuator at full speed) * 7.2 = 9.36 revolutions per second
-        //384.5 * 9.36 = 3595 ticks (little less than actual calculation to be safe)
         if (gamepad1.right_bumper && (linearActuatorMotor.getCurrentPosition()<9100)) {
             linearActuatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearActuatorMotor.setPower(2);
+            linearActuatorMotor.setPower(1);
         } else if (gamepad1.left_bumper && (linearActuatorMotor.getCurrentPosition() > 100)){
             linearActuatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             linearActuatorMotor.setPower(-1);
@@ -208,10 +106,28 @@ public class actuatorTest extends OpMode {
             linearActuatorMotor.setPower(0);
         }
 
-        if (gamepad1.dpad_down) {
-            linearActuatorMotor.setPower(-0.5);
-        } else if (gamepad1.dpad_up) {
-            linearActuatorMotor.setPower(0.5);
+        //auto hang code
+        if (gamepad1.dpad_left) {
+            while (linearActuatorMotor.getCurrentPosition()<9100) {
+                if (gamepad1.dpad_down) {
+                    break;
+                } else {
+                    linearActuatorMotor.setPower(1);
+                    linearActuatorMotor2.setPower(1);
+                }
+            }
+        } else if (gamepad1.dpad_right) {
+            while (linearActuatorMotor.getCurrentPosition()>100) {
+                if (gamepad1.dpad_down) {
+                    break;
+                } else {
+                    linearActuatorMotor.setPower(-1);
+                    linearActuatorMotor2.setPower(-1);
+                }
+            }
+        } else {
+            linearActuatorMotor2.setPower(0);
+            linearActuatorMotor.setPower(0);
         }
 
         telemetry.addData("Claw Position,", gripperServo1.getPosition());

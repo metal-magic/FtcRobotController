@@ -91,7 +91,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 //        gripperServo2 = hardwareMap.servo.get("gripperServo2");
         pivotServo = hardwareMap.servo.get("pivotServo");
 
-//        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
         linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
 
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -102,9 +102,15 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
         linearSlideMotor.setDirection(CRServo.Direction.REVERSE);
 
-        ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
-//        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        while (linearSlideMotor.getCurrentPosition() > 0) {
+            linearSlideMotor.setPower(-0.5);
+        }
+        while (linearSlideMotor.getCurrentPosition() < 0) {
+            linearSlideMotor.setPower(0.3);
+        }
+
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         gripperServo1.setPosition(0);
@@ -171,28 +177,28 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 //        Limit is ROUNDED DOWN
 //        3064 max
         double up;
-//        if (linearSlideMotor.getCurrentPosition() < 3000 && gamepad2.right_trigger >= 0.1F) {
-//            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-//            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
-//            up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
-//            linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
-//        } else if (linearSlideMotor.getCurrentPosition() > 100 && gamepad2.left_trigger >= 0.1F) {
-//            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-//            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//            ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
-//            up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
-//            linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
-//        } else {
-//            if (linearSlideMotor.getCurrentPosition() > 3064) {
-//                linearSlideMotor.setPower(-0.3);
-//            } else if (linearSlideMotor.getCurrentPosition() < 0) {
-//                linearSlideMotor.setPower(0.3);
-//            } else {
-//                linearSlideMotor.setPower(0);
-//            }
-//
-//        }
+        if (linearSlideMotor.getCurrentPosition() < 3000 && gamepad2.right_trigger >= 0.1F) {
+            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
+            up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+            linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
+        } else if (linearSlideMotor.getCurrentPosition() > 100 && gamepad2.left_trigger >= 0.1F) {
+            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+            up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+            linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
+        } else {
+            if (linearSlideMotor.getCurrentPosition() > 3064) {
+                linearSlideMotor.setPower(-0.3);
+            } else if (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setPower(0.3);
+            } else {
+                linearSlideMotor.setPower(0);
+            }
+
+        }
         //linear slide limit calculations
         //435/60 = 7.2 revolutions per second
         //1.31 (time it takes to full extend linear actuator at full speed) * 7.2 = 9.36 revolutions per second
