@@ -9,8 +9,10 @@ public class UtilityValues {
     public static int smallWheelDiameter = 104; //96 for test robot
     public static double motorTicks = 537.7; // goBILDA 5203 series Yellow Jacket
     public static String webCamName = "testWebcam";
+    public static String webCamName2 = "diddyCam";
 
-
+    public static boolean useWebCam1 = false;
+    public static boolean useWebCam2 = false;
 
     public static final double MOTOR_TICK_COUNTS = motorTicks; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
@@ -26,6 +28,9 @@ public class UtilityValues {
     public static final double LSSPEED = 0.7;
 
     public static final double minLS = 0;
+    public static final double chamberLS = 0;
+    public static final double basketLS = 0;
+    public static final double maxLS = 3064;
 
     // for test robot
     public static final DcMotorSimple.Direction leftFrontDirection = DcMotor.Direction.FORWARD;
