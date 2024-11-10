@@ -110,9 +110,15 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         }
 
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         gripperServo1.setPosition(0.3);
         pivotServo.setPosition(0.55);
 
@@ -192,7 +198,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
             linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
         } else {
-            if (linearSlideMotor.getCurrentPosition() > 3064) {
+            if (linearSlideMotor.getCurrentPosition() > 3100) {
                 linearSlideMotor.setPower(-0.3);
             } else if (linearSlideMotor.getCurrentPosition() < 0) {
                 linearSlideMotor.setPower(0.3);
@@ -205,7 +211,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         //435/60 = 7.2 revolutions per second
         //1.31 (time it takes to full extend linear actuator at full speed) * 7.2 = 9.36 revolutions per second
         //384.5 * 9.36 = 3595 ticks (little less than actual calculation to be safe)
-        if (gamepad1.right_bumper && (linearActuatorMotor.getCurrentPosition()<3595)) {
+        if (gamepad1.right_bumper && (linearActuatorMotor.getCurrentPosition()<9100)) {
             linearActuatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             linearActuatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             linearActuatorMotor.setPower(1);
