@@ -113,8 +113,9 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(0);
+        gripperServo1.setPosition(0.3);
+        pivotServo.setPosition(0.55);
+
     }
 
     @Override
@@ -159,31 +160,32 @@ public class MMIntoTheDeepTeleOp extends OpMode {
                 gripperServo1.setPosition(0.3);
             }
             if (gamepad2.left_bumper) {
-                gripperServo1.setPosition(0.1);
+                gripperServo1.setPosition(0);
             }
             if (gamepad2.dpad_up) {
-                gripperServo1.setPosition(0);
+                gripperServo1.setPosition(0.1);
             }
 
             if (gamepad2.y) {
-                pivotServo.setPosition(0.5);
+                pivotServo.setPosition(pivotServo.getPosition() - 0.01);
             }
             if (gamepad2.a) {
-                pivotServo.setPosition(0);
+                pivotServo.setPosition(pivotServo.getPosition() + 0.01);
             }
+            telemetry.addData("Pivot Servo Position1", pivotServo.getPosition());
         }
 //        Slide limit = 696 mm
 //        Slide limit converted to ticks calculation = 537.7*5.7
 //        Limit is ROUNDED DOWN
 //        3064 max
         double up;
-        if (linearSlideMotor.getCurrentPosition() < 3000 && gamepad2.right_trigger >= 0.1F) {
+        if (linearSlideMotor.getCurrentPosition() < 3064 && gamepad2.right_trigger >= 0.1F) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
             up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
             linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
-        } else if (linearSlideMotor.getCurrentPosition() > 100 && gamepad2.left_trigger >= 0.1F) {
+        } else if (linearSlideMotor.getCurrentPosition() > 0 && gamepad2.left_trigger >= 0.1F) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);

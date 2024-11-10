@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Autonomous(name="Blue TEST ONLY: LEFT of Gate", group="Autonomous")
-@Disabled
+
 public class BlueAutoLeftTest extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
