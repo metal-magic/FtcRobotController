@@ -109,6 +109,13 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             linearSlideMotor.setPower(0.3);
         }
 
+        while (linearActuatorMotor.getCurrentPosition() > 0) {
+            linearActuatorMotor.setPower(-0.5);
+        }
+        while (linearSlideMotor.getCurrentPosition() < 0) {
+            linearSlideMotor.setPower(0.3);
+        }
+
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.Objects;
 
 @Autonomous(name="Blue TEST ONLY: LEFT of Gate", group="Autonomous")
-
 public class BlueAutoLeftTest extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
@@ -77,10 +76,24 @@ public class BlueAutoLeftTest extends LinearOpMode {
         */
         //sleep lines are to avoid two lines of codes running at the same time
         gripperServo1.setPosition(0);
-        strafeDiagonalLeft(5);
+        moveStraightLine(30); //33
+        moveLinearSlide(28);
+        moveStraightLine(3);
+        moveLinearSlide(26); //to 26 inches high
+        gripperServo1.setPosition(0.3);
+        moveLinearSlide(-24);
+        rotate(-90);
+        align(0, 24, 90, 1);
+        pivotServo.setPosition(1);
+        gripperServo1.setPosition(0);
+
+
+
+        /*strafeDiagonalLeft(5);
         alignToDefault("chamber", 2);
         rotate(-90);
         moveLinearSlide(27);
+        gripperServo1.setPosition(0.3);
 
         moveLinearSlide(0); //or 3 because 3 or less defaults to 0
 
@@ -110,7 +123,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
         moveStraightLine(-19);
         alignToDefault("basket", 1);
         moveLinearSlide(43);
-        moveLinearSlide(0);
+        moveLinearSlide(0);*/
 
         //Termination
         if (currentTime.getTime() > 20000) {
@@ -436,17 +449,10 @@ public class BlueAutoLeftTest extends LinearOpMode {
         }
     }
 
-    public void moveLinearSlide(double inches) {
-        double inchesWithoutRobotHeight = inches - 3;
-        if (inchesWithoutRobotHeight < 0) {
-            inchesWithoutRobotHeight = 0;
-        }
-        //double mm = inches * 25.4;
-        double y; // = mm * (984.0 / 3064.0);
-        y = inchesWithoutRobotHeight * (3064.0 / 40.5);
+    public void moveLinearSlideRevs(double y) {
         double up;
         if (y > 0) {
-            while (linearSlideMotor.getCurrentPosition() < 3000 && linearSlideMotor.getCurrentPosition() < y) {
+            while (linearSlideMotor.getCurrentPosition() < 3064 && linearSlideMotor.getCurrentPosition() < y) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
@@ -458,7 +464,43 @@ public class BlueAutoLeftTest extends LinearOpMode {
             }
             linearSlideMotor.setPower(0);
         } else if (y < 0) {
-            while (linearSlideMotor.getCurrentPosition() > 100 && linearSlideMotor.getCurrentPosition() > y) {
+            while (linearSlideMotor.getCurrentPosition() > 0 && linearSlideMotor.getCurrentPosition() > y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        }
+    }
+
+    public void moveLinearSlide(double inches) {
+        double inchesWithoutRobotHeight = inches - 3;
+        if (inchesWithoutRobotHeight < 0) {
+            inchesWithoutRobotHeight = 0;
+        }
+        //double mm = inches * 25.4;
+        double y; // = mm * (984.0 / 3064.0);
+        y = inchesWithoutRobotHeight * (3064.0 / 40.5);
+        double up;
+        if (y > 0) {
+            while (linearSlideMotor.getCurrentPosition() < 3064 && linearSlideMotor.getCurrentPosition() < y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() > 3064) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        } else if (y < 0) {
+            while (linearSlideMotor.getCurrentPosition() > 0 && linearSlideMotor.getCurrentPosition() > y) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
