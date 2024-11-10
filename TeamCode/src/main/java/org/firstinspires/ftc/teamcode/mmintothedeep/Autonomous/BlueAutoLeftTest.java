@@ -86,7 +86,11 @@ public class BlueAutoLeftTest extends LinearOpMode {
         align(0, 24, 90, 1);
         pivotServo.setPosition(1);
         gripperServo1.setPosition(0);
-
+        rotate(-90);
+        alignToDefault("basket", 1);
+        moveLinearSlide(43.5);
+        moveStraightLine(2);
+        gripperServo1.setPosition(0.3);
 
 
         /*strafeDiagonalLeft(5);
