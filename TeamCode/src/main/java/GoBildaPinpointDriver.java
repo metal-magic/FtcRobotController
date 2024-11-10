@@ -20,8 +20,6 @@
  *   SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode;
-
 import static com.qualcomm.robotcore.util.TypeConversion.byteArrayToInt;
 
 import com.qualcomm.hardware.lynx.LynxI2cDeviceSynch;
