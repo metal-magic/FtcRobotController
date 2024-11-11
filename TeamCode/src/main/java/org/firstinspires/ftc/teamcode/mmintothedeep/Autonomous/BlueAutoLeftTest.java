@@ -43,7 +43,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
-    static final double SPEED = UtilityValues.SPEED; // Motor Power setting
+    static final double SPEED = 0.4; // Motor Power setting
 
     VisionPortal visionPortal;
     VisionPortal visionPortal2;
@@ -75,13 +75,39 @@ public class BlueAutoLeftTest extends LinearOpMode {
         THIS WAS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
         */
         //sleep lines are to avoid two lines of codes running at the same time
+        pivotServo.setPosition(0.6);
         gripperServo1.setPosition(0);
-        moveStraightLine(30); //33
-        moveLinearSlide(28);
-        moveStraightLine(3);
-        moveLinearSlide(26); //to 26 inches high
+        moveStraightLine(24); //33
+        linearSlideMovement(1300, false);
+        strafeDiagonalLeft(15);
+        //moveStraightLine(-1);
+        pivotServo.setPosition(0.635);
+        linearSlideMovement(300, true);
+        sleep(500);
         gripperServo1.setPosition(0.3);
+        sleep(600);
+        moveStraightLine(-10);
+        linearSlideMovement(50, false);
+        rotate(-80);
+        sleep(1000);
+        //moveStraightLine(30);
+        moveStraightLine(20);
+        tagTelemetry(1);
+        sleep(1000);
+        align(-24, 24, 0, 1);
+
+
+        /*sleep(200);
+        moveStraightLine(3);
+        sleep(200);
+        moveLinearSlide(26); //to 26 inches high
+        sleep(200);
+        gripperServo1.setPosition(0.3);
+        sleep(200);
         moveLinearSlide(-24);
+        sleep(200);
+        moveStraightLine(-3);
+        sleep(200);
         rotate(-90);
         align(0, 24, 90, 1);
         pivotServo.setPosition(1);
@@ -90,7 +116,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
         alignToDefault("basket", 1);
         moveLinearSlide(43.5);
         moveStraightLine(2);
-        gripperServo1.setPosition(0.3);
+        gripperServo1.setPosition(0.3);*/
 
 
         /*strafeDiagonalLeft(5);
@@ -137,6 +163,32 @@ public class BlueAutoLeftTest extends LinearOpMode {
             rightFrontDrive.setPower(0);
         }
 
+    }
+
+    public void linearSlideMovement(double y, boolean maxPower) {
+        double up;
+        if (y > linearSlideMotor.getCurrentPosition()) {
+            while (linearSlideMotor.getCurrentPosition() < y) {
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                if (maxPower) {
+                    linearSlideMotor.setPower(1);
+                } else {
+                    linearSlideMotor.setPower(up);
+                }
+            }
+            linearSlideMotor.setPower(0);
+        } else {
+            while (linearSlideMotor.getCurrentPosition() > y) {
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                if (maxPower) {
+                    linearSlideMotor.setPower(-1);
+                } else {
+                    linearSlideMotor.setPower(-1*up);
+                }
+
+            }
+            linearSlideMotor.setPower(0);
+        }
     }
 
     public void returnBackTo13Basket() {
@@ -216,7 +268,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
         leftBackDrive.setDirection(UtilityValues.finalLeftBackDirection);
         rightFrontDrive.setDirection(UtilityValues.finalRightFrontDirection);
-        rightBackDrive.setDirection(UtilityValues.finalLeftBackDirection);
+        rightBackDrive.setDirection(UtilityValues.finalRightBackDirection);
 
 
         // Reset encoders positions
@@ -225,14 +277,14 @@ public class BlueAutoLeftTest extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        linearSlideMotor.setDirection(CRServo.Direction.REVERSE);
+        linearSlideMotor.setDirection(CRServo.Direction.FORWARD);
 
-        while (linearSlideMotor.getCurrentPosition() > 0) {
+        /*while (linearSlideMotor.getCurrentPosition() > 0) {
             linearSlideMotor.setPower(-0.5);
         }
         while (linearSlideMotor.getCurrentPosition() < 0) {
             linearSlideMotor.setPower(0.3);
-        }
+        }*/
 
         ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -251,7 +303,10 @@ public class BlueAutoLeftTest extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0);
+        pivotServo.setPosition(0.48);
+
+        linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void initPortal() {
@@ -328,6 +383,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
                 telemetry.addData("id", tag.id);
             }
         }
+        telemetry.update();
     }
 
     public void align(int x, int y, int dir, int vision) {

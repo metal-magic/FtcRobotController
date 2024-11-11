@@ -29,6 +29,7 @@ import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
+import org.opencv.core.Rect;
 import org.opencv.core.RotatedRect;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -36,6 +37,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+
+
 
 /*
  * This OpMode determines the best Exposure for minimizing image motion-blur on a Webcam
@@ -65,16 +68,6 @@ public class ColorAutonomous extends LinearOpMode
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private int myExposure;
     private int myGain;
-
-    boolean thisExpUp = false;
-    boolean thisExpDn = false;
-    boolean thisGainUp = false;
-    boolean thisGainDn = false;
-
-    boolean lastExpUp = false;
-    boolean lastExpDn = false;
-    boolean lastGainUp = false;
-    boolean lastGainDn = false;
 
     /* Declare all motors as null */
     Date currentTime = new Date();
@@ -159,6 +152,7 @@ public class ColorAutonomous extends LinearOpMode
         telemetry.addData("Camera preview on/off", "3 dots, Camera Stream");
         telemetry.addData(">", "Touch START to start OpMode");
         telemetry.update();
+
         waitForStart();
 
         while (opModeIsActive())
@@ -178,9 +172,9 @@ public class ColorAutonomous extends LinearOpMode
             else
                 telemetry.addData("Tag", "----------- none - ----------");
             */
-            telemetry.addData("Exposure","%d  (%d - %d)", myExposure);
-            telemetry.addData("Gain","%d  (%d - %d)", myGain);
-            telemetry.addData("DS preview on/off", "3 dots, Camera Stream\n");
+//            telemetry.addData("Exposure","%d  (%d - %d)", myExposure);
+//            telemetry.addData("Gain","%d  (%d - %d)", myGain);
+//            telemetry.addData("DS preview on/off", "3 dots, Camera Stream\n");
 
             // Request the most recent color analysis.
             // This will return the closest matching colorSwatch and the predominant RGB color.
@@ -218,18 +212,44 @@ public class ColorAutonomous extends LinearOpMode
 //                }
 //            }
 
+            org.opencv.core.Size myBoxFitSize;
             if (!blobs.isEmpty()) {
                 RotatedRect boxFit = blobs.get(0).getBoxFit();
+                myBoxFitSize = boxFit.size;
+                double boxWidth = myBoxFitSize.width;
+                double boxHeight = myBoxFitSize.height;
                 int currX = (int) boxFit.center.x;
                 double error = 320 - currX;
+                int angle = (int) boxFit.angle;
                 if (Math.abs((currX) - 320) <= 20) {
-                    telemetry.addLine("CENTERED");
+                    telemetry.addLine("X CENTERED");
+                    if (Math.abs(angle - 90) <= 5 || angle <= 5) {
+                        if (angle >= 45) {
+                            rotate(-5, 0.25);
+                        }
+                        else {
+                            rotate(5, 0.25);
+                        }
+                    }
+                    else {
+                        telemetry.addLine("Fully aligned");
+                        strafe(5);
+
+                    }
+                    telemetry.addLine(String.valueOf(angle));
+                }
+                else if (Math.abs((currX) - 320) <= 100) {
+                    strafe(-1 * error/40);
                 }
                 else {
                     strafe(-1 * error/20);
                 }
                 telemetry.addLine(String.valueOf((int) boxFit.center.x));
+                telemetry.addLine(String.valueOf(18644/Math.min(boxHeight, boxWidth)));
+
             }
+
+
 
 
 
@@ -358,7 +378,6 @@ public class ColorAutonomous extends LinearOpMode
                         PredominantColorProcessor.Swatch.RED,
                         PredominantColorProcessor.Swatch.BLUE,
                         PredominantColorProcessor.Swatch.BLACK,
-                        PredominantColorProcessor.Swatch.WHITE,
                         PredominantColorProcessor.Swatch.YELLOW)
                 .build();
 
@@ -373,9 +392,9 @@ public class ColorAutonomous extends LinearOpMode
      * Initialize the ColorLocator processor
      */
 
-    public void initColorBlobsProcessor() {
+    public void initColorBlobsProcessor(ColorRange color) {
         ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.RED)         // use a predefined color match
+                .setTargetColorRange(color)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
                 // .setDrawContours(true)                        // Show contours on the Stream Preview
@@ -434,7 +453,7 @@ public class ColorAutonomous extends LinearOpMode
         // Set camera controls unless we are stopping.
         if (!isStopRequested())
         {
-            // Set exposure.  Make sure we are in Manual Mode for these values to take effect.
+            // Set exposure. Make sure we are in Manual Mode for these values to take effect.
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
                 exposureControl.setMode(ExposureControl.Mode.Manual);
@@ -476,7 +495,7 @@ public class ColorAutonomous extends LinearOpMode
         // We assume that strafing right means positive
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
         if (strafeInches >= 0) {
-            telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
+            telemetry.addData("Strafing towards right by ", strafeInches);
 
             drive(SPEED,
                     1 * strafeRevs,
@@ -484,13 +503,33 @@ public class ColorAutonomous extends LinearOpMode
                     -1 * strafeRevs,
                     1 * strafeRevs);
         } else {
-            telemetry.addData("Strafing towards Left by ", "%.3f inches", Math.abs(strafeInches));
+            telemetry.addData("Strafing towards Left by ", Math.abs(strafeInches));
 
             drive(SPEED,
                     -1 * strafeRevs,
                     1 * strafeRevs,
                     1 * strafeRevs,
                     -1 * strafeRevs);
+        }
+    }
+
+    public void rotate(double degrees, double robotSpeed) {
+        // Assume positive degrees means moving towards the right
+        double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
+
+        if (degrees >= 0) {
+            drive(robotSpeed,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs);
+        } else {
+            // Moving negative means rotating left
+            drive(robotSpeed,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs);
         }
     }
 

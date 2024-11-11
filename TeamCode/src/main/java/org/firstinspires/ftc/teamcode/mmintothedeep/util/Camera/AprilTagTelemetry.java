@@ -208,6 +208,7 @@ public class AprilTagTelemetry extends LinearOpMode{
 
         double rotateNew;
 
+
         if (!tagProcessor.getDetections().isEmpty()) {
             rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw;
 

@@ -46,7 +46,7 @@ public class MoveForwardTest extends LinearOpMode {
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
 
-        // Reset encoders positions
+           // Reset encoders positions
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

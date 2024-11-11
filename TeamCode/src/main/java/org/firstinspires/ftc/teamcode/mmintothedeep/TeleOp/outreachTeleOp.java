@@ -61,6 +61,7 @@ public class outreachTeleOp extends OpMode {
     public DcMotor motorFrontRight = null;
     public DcMotor motorBackLeft = null;
     public DcMotor motorBackRight = null;
+    public static boolean rightPressed = false;
 
 
     public Date previousTime = new Date();
@@ -106,21 +107,29 @@ public class outreachTeleOp extends OpMode {
         }
 
         if (!CutPower) {
-            if (gamepad1.right_trigger >= 0.3F) {
-                // Fine controls
-                motorSpeed = 0.20;
-            } else if (gamepad1.left_trigger >= 0.3F && gamepad1.left_bumper && gamepad1.right_trigger >= 0.3F) {
-                motorSpeed = 0.65;
+
+            if (gamepad1.right_bumper) {
+                rightPressed = !rightPressed;
+            }
+
+            if (!rightPressed) {
+                if (gamepad1.left_bumper && gamepad1.left_trigger >= 0.3F) {
+                    // fast mode
+                    motorSpeed = 1;
+                } else {
+                    // reg mode
+                    motorSpeed = 0.4;
+                }
             } else {
-                // Reg speed
-                motorSpeed = 0.4;
+                // slow mode
+                motorSpeed = 0.2;
             }
 
             motorFrontLeft.setPower(frontLeftPower * motorSpeed);
             motorBackLeft.setPower(backLeftPower * motorSpeed);
             motorFrontRight.setPower(frontRightPower * motorSpeed);
             motorBackRight.setPower(backRightPower * motorSpeed);
-
+            telemetry.addData("Robot Speed", motorSpeed);
         }
 
         telemetry.update();
