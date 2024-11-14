@@ -458,7 +458,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
                 }
 
                 rotateRadians = Math.toRadians(rotateNew);
-                correctX = rotateRadians * originalY;
+                correctX = Math.tan(rotateRadians) * originalY;
                 strafe(correctX);
 
             }
@@ -477,7 +477,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
                 }
 
                 rotateRadians = Math.toRadians(rotateNew);
-                correctX = rotateRadians * originalY;
+                correctX = Math.tan(rotateRadians) * originalY;
                 strafe(-1*correctX);
             }
         }
