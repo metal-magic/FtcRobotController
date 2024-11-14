@@ -240,7 +240,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
                     out = (Kp*error) + (Ki * integralSum) + (Kd * derivative);
                     linearSlideMotor.setPower(out);
                     lastError = error;
-                    if (Math.abs(linearSlideMotor.getCurrentPosition()-setPoint) <= 10) {
+                    if ((gamepad2.right_trigger>=0.1F) || (gamepad2.left_trigger>=0.1F)) {
                         setPointIsNotReached = false;
                     }
                 } if (!setPointIsNotReached) {
