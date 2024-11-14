@@ -43,7 +43,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
-    static final double SPEED = 0.4; // Motor Power setting
+    static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
     VisionPortal visionPortal;
     VisionPortal visionPortal2;
@@ -53,12 +53,8 @@ public class BlueAutoLeftTest extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        //Object creation for DriveTrainFunctions
-        DriveTrainFunctions dtf = new DriveTrainFunctions();
-
         initPortal();
         initMotor();
-
         waitForStart();
 
 
@@ -72,12 +68,13 @@ public class BlueAutoLeftTest extends LinearOpMode {
         METAL MAGIC INTO THE DEEP
         THIS CODE STARTS ON THE LEFT SIDE OF THE BLUE SIDE (closer to backdrop)
         STACKS PIXEL AND PARKS IN CORNER
-        THIS WAS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
+        THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
         */
         //sleep lines are to avoid two lines of codes running at the same time
         pivotServo.setPosition(0.6);
         gripperServo1.setPosition(0);
-        moveStraightLine(24); //33
+        //moveStraightLine(24); //33
+        strafe(0);
         linearSlideMovement(1300, false);
         strafeDiagonalLeft(15);
         //moveStraightLine(-1);
@@ -94,7 +91,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
         moveStraightLine(20);
         tagTelemetry(1);
         sleep(1000);
-        align(-24, 24, 0, 1);
+        alignToOffset(-24, 24, 0, 1);
 
 
         /*sleep(200);
@@ -163,6 +160,52 @@ public class BlueAutoLeftTest extends LinearOpMode {
             rightFrontDrive.setPower(0);
         }
 
+    }
+
+    public void alignToOffset(double x, double y, double dir, int vision) {
+
+        double offset;
+        if (vision == 1) {
+            offset = UtilityValues.offsetCamera1;
+            alignRotate(0, vision);
+            alignX(0+offset, vision);
+            alignY(y, vision);
+            rotate(dir);
+        }
+
+    }
+
+    public void alignToDefaultOffset(String s, int vision) {
+        if (vision == 1) {
+            if (Objects.equals(s, "basket")) {
+                if (tagProcessor.getDetections().get(0).id == 11) {
+                    alignToOffset(0, 70, 180, vision);
+                    alignToOffset(0, 16, -45, vision); //now with tag 13
+                } else if (tagProcessor.getDetections().get(0).id == 12) {
+                    alignToOffset(-50, 16, 90, vision);
+                    alignToOffset(0, 16, -45, vision); //now with tag 13
+                } else if (tagProcessor.getDetections().get(0).id == 13) {
+                    alignToOffset(0, 16, -45, vision);
+                }
+            }
+
+            if (Objects.equals(s, "chamber")) {
+            }
+        } else if (vision == 2) {
+            if (Objects.equals(s, "chamber")) {
+                if (tagProcessor2.getDetections().get(0).id == 12) {
+                    pivotServo.setPosition(0.6);
+                    gripperServo1.setPosition(0);
+                    alignY(24, vision);
+                    linearSlideMovement(1300, false);
+                    strafeDiagonalLeft(15);
+                    //moveStraightLine(-1);
+                    pivotServo.setPosition(0.635);
+                    linearSlideMovement(300, true);
+                    gripperServo1.setPosition(0.3);
+                }
+            }
+        }
     }
 
     public void linearSlideMovement(double y, boolean maxPower) {

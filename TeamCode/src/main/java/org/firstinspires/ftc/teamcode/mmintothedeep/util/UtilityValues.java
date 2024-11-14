@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class UtilityValues {
 
     public static int wheelDiameter = 104; //96 for test robot
-    public static int smallWheelDiameter = 104; //96 for test robot
+    public static int smallWheelDiameter = 96; //96 for test robot
     public static double motorTicks = 537.7; // goBILDA 5203 series Yellow Jacket
     public static String webCamName = "testWebcam";
     public static String webCamName2 = "diddyCam";
@@ -31,6 +31,8 @@ public class UtilityValues {
     public static final double chamberLS = 0;
     public static final double basketLS = 0;
     public static final double maxLS = 3064;
+
+    public static final double offsetCamera1 = 34;
 
     // for test robot
     public static final DcMotorSimple.Direction leftFrontDirection = DcMotor.Direction.FORWARD;
