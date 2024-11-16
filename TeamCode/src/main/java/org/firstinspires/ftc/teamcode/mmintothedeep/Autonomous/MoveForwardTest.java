@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 import java.util.Date;
 
 @Autonomous(name="move forward test")
+@Disabled
 public class MoveForwardTest extends LinearOpMode {
     /* Declare all motors as null */
     Date currentTime = new Date();

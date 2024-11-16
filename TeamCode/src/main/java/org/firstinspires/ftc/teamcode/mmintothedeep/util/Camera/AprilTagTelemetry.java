@@ -30,6 +30,7 @@ import java.util.Date;
  */
 
 @Autonomous
+@Disabled
 public class AprilTagTelemetry extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();

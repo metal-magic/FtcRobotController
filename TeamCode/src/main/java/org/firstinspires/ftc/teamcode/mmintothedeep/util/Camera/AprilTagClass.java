@@ -31,6 +31,7 @@ import java.util.Date;
  */
 
 @Autonomous
+@Disabled
 public class AprilTagClass extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();

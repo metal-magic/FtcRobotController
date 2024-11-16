@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TeleOp(name = "OpenCV Testing")
-
+@Disabled
 public class opencv extends LinearOpMode {
 
     double cX = 0;

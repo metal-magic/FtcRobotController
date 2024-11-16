@@ -24,7 +24,7 @@ import java.util.Objects;
 
 @TeleOp//(name="Tag Self Align TeleOp", group="AprilTag")
 //@Disabled.
-
+@Disabled
 public class TeleOpAprilTag extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();

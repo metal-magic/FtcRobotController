@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -20,6 +21,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import java.util.Date;
 
 @Autonomous
+@Disabled
 public class OldAprilTagClass extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();

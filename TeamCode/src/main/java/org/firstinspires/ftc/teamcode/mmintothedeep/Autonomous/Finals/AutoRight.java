@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Finals;
 
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainFunctions;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -21,8 +19,9 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.Date;
 import java.util.Objects;
 
-@Autonomous(name="Blue TEST ONLY: LEFT of Gate", group="Autonomous")
-public class BlueAutoLeftTest extends LinearOpMode {
+
+@Autonomous(name="RIGHT of Gate", group="Autonomous")
+public class AutoRight extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -73,8 +72,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
         //sleep lines are to avoid two lines of codes running at the same time
         pivotServo.setPosition(0.6);
         gripperServo1.setPosition(0);
-        //moveStraightLine(24); //33
-        strafe(0);
+        moveStraightLine(24); //33
         linearSlideMovement(1300, false);
         strafeDiagonalLeft(15);
         //moveStraightLine(-1);
@@ -91,66 +89,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
         moveStraightLine(20);
         tagTelemetry(1);
         sleep(1000);
-        alignToOffset(-24, 24, 0, 1);
 
-
-        /*sleep(200);
-        moveStraightLine(3);
-        sleep(200);
-        moveLinearSlide(26); //to 26 inches high
-        sleep(200);
-        gripperServo1.setPosition(0.3);
-        sleep(200);
-        moveLinearSlide(-24);
-        sleep(200);
-        moveStraightLine(-3);
-        sleep(200);
-        rotate(-90);
-        align(0, 24, 90, 1);
-        pivotServo.setPosition(1);
-        gripperServo1.setPosition(0);
-        rotate(-90);
-        alignToDefault("basket", 1);
-        moveLinearSlide(43.5);
-        moveStraightLine(2);
-        gripperServo1.setPosition(0.3);*/
-
-
-        /*strafeDiagonalLeft(5);
-        alignToDefault("chamber", 2);
-        rotate(-90);
-        moveLinearSlide(27);
-        gripperServo1.setPosition(0.3);
-
-        moveLinearSlide(0); //or 3 because 3 or less defaults to 0
-
-        align(0, 16, 0, 1);
-        alignToDefault("basket", 1);
-        moveLinearSlide(43);
-        moveLinearSlide(0);
-
-        returnBackTo13Basket(); //returning to apriltag 13 for scanning
-        //in place of color scanning to test timing
-        //block 1
-        align(24, 24, 0, 1);
-        strafe(-24);
-        alignToDefault("basket", 1);
-        moveLinearSlide(43);
-        moveLinearSlide(0);
-        //block 2
-        align(24, 12, 0, 1);
-        strafe(-24);
-        moveStraightLine(-12);
-        alignToDefault("basket", 1);
-        moveLinearSlide(43);
-        moveLinearSlide(0);
-        //block 3
-        align(24, 5, 0, 1);
-        strafe(-24);
-        moveStraightLine(-19);
-        alignToDefault("basket", 1);
-        moveLinearSlide(43);
-        moveLinearSlide(0);*/
 
         //Termination
         if (currentTime.getTime() > 20000) {
@@ -459,7 +398,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
 
                 rotateRadians = Math.toRadians(rotateNew);
                 correctX = Math.tan(rotateRadians) * originalY;
-                strafe(correctX);
+                strafe(-1*correctX);
 
             }
         } else if (vision == 2) {
@@ -478,7 +417,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
 
                 rotateRadians = Math.toRadians(rotateNew);
                 correctX = Math.tan(rotateRadians) * originalY;
-                strafe(-1*correctX);
+                strafe(correctX);
             }
         }
 

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 
 import android.util.Size;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -21,8 +22,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @TeleOp//(name="Tag Self Align TeleOp", group="AprilTag")
-//@Disabled.
-
+@Disabled
 public class TeleOpAprilTag2 extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();
