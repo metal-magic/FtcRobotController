@@ -70,7 +70,7 @@ public class AutoRight extends LinearOpMode {
         THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
         */
         //sleep lines are to avoid two lines of codes running at the same time
-        pivotServo.setPosition(0.6);
+        pivotServo.setPosition(0.5);
         gripperServo1.setPosition(0);
         moveStraightLine(24); //33
         linearSlideMovement(1300, false);
@@ -82,13 +82,21 @@ public class AutoRight extends LinearOpMode {
         gripperServo1.setPosition(0.3);
         sleep(600);
         moveStraightLine(-10);
-        linearSlideMovement(50, false);
+        //linearSlideMovement(30, false);
         rotate(-80);
         sleep(1000);
         //moveStraightLine(30);
         moveStraightLine(20);
         tagTelemetry(1);
         sleep(1000);
+        //alignToDefault("basket", 1);
+        //align(-24, 24, 0, 1);
+        //strafe(-24);
+        align(11, 24, 90, 1);
+        pivotServo.setPosition(1);
+        gripperServo1.setPosition(0.6);
+        rotate(-90);
+        strafe(-11);
 
 
         //Termination
@@ -396,9 +404,9 @@ public class AutoRight extends LinearOpMode {
                     rotate(-rotateNew);
                 }
 
-                rotateRadians = Math.toRadians(rotateNew);
-                correctX = Math.tan(rotateRadians) * originalY;
-                strafe(-1*correctX);
+                //rotateRadians = Math.toRadians(rotateNew);
+                //correctX = Math.tan(rotateRadians) * originalY;
+                //strafe(1*correctX);
 
             }
         } else if (vision == 2) {
@@ -415,9 +423,9 @@ public class AutoRight extends LinearOpMode {
                     rotate(-rotateNew);
                 }
 
-                rotateRadians = Math.toRadians(rotateNew);
-                correctX = Math.tan(rotateRadians) * originalY;
-                strafe(correctX);
+                //rotateRadians = Math.toRadians(rotateNew);
+                //correctX = Math.tan(rotateRadians) * originalY;
+                //strafe(correctX);
             }
         }
 
@@ -429,15 +437,17 @@ public class AutoRight extends LinearOpMode {
         //alignX(-1, 1, 12);
         if (vision == 1) {
             if (tagProcessor.getDetections().size() > 0) {
-                xPosNew = tagProcessor.getDetections().get(0).ftcPose.x - x;
+                if (tagProcessor.getDetections().size() > 0) {
+                    xPosNew = tagProcessor.getDetections().get(0).ftcPose.x-x;
 
-                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
-                    //strafe(1);
-                    strafe(1 * xPosNew);
-                }
-                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
-                    //strafe(-1);
-                    strafe(1 * xPosNew);
+                    if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5+x)) { //0.5 is buffer
+                        //strafe(1);
+                        strafe(1*xPosNew);
+                    }
+                    if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5+x)) { //0.5 is buffer
+                        //strafe(-1);
+                        strafe(1*xPosNew);
+                    }
                 }
             }
         } else if (vision == 2) {
