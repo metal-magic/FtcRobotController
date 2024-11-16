@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.BlueAutoLeftTest;
+// import org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.BlueAutoLeftTest;
+import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 
 import java.util.Locale;
@@ -18,7 +19,7 @@ public class DriveBackTest extends LinearOpMode {
     GoBildaPinpointDriver odo; // Declare OpMode member for the Odometry Computer
 
     double oldTime = 0;
-    BlueAutoLeftTest board = new BlueAutoLeftTest();
+    //BlueAutoLeftTest board = new BlueAutoLeftTest();
     final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
@@ -231,9 +232,9 @@ public class DriveBackTest extends LinearOpMode {
                 tracebackh = pos.getHeading(AngleUnit.DEGREES);
             }
             if (gamepad1.y) {
-                if (tracebackh!=pos.getHeading()) {
-
-                }
+//                if (tracebackh!=pos.getHeading()) {
+//
+//                }
             }
 
             telemetry.addData("Status", odo.getDeviceStatus());
