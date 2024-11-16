@@ -95,6 +95,8 @@ public class AutoRight extends LinearOpMode {
         align(11, 24, 90, 1);
         pivotServo.setPosition(1);
         gripperServo1.setPosition(0.6);
+        sleep(200);
+        pivotServo.setPosition(0.5);
         rotate(-90);
         strafe(-11);
 

@@ -177,8 +177,11 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         }
 
         if (!CutPower) {
+            telemetry.addData("slide", linearSlideMotor.getCurrentPosition());
 
-
+            if (gamepad1.x) {
+                alignToDefault("basket", 1);
+            }
 
             if (gamepad1.right_trigger >= 0.3F) {
                 // Fine controls
@@ -236,7 +239,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
             linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
         } else {
-            if (linearSlideMotor.getCurrentPosition() > 3450) {
+            if (linearSlideMotor.getCurrentPosition() > 3250) {
                 linearSlideMotor.setPower(-0.3);
             } else if (linearSlideMotor.getCurrentPosition() < 0) {
                 linearSlideMotor.setPower(0.3);
