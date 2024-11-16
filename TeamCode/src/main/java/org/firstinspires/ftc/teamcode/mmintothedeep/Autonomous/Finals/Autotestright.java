@@ -1,39 +1,36 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Finals;
 
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainFunctions;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-
 import java.util.Date;
 import java.util.Objects;
 
-@TeleOp//(name="Tag Self Align TeleOp", group="AprilTag")
-//@Disabled.
 
-public class MultiPortalTag extends LinearOpMode{
-    /* Declare all motors as null */
+@Autonomous(name="Test right of Gate", group="Autonomous")
+public class Autotestright extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    Servo gripperServo1 = null;
-    Servo pivotServo = null;
+    public Servo gripperServo1 = null;
+    public Servo pivotServo = null;
+    public DcMotor linearSlideMotor = null;
+    public DcMotor linearActuatorMotor = null;
 
     CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
@@ -53,80 +50,135 @@ public class MultiPortalTag extends LinearOpMode{
     AprilTagProcessor tagProcessor2;
 
     @Override
+    public void runOpMode() {
 
-    public void runOpMode() throws InterruptedException {
-
-        initMotor();
         initPortal();
+        initMotor();
         waitForStart();
 
 
-        while (!isStopRequested() && opModeIsActive()) {
-            /*
-             * ===============
-             * ACTUAL DRIVING
-             * ===============
-             */
-            if (gamepad1.dpad_left) {
-                if (!tagProcessor.getDetections().isEmpty()) {
-                    alignToDefault("basket", 1);
-                }
-            }
-            if (gamepad1.dpad_right) {
-                if (!tagProcessor2.getDetections().isEmpty()) {
-                    alignToDefault("chamber", 2);
-                }
-            }
+      /*
+        ============================
+        THIS IS THE ACTUAL DRIVING
+        ============================
+       */
 
-            tagTelemetry(1);
-            tagTelemetry(2);
-            telemetry.update();
+       /*
+        METAL MAGIC INTO THE DEEP
+        THIS CODE STARTS ON THE LEFT SIDE OF THE BLUE SIDE (closer to backdrop)
+        STACKS PIXEL AND PARKS IN CORNER
+        THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
+        */
+        //sleep lines are to avoid two lines of codes running at the same time
+        //pivotServo.setPosition(0.6);
+        //gripperServo1.setPosition(0);
+        //moveStraightLine(24); //33
+        strafe(0);
+        linearSlideMovement(1300, false);
+        strafeDiagonalLeft(15);
+        //moveStraightLine(-1);
+        //pivotServo.setPosition(0.635);
+        linearSlideMovement(300, true);
+        sleep(500);
+        //gripperServo1.setPosition(0.3);
+        sleep(600);
+        moveStraightLine(-10);
+        linearSlideMovement(50, false);
+        rotate(-80);
+        sleep(1000);
+        //moveStraightLine(30);
+        moveStraightLine(20);
+        tagTelemetry(1);
+        sleep(1000);
+        align(-24, 24, 0, 1);
+        alignToDefault("basket", 1);
+
+
+        //Termination
+        if (currentTime.getTime() > 20000) {
+            leftBackDrive.setPower(0);
+            leftFrontDrive.setPower(0);
+            rightBackDrive.setPower(0);
+            rightFrontDrive.setPower(0);
         }
 
     }
 
-    public void initMotor() {
-        //        DcMotor motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
-//        DcMotor motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
-//        DcMotor motorFrontRight = hardwareMap.dcMotor.get("motorFrontRight");
-//        DcMotor motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
-//
-//        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-//        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-//
-//        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-//        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+    public void alignToOffset(double x, double y, double dir, int vision) {
 
+        double offset;
+        if (vision == 1) {
+            offset = UtilityValues.offsetCamera1;
+            alignRotate(0, vision);
+            alignX(0+offset, vision);
+            alignY(y, vision);
+            rotate(dir);
+        }
 
-        /* Assign all the motors */
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
-        //armMotor = hardwareMap.crservo.get("armMotor");
+    }
 
-        // Set all the right motor directions
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+    public void alignToDefaultOffset(String s, int vision) {
+        if (vision == 1) {
+            if (Objects.equals(s, "basket")) {
+                if (tagProcessor.getDetections().get(0).id == 11) {
+                    alignToOffset(0, 70, 180, vision);
+                    alignToOffset(0, 16, -45, vision); //now with tag 13
+                } else if (tagProcessor.getDetections().get(0).id == 12) {
+                    alignToOffset(-50, 16, 90, vision);
+                    alignToOffset(0, 16, -45, vision); //now with tag 13
+                } else if (tagProcessor.getDetections().get(0).id == 13) {
+                    alignToOffset(0, 16, -45, vision);
+                }
+            }
 
-        // Reset encoders positions
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            if (Objects.equals(s, "chamber")) {
+            }
+        } else if (vision == 2) {
+            if (Objects.equals(s, "chamber")) {
+                if (tagProcessor2.getDetections().get(0).id == 12) {
+                    pivotServo.setPosition(0.6);
+                    gripperServo1.setPosition(0);
+                    alignY(24, vision);
+                    linearSlideMovement(1300, false);
+                    strafeDiagonalLeft(15);
+                    //moveStraightLine(-1);
+                    pivotServo.setPosition(0.635);
+                    linearSlideMovement(300, true);
+                    gripperServo1.setPosition(0.3);
+                }
+            }
+        }
+    }
 
-        // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
+    public void linearSlideMovement(double y, boolean maxPower) {
+        double up;
+        if (y > linearSlideMotor.getCurrentPosition()) {
+            while (linearSlideMotor.getCurrentPosition() < y) {
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                if (maxPower) {
+                    linearSlideMotor.setPower(1);
+                } else {
+                    linearSlideMotor.setPower(up);
+                }
+            }
+            linearSlideMotor.setPower(0);
+        } else {
+            while (linearSlideMotor.getCurrentPosition() > y) {
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                if (maxPower) {
+                    linearSlideMotor.setPower(-1);
+                } else {
+                    linearSlideMotor.setPower(-1*up);
+                }
 
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //gripperServo1.setPosition(1);
+            }
+            linearSlideMotor.setPower(0);
+        }
+    }
 
-        //MyDriveTrain m = new MyDriveDrain();
-        //m.rotate(90);
+    public void returnBackTo13Basket() {
+        rotate(45);
+        strafe(0);
     }
 
     public void alignToDefault(String s, int vision) {
@@ -180,6 +232,66 @@ public class MultiPortalTag extends LinearOpMode{
             }
         }
 
+    }
+
+    public void initMotor() {
+        /* Assign all the motors */
+        //drivetrain
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        //claw
+        gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");
+
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+        linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
+
+        // Set all the right motor directions
+        leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
+        leftBackDrive.setDirection(UtilityValues.finalLeftBackDirection);
+        rightFrontDrive.setDirection(UtilityValues.finalRightFrontDirection);
+        rightBackDrive.setDirection(UtilityValues.finalRightBackDirection);
+
+
+        // Reset encoders positions
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        linearSlideMotor.setDirection(CRServo.Direction.FORWARD);
+
+        /*while (linearSlideMotor.getCurrentPosition() > 0) {
+            linearSlideMotor.setPower(-0.5);
+        }
+        while (linearSlideMotor.getCurrentPosition() < 0) {
+            linearSlideMotor.setPower(0.3);
+        }*/
+
+        ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(0);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(0);
+
+        // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(0.48);
+
+        linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void initPortal() {
@@ -256,6 +368,7 @@ public class MultiPortalTag extends LinearOpMode{
                 telemetry.addData("id", tag.id);
             }
         }
+        telemetry.update();
     }
 
     public void align(int x, int y, int dir, int vision) {
@@ -288,7 +401,7 @@ public class MultiPortalTag extends LinearOpMode{
 
                 rotateRadians = Math.toRadians(rotateNew);
                 correctX = Math.tan(rotateRadians) * originalY;
-                strafe(1*correctX);
+                strafe(-1*correctX);
 
             }
         } else if (vision == 2) {
@@ -381,7 +494,73 @@ public class MultiPortalTag extends LinearOpMode{
         }
     }
 
+    public void moveLinearSlideRevs(double y) {
+        double up;
+        if (y > 0) {
+            while (linearSlideMotor.getCurrentPosition() < 3064 && linearSlideMotor.getCurrentPosition() < y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() > 3064) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        } else if (y < 0) {
+            while (linearSlideMotor.getCurrentPosition() > 0 && linearSlideMotor.getCurrentPosition() > y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        }
+    }
+
+    public void moveLinearSlide(double inches) {
+        double inchesWithoutRobotHeight = inches - 3;
+        if (inchesWithoutRobotHeight < 0) {
+            inchesWithoutRobotHeight = 0;
+        }
+        //double mm = inches * 25.4;
+        double y; // = mm * (984.0 / 3064.0);
+        y = inchesWithoutRobotHeight * (3064.0 / 40.5);
+        double up;
+        if (y > 0) {
+            while (linearSlideMotor.getCurrentPosition() < 3064 && linearSlideMotor.getCurrentPosition() < y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() > 3064) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        } else if (y < 0) {
+            while (linearSlideMotor.getCurrentPosition() > 0 && linearSlideMotor.getCurrentPosition() > y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        }
+    }
+
     public void rotate(double degrees) {
+
         double robotSpeed = SPEED;
         // Assume positive degrees means moving towards the right
         double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
@@ -484,6 +663,47 @@ public class MultiPortalTag extends LinearOpMode{
 
 
         sleep(250);
+    }
+
+    public void strafeDiagonalLeft(double strafeLeftInches) {
+        double robotSpeed = SPEED;
+
+        double strafeLeftRevs = Math.abs(strafeLeftInches / CIRCUMFERENCE_INCHES);
+
+        if (strafeLeftInches >= 0) {
+            drive(robotSpeed,
+                    0,
+                    1 * strafeLeftRevs,
+                    1 * strafeLeftRevs,
+                    0);
+        } else {
+            drive(robotSpeed,
+                    0,
+                    -1 * strafeLeftRevs,
+                    -1 * strafeLeftRevs,
+                    0);
+        }
+    }
+
+    public void strafeDiagonalRight(double strafeLeftInches) {
+
+        double robotSpeed = SPEED;
+        double strafeLeftRevs = Math.abs(strafeLeftInches / CIRCUMFERENCE_INCHES);
+
+        if (strafeLeftInches >= 0) {
+            drive(robotSpeed,
+                    1 * strafeLeftRevs,
+                    0,
+                    0,
+                    1 * strafeLeftRevs);
+        } else {
+            drive(robotSpeed,
+                    -1 * strafeLeftRevs,
+                    0,
+                    0,
+                    -1 * strafeLeftRevs);
+        }
+
     }
 
 }

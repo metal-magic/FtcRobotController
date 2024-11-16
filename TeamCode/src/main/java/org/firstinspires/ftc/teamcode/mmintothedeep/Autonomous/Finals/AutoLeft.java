@@ -70,17 +70,17 @@ public class AutoLeft extends LinearOpMode {
         THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
         */
         //sleep lines are to avoid two lines of codes running at the same time
-        pivotServo.setPosition(0.6);
-        gripperServo1.setPosition(0);
+        //pivotServo.setPosition(0.6);
+        //gripperServo1.setPosition(0);
         //moveStraightLine(24); //33
         strafe(0);
         linearSlideMovement(1300, false);
         strafeDiagonalLeft(15);
         //moveStraightLine(-1);
-        pivotServo.setPosition(0.635);
+        //pivotServo.setPosition(0.635);
         linearSlideMovement(300, true);
         sleep(500);
-        gripperServo1.setPosition(0.3);
+        //gripperServo1.setPosition(0.3);
         sleep(600);
         moveStraightLine(-10);
         linearSlideMovement(50, false);
@@ -90,7 +90,8 @@ public class AutoLeft extends LinearOpMode {
         moveStraightLine(20);
         tagTelemetry(1);
         sleep(1000);
-        alignToOffset(-24, 24, 0, 1);
+        align(-24, 24, 0, 1);
+        alignToDefault("basket", 1);
 
 
         //Termination
