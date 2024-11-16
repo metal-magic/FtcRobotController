@@ -173,18 +173,15 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
             if (gamepad2.right_bumper) {
                 gripperServo1.setPosition(0.3);
-            }
-            if (gamepad2.left_bumper) {
+            } else if (gamepad2.left_bumper) {
                 gripperServo1.setPosition(0);
-            }
-            if (gamepad2.dpad_up) {
+            } else if (gamepad2.dpad_up) {
                 gripperServo1.setPosition(0.1);
             }
 
             if (gamepad2.y) {
                 pivotServo.setPosition(pivotServo.getPosition() - 0.01);
-            }
-            if (gamepad2.a) {
+            } else if (gamepad2.a) {
                 pivotServo.setPosition(pivotServo.getPosition() + 0.01);
             }
             telemetry.addData("Pivot Servo Position1", pivotServo.getPosition());
