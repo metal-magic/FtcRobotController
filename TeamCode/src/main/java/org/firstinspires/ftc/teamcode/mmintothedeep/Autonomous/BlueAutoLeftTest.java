@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Finals;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,23 +14,25 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainFunctions;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.opencv.core.RotatedRect;
+
 
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-
-@Autonomous(name="RIGHT of Gate", group="Autonomous")
-public class AutoRight extends LinearOpMode {
+@Autonomous(name="Blue TEST ONLY: LEFT of Gate", group="Autonomous")
+public class BlueAutoLeftTest extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -86,72 +89,95 @@ public class AutoRight extends LinearOpMode {
         THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
         */
         //sleep lines are to avoid two lines of codes running at the same time
-
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-        pivotServo.setPosition(0.9);
-        gripperServo1.setPosition(0);
-        moveStraightLine(24); //33
-        sleep(250);
-        linearSlideMovement(1300, false);
-        strafeDiagonalLeft(15);
-        moveStraightLine(1);
-        pivotServo.setPosition(0.7);
-        linearSlideMovement(250, true);
-        sleep(500);
-        gripperServo1.setPosition(0.3);
-        sleep(600);
-        moveStraightLine(-15);
-        sleep(250);
-        //linearSlideMovement(30, false);
-        sleep(1000);
-        //moveStraightLine(30);
-        strafe(-60);
-        linearSlideMovement(10, false);
-        moveStraightLine(3);
-        pivotServo.setPosition(0.3);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.7);
-        linearSlideMovement(3100, true);
-
-//        sleep(250);
+//        pivotServo.setPosition(0.6);
+//        gripperServo1.setPosition(0);
+//        moveStraightLine(12); //33
+//        strafe(20);
+//        linearSlideMovement(800, false);
+//        strafeDiagonalRight(30);
+//        moveStraightLine(2.5);
+//        //moveStraightLine(-1);
+//        pivotServo.setPosition(0.635);
+//        linearSlideMovement(300, true);
+//        sleep(500);
+//        gripperServo1.setPosition(0.3);
+//        sleep(600);
+//        moveStraightLine(-10);
+//        linearSlideMovement(50, false);
+//        rotate(-90);
+//        sleep(1000);
+//        //moveStraightLine(30);
+//        moveStraightLine(20);
 //        tagTelemetry(1);
 //        sleep(1000);
-        //alignToDefault("basket", 1);
-        //align(-24, 24, 0, 1);
-        //strafe(-24);
-//        align(-5, 24, 90, 1);
-//        sleep(250);
-//        pivotServo.setPosition(0.5);
-//        gripperServo1.setPosition(0);
-//        sleep(200);
-//        pivotServo.setPosition(0.7);
-//        rotate(-70);
-//        sleep(250);
-//        strafe(-11);
-//        sleep(250);
-//        alignToDefault("basket", 1);
-//        sleep(250);
-//        rotate(10);
-//        sleep(250);
-//        moveLinearSlideRevs(3000);
-//        sleep(250);
-//        moveStraightLine(2);
-//        sleep(250);
-//        gripperServo1.setPosition(0.3);
-//        sleep(250);
-        align(11, 24, 90, 1);
-        pivotServo.setPosition(1);
-        gripperServo1.setPosition(0.6);
-        sleep(200);
-        pivotServo.setPosition(0.5);
-        rotate(-90);
-        strafe(-11);
+//        align(0, 16, 0, 1);
+//        strafe(24);
+//        pivotServo.setPosition(0.9);
+//        gripperServo1.setPosition(0.1);
+        alignSample();
+        pivotServo.setPosition(0.9);
+        gripperServo1.setPosition(0.1);
+        //rotate(90);
+        //strafe(24);
 
+
+        /*sleep(200);
+        moveStraightLine(3);
+        sleep(200);
+        moveLinearSlide(26); //to 26 inches high
+        sleep(200);
+        gripperServo1.setPosition(0.3);
+        sleep(200);
+        moveLinearSlide(-24);
+        sleep(200);
+        moveStraightLine(-3);
+        sleep(200);
+        rotate(-90);
+        align(0, 24, 90, 1);
+        pivotServo.setPosition(1);
+        gripperServo1.setPosition(0);
+        rotate(-90);
+        alignToDefault("basket", 1);
+        moveLinearSlide(43.5);
+        moveStraightLine(2);
+        gripperServo1.setPosition(0.3);*/
+
+
+        /*strafeDiagonalLeft(5);
+        alignToDefault("chamber", 2);
+        rotate(-90);
+        moveLinearSlide(27);
+        gripperServo1.setPosition(0.3);
+
+        moveLinearSlide(0); //or 3 because 3 or less defaults to 0
+
+        align(0, 16, 0, 1);
+        alignToDefault("basket", 1);
+        moveLinearSlide(43);
+        moveLinearSlide(0);
+
+        returnBackTo13Basket(); //returning to apriltag 13 for scanning
+        //in place of color scanning to test timing
+        //block 1
+        align(24, 24, 0, 1);
+        strafe(-24);
+        alignToDefault("basket", 1);
+        moveLinearSlide(43);
+        moveLinearSlide(0);
+        //block 2
+        align(24, 12, 0, 1);
+        strafe(-24);
+        moveStraightLine(-12);
+        alignToDefault("basket", 1);
+        moveLinearSlide(43);
+        moveLinearSlide(0);
+        //block 3
+        align(24, 5, 0, 1);
+        strafe(-24);
+        moveStraightLine(-19);
+        alignToDefault("basket", 1);
+        moveLinearSlide(43);
+        moveLinearSlide(0);*/
 
         //Termination
         if (currentTime.getTime() > 20000) {
@@ -169,7 +195,7 @@ public class AutoRight extends LinearOpMode {
         if (vision == 1) {
             offset = UtilityValues.offsetCamera1;
             alignRotate(0, vision);
-            alignX(0+offset, vision);
+            alignX(x+offset, vision);
             alignY(y, vision);
             rotate(dir);
         }
@@ -195,13 +221,13 @@ public class AutoRight extends LinearOpMode {
         } else if (vision == 2) {
             if (Objects.equals(s, "chamber")) {
                 if (tagProcessor2.getDetections().get(0).id == 12) {
-                    pivotServo.setPosition(1-0.6);
+                    pivotServo.setPosition(0.6);
                     gripperServo1.setPosition(0);
                     alignY(24, vision);
                     linearSlideMovement(1300, false);
                     strafeDiagonalLeft(15);
                     //moveStraightLine(-1);
-                    pivotServo.setPosition(1-0.635);
+                    pivotServo.setPosition(0.635);
                     linearSlideMovement(300, true);
                     gripperServo1.setPosition(0.3);
                 }
@@ -261,6 +287,311 @@ public class AutoRight extends LinearOpMode {
                 if (tagProcessor2.getDetections().get(0).id == 12) {
                     align(0, 16, 0, 2);
                     moveStraightLine(5);
+                }
+            }
+        }
+    }
+
+    public void alignTo(String s, int tagID, int vision) {
+
+        if (Objects.equals(s, "basket")) {
+            if (tagID == 12) {
+                align(55, 16, 45, vision);
+            }
+
+        }
+
+        if (Objects.equals(s, "chamber")) {
+            if (tagID == 12) {
+                align(0, 26, 180, vision);
+            }
+        }
+
+        if (tagID == 13) {
+            if (Objects.equals(s, "basket")) {
+                alignRotate(0, vision);
+                alignY(16, vision);
+                alignX(-16, vision);
+                alignRotate(-45, vision);
+
+            }
+        }
+
+    }
+
+    public void initMotor() {
+        /* Assign all the motors */
+        //drivetrain
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        //claw
+        gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");
+
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+        linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
+
+        // Set all the right motor directions
+        leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
+        leftBackDrive.setDirection(UtilityValues.finalLeftBackDirection);
+        rightFrontDrive.setDirection(UtilityValues.finalRightFrontDirection);
+        rightBackDrive.setDirection(UtilityValues.finalRightBackDirection);
+
+
+        // Reset encoders positions
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        linearSlideMotor.setDirection(CRServo.Direction.FORWARD);
+
+        /*while (linearSlideMotor.getCurrentPosition() > 0) {
+            linearSlideMotor.setPower(-0.5);
+        }
+        while (linearSlideMotor.getCurrentPosition() < 0) {
+            linearSlideMotor.setPower(0.3);
+        }*/
+
+        ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(0);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(0);
+
+        // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(0.48);
+
+        linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void initPortal() {
+
+        // Because we want to show two camera feeds simultaneously, we need to inform
+        // the SDK that we want it to split the camera monitor area into two smaller
+        // areas for us. It will then give us View IDs which we can pass to the individual
+        // vision portals to allow them to properly hook into the UI in tandem.
+        int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
+
+        // We extract the two view IDs from the array to make our lives a little easier later.
+        // NB: the array is 2 long because we asked for 2 portals up above.
+        int portal1ViewId = viewIds[0];
+        int portal2ViewId = viewIds[1];
+        int portal3ViewId = viewIds[2];
+
+        //drawing information on the driver station camera screen
+        tagProcessor = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagID(true)
+                .setDrawTagOutline(true)
+                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
+                .build();
+
+        tagProcessor2 = new AprilTagProcessor.Builder()
+                .setDrawAxes(true)
+                .setDrawCubeProjection(true)
+                .setDrawTagID(true)
+                .setDrawTagOutline(true)
+                .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
+                .build();
+
+        //stating the webcam
+        visionPortal = new VisionPortal.Builder()
+                .setLiveViewContainerId(portal1ViewId)
+                .addProcessor(tagProcessor)
+                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                .setCameraResolution(new Size(640, 480))
+                .build();
+
+        visionPortal2 = new VisionPortal.Builder()
+                .setLiveViewContainerId(portal2ViewId)
+                .addProcessor(tagProcessor2)
+                .setCamera(hardwareMap.get(WebcamName.class, "diddyCam"))
+                .setCameraResolution(new Size(640, 480))
+                .build();
+
+        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
+                .setTargetColorRange(ColorRange.RED)         // use a predefined color match
+                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
+                // .setDrawContours(true)                        // Show contours on the Stream Preview
+                .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                //.setErodeSize(6)
+                //.setDilateSize(6)
+                .build();
+
+        visionPortal3 = new VisionPortal.Builder()
+                .setLiveViewContainerId(portal3ViewId)
+                .addProcessor(colorLocator)
+                .setCameraResolution(new Size(640, 480))
+                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                .build();
+
+    }
+
+    public void tagTelemetry(int vision) {
+        telemetry.addData("Vision portal: ", vision);
+        if (vision == 1) {
+            if (tagProcessor.getDetections().size() > 0) {
+                AprilTagDetection tag = tagProcessor.getDetections().get(0);
+                //sending telemetry values to the driver station
+                telemetry.addData("x", tag.ftcPose.x);
+                telemetry.addData("y", tag.ftcPose.y);
+                telemetry.addData("z", tag.ftcPose.z);
+                telemetry.addData("roll", tag.ftcPose.roll);
+                telemetry.addData("pitch", tag.ftcPose.pitch);
+                telemetry.addData("yaw", tag.ftcPose.yaw);
+                telemetry.addData("id", tag.id);
+            }
+        } else if (vision == 2) {
+            if (tagProcessor2.getDetections().size() > 0) {
+                AprilTagDetection tag = tagProcessor2.getDetections().get(0);
+                //sending telemetry values to the driver station
+                telemetry.addData("x", tag.ftcPose.x);
+                telemetry.addData("y", tag.ftcPose.y);
+                telemetry.addData("z", tag.ftcPose.z);
+                telemetry.addData("roll", tag.ftcPose.roll);
+                telemetry.addData("pitch", tag.ftcPose.pitch);
+                telemetry.addData("yaw", tag.ftcPose.yaw);
+                telemetry.addData("id", tag.id);
+            }
+        }
+        telemetry.update();
+    }
+
+    public void align(int x, int y, int dir, int vision) {
+        alignRotate(0, vision);
+        alignY(y, vision);
+        alignX(x, vision);
+        rotate(dir);
+    }
+
+    public void alignRotate(int dir, int vision) {
+
+        double rotateNew;
+        double originalY;
+        double rotateRadians;
+        double correctX;
+
+        if (vision == 1) {
+            if (tagProcessor.getDetections().size() > 0) {
+                rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw - dir;
+                originalY = tagProcessor.getDetections().get(0).ftcPose.y;
+
+                if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
+                    //strafe(1);
+                    rotate(-rotateNew);
+                }
+                else if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
+                    //strafe(-1);
+                    rotate(-rotateNew);
+                }
+
+                rotateRadians = Math.toRadians(rotateNew);
+                correctX = Math.tan(rotateRadians) * originalY;
+                strafe(correctX);
+
+            }
+        } else if (vision == 2) {
+            if (tagProcessor2.getDetections().size() > 0) {
+                rotateNew = tagProcessor2.getDetections().get(0).ftcPose.yaw - dir;
+                originalY = tagProcessor2.getDetections().get(0).ftcPose.y;
+
+                if (tagProcessor2.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
+                    //strafe(1);
+                    rotate(-rotateNew);
+                }
+                if (tagProcessor2.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
+                    //strafe(-1);
+                    rotate(-rotateNew);
+                }
+
+                rotateRadians = Math.toRadians(rotateNew);
+                correctX = Math.tan(rotateRadians) * originalY;
+                strafe(-1*correctX);
+            }
+        }
+
+    }
+
+    public void alignX(double x, int vision) {
+
+        double xPosNew;
+        //alignX(-1, 1, 12);
+        if (vision == 1) {
+            if (tagProcessor.getDetections().size() > 0) {
+                xPosNew = tagProcessor.getDetections().get(0).ftcPose.x - x;
+
+                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
+                    //strafe(1);
+                    strafe(1 * xPosNew);
+                }
+                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
+                    //strafe(-1);
+                    strafe(1 * xPosNew);
+                }
+            }
+        } else if (vision == 2) {
+            if (tagProcessor2.getDetections().size() > 0) {
+                xPosNew = tagProcessor2.getDetections().get(0).ftcPose.x - x;
+
+                if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
+                    //strafe(1);
+                    strafe(-1 * xPosNew);
+                }
+                if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
+                    //strafe(-1);
+                    strafe(-1 * xPosNew);
+                }
+            }
+        }
+    }
+
+    public void alignY(double y, int vision) {
+        double yPosNew;
+        //double moveInRevs;
+        //alignX(-1, 1, 12);
+        if (vision == 1) {
+            if (tagProcessor.getDetections().size() > 0) {
+                yPosNew = tagProcessor.getDetections().get(0).ftcPose.y - y;
+                //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
+
+                if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + y)) { //0.5 is buffer
+                    //strafe(1);
+                    moveStraightLine(1 * yPosNew);
+                }
+                if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + y)) { //0.5 is buffer
+                    //strafe(-1);
+                    moveStraightLine(1 * yPosNew);
+                }
+            }
+        } else if (vision == 2) {
+            if (tagProcessor2.getDetections().size() > 0) {
+                yPosNew = tagProcessor2.getDetections().get(0).ftcPose.y - y;
+                //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
+
+                if (tagProcessor2.getDetections().get(0).ftcPose.y < (-0.5 + y)) { //0.5 is buffer
+                    //strafe(1);
+                    moveStraightLine(-1 * yPosNew);
+                }
+                if (tagProcessor2.getDetections().get(0).ftcPose.y > (0.5 + y)) { //0.5 is buffer
+                    //strafe(-1);
+                    moveStraightLine(-1 * yPosNew);
                 }
             }
         }
@@ -366,313 +697,6 @@ public class AutoRight extends LinearOpMode {
 
         sleep(20);
         telemetry.update();
-    }
-
-    public void alignTo(String s, int tagID, int vision) {
-
-        if (Objects.equals(s, "basket")) {
-            if (tagID == 12) {
-                align(55, 16, 45, vision);
-            }
-
-        }
-
-        if (Objects.equals(s, "chamber")) {
-            if (tagID == 12) {
-                align(0, 26, 180, vision);
-            }
-        }
-
-        if (tagID == 13) {
-            if (Objects.equals(s, "basket")) {
-                alignRotate(0, vision);
-                alignY(16, vision);
-                alignX(-16, vision);
-                alignRotate(-45, vision);
-
-            }
-        }
-
-    }
-
-    public void initMotor() {
-        /* Assign all the motors */
-        //drivetrain
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
-
-        //claw
-        gripperServo1 = hardwareMap.servo.get("gripperServo1");
-        pivotServo = hardwareMap.servo.get("pivotServo");
-
-        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
-        linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
-
-        // Set all the right motor directions
-        leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
-        leftBackDrive.setDirection(UtilityValues.finalLeftBackDirection);
-        rightFrontDrive.setDirection(UtilityValues.finalRightFrontDirection);
-        rightBackDrive.setDirection(UtilityValues.finalRightBackDirection);
-
-
-        // Reset encoders positions
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        linearSlideMotor.setDirection(CRServo.Direction.FORWARD);
-
-        /*while (linearSlideMotor.getCurrentPosition() > 0) {
-            linearSlideMotor.setPower(-0.5);
-        }
-        while (linearSlideMotor.getCurrentPosition() < 0) {
-            linearSlideMotor.setPower(0.3);
-        }*/
-
-        ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
-        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(1-0);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(1-0);
-
-        // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
-
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.9);
-
-        linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void initPortal() {
-
-        // Because we want to show two camera feeds simultaneously, we need to inform
-        // the SDK that we want it to split the camera monitor area into two smaller
-        // areas for us. It will then give us View IDs which we can pass to the individual
-        // vision portals to allow them to properly hook into the UI in tandem.
-        int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
-
-        // We extract the two view IDs from the array to make our lives a little easier later.
-        // NB: the array is 2 long because we asked for 2 portals up above.
-        int portal1ViewId = viewIds[0];
-        int portal2ViewId = viewIds[1];
-        int portal3ViewId = viewIds[2];
-
-        //drawing information on the driver station camera screen
-        tagProcessor = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
-                .build();
-
-        tagProcessor2 = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
-                .build();
-
-        //stating the webcam
-        visionPortal = new VisionPortal.Builder()
-                .setLiveViewContainerId(portal1ViewId)
-                .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
-
-        visionPortal2 = new VisionPortal.Builder()
-                .setLiveViewContainerId(portal2ViewId)
-                .addProcessor(tagProcessor2)
-                .setCamera(hardwareMap.get(WebcamName.class, "diddyCam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
-
-        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.YELLOW)         // use a predefined color match
-                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
-                // .setDrawContours(true)                        // Show contours on the Stream Preview
-                .setBlurSize(5)                               // Smooth the transitions between different colors in image
-                //.setErodeSize(6)
-                //.setDilateSize(6)
-                .build();
-
-        visionPortal3 = new VisionPortal.Builder()
-                .setLiveViewContainerId(portal3ViewId)
-                .addProcessor(colorLocator)
-                .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .build();
-
-    }
-
-    public void tagTelemetry(int vision) {
-        telemetry.addData("Vision portal: ", vision);
-        if (vision == 1) {
-            if (tagProcessor.getDetections().size() > 0) {
-                AprilTagDetection tag = tagProcessor.getDetections().get(0);
-                //sending telemetry values to the driver station
-                telemetry.addData("x", tag.ftcPose.x);
-                telemetry.addData("y", tag.ftcPose.y);
-                telemetry.addData("z", tag.ftcPose.z);
-                telemetry.addData("roll", tag.ftcPose.roll);
-                telemetry.addData("pitch", tag.ftcPose.pitch);
-                telemetry.addData("yaw", tag.ftcPose.yaw);
-                telemetry.addData("id", tag.id);
-            }
-        } else if (vision == 2) {
-            if (tagProcessor2.getDetections().size() > 0) {
-                AprilTagDetection tag = tagProcessor2.getDetections().get(0);
-                //sending telemetry values to the driver station
-                telemetry.addData("x", tag.ftcPose.x);
-                telemetry.addData("y", tag.ftcPose.y);
-                telemetry.addData("z", tag.ftcPose.z);
-                telemetry.addData("roll", tag.ftcPose.roll);
-                telemetry.addData("pitch", tag.ftcPose.pitch);
-                telemetry.addData("yaw", tag.ftcPose.yaw);
-                telemetry.addData("id", tag.id);
-            }
-        }
-        telemetry.update();
-    }
-
-    public void align(int x, int y, int dir, int vision) {
-        alignRotate(0, vision);
-        alignY(y, vision);
-        alignX(x, vision);
-        rotate(dir);
-    }
-
-    public void alignRotate(int dir, int vision) {
-
-        double rotateNew;
-        double originalY;
-        double rotateRadians;
-        double correctX;
-
-        if (vision == 1) {
-            if (tagProcessor.getDetections().size() > 0) {
-                rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw - dir;
-                originalY = tagProcessor.getDetections().get(0).ftcPose.y;
-
-                if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
-                    //strafe(1);
-                    rotate(-rotateNew);
-                }
-                else if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
-                    //strafe(-1);
-                    rotate(-rotateNew);
-                }
-
-                //rotateRadians = Math.toRadians(rotateNew);
-                //correctX = Math.tan(rotateRadians) * originalY;
-                //strafe(1*correctX);
-
-            }
-        } else if (vision == 2) {
-            if (tagProcessor2.getDetections().size() > 0) {
-                rotateNew = tagProcessor2.getDetections().get(0).ftcPose.yaw - dir;
-                originalY = tagProcessor2.getDetections().get(0).ftcPose.y;
-
-                if (tagProcessor2.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
-                    //strafe(1);
-                    rotate(-rotateNew);
-                }
-                if (tagProcessor2.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
-                    //strafe(-1);
-                    rotate(-rotateNew);
-                }
-
-                //rotateRadians = Math.toRadians(rotateNew);
-                //correctX = Math.tan(rotateRadians) * originalY;
-                //strafe(correctX);
-            }
-        }
-
-    }
-
-    public void alignX(double x, int vision) {
-
-        double xPosNew;
-        //alignX(-1, 1, 12);
-        if (vision == 1) {
-            if (tagProcessor.getDetections().size() > 0) {
-                if (tagProcessor.getDetections().size() > 0) {
-                    xPosNew = tagProcessor.getDetections().get(0).ftcPose.x-x;
-
-                    if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5+x)) { //0.5 is buffer
-                        //strafe(1);
-                        strafe(1*xPosNew);
-                    }
-                    if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5+x)) { //0.5 is buffer
-                        //strafe(-1);
-                        strafe(1*xPosNew);
-                    }
-                }
-            }
-        } else if (vision == 2) {
-            if (tagProcessor2.getDetections().size() > 0) {
-                xPosNew = tagProcessor2.getDetections().get(0).ftcPose.x - x;
-
-                if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
-                    //strafe(1);
-                    strafe(-1 * xPosNew);
-                }
-                if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
-                    //strafe(-1);
-                    strafe(-1 * xPosNew);
-                }
-            }
-        }
-    }
-
-    public void alignY(double y, int vision) {
-        double yPosNew;
-        //double moveInRevs;
-        //alignX(-1, 1, 12);
-        if (vision == 1) {
-            if (tagProcessor.getDetections().size() > 0) {
-                yPosNew = tagProcessor.getDetections().get(0).ftcPose.y - y;
-                //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
-
-                if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + y)) { //0.5 is buffer
-                    //strafe(1);
-                    moveStraightLine(1 * yPosNew);
-                }
-                if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + y)) { //0.5 is buffer
-                    //strafe(-1);
-                    moveStraightLine(1 * yPosNew);
-                }
-            }
-        } else if (vision == 2) {
-            if (tagProcessor2.getDetections().size() > 0) {
-                yPosNew = tagProcessor2.getDetections().get(0).ftcPose.y - y;
-                //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
-
-                if (tagProcessor2.getDetections().get(0).ftcPose.y < (-0.5 + y)) { //0.5 is buffer
-                    //strafe(1);
-                    moveStraightLine(-1 * yPosNew);
-                }
-                if (tagProcessor2.getDetections().get(0).ftcPose.y > (0.5 + y)) { //0.5 is buffer
-                    //strafe(-1);
-                    moveStraightLine(-1 * yPosNew);
-                }
-            }
-        }
     }
 
     public void moveLinearSlideRevs(double y) {
@@ -815,11 +839,6 @@ public class AutoRight extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         leftFrontDrive.setPower(speed);

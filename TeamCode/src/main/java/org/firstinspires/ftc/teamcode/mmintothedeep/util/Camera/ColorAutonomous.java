@@ -1,15 +1,12 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera.eocv1;
+package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 import org.firstinspires.ftc.vision.VisionPortal;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.Date;
@@ -17,25 +14,18 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-import android.graphics.Color;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
-import org.opencv.core.Rect;
 import org.opencv.core.RotatedRect;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
@@ -66,6 +56,7 @@ public class ColorAutonomous extends LinearOpMode
 {
     private VisionPortal visionPortal = null;        // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
+    private ColorBlobLocatorProcessor colorLocator;
     private int myExposure;
     private int myGain;
 
@@ -107,22 +98,24 @@ public class ColorAutonomous extends LinearOpMode
 
         initMotor();
 
+        initColorBlobsProcessor(ColorRange.RED);
 
-        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.RED)         // use a predefined color match
-                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
-                // .setDrawContours(true) (DO NOT UNCOMMENT)                       // Show contours on the Stream Preview
-                .setBlurSize(3)                               // Smooth the transitions between different colors in image
-                //.setErodeSize(6)
-                //.setDilateSize(6)
-                .build();
 
-        visionPortal = new VisionPortal.Builder()
-                .addProcessor(colorLocator)
-                .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .build();
+//        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
+//                .setTargetColorRange(ColorRange.RED)         // use a predefined color match
+//                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+//                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
+//                // .setDrawContours(true) (DO NOT UNCOMMENT)                       // Show contours on the Stream Preview
+//                .setBlurSize(3)                               // Smooth the transitions between different colors in image
+//                //.setErodeSize(6)
+//                //.setDilateSize(6)
+//                .build();
+//
+//        visionPortal = new VisionPortal.Builder()
+//                .addProcessor(colorLocator)
+//                .setCameraResolution(new Size(640, 480))
+//                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+//                .build();
 
         /*ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(ColorRange.RED)         // use a predefined color match
@@ -223,20 +216,7 @@ public class ColorAutonomous extends LinearOpMode
                 int angle = (int) boxFit.angle;
                 if (Math.abs((currX) - 320) <= 20) {
                     telemetry.addLine("X CENTERED");
-                    if (Math.abs(angle - 90) <= 5 || angle <= 5) {
-                        if (angle >= 45) {
-                            rotate(-5, 0.25);
-                        }
-                        else {
-                            rotate(5, 0.25);
-                        }
-                    }
-                    else {
-                        telemetry.addLine("Fully aligned");
-                        strafe(5);
-
-                    }
-                    telemetry.addLine(String.valueOf(angle));
+                    strafe(5);
                 }
                 else if (Math.abs((currX) - 320) <= 100) {
                     strafe(-1 * error/40);
@@ -246,7 +226,8 @@ public class ColorAutonomous extends LinearOpMode
                 }
                 telemetry.addLine(String.valueOf((int) boxFit.center.x));
                 telemetry.addLine(String.valueOf(18644/Math.min(boxHeight, boxWidth)));
-
+                for (ColorBlobLocatorProcessor.ContourMode c : ColorBlobLocatorProcessor.ContourMode.values())
+                    telemetry.addLine(String.valueOf(c));
             }
 
 
@@ -403,7 +384,7 @@ public class ColorAutonomous extends LinearOpMode
                 //.setDilateSize(6)
                 .build();
 
-        visionPortal = new VisionPortal.Builder()
+        VisionPortal visionPortal = new VisionPortal.Builder()
                 .addProcessor(colorLocator)
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
