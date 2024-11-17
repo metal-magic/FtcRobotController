@@ -182,7 +182,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             if (gamepad2.y) {
                 pivotServo.setPosition(pivotServo.getPosition() - 0.01);
             } else if (gamepad2.a) {
-                pivotServo.setPosition(pivotServo.getPosition() + 0.01);
+                pivotServo.setPosition(0.99);
             }
             telemetry.addData("Pivot Servo Position1", pivotServo.getPosition());
         }
