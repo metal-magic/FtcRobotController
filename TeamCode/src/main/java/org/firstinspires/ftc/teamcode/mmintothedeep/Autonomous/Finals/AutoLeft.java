@@ -75,7 +75,7 @@ public class AutoLeft extends LinearOpMode {
         //moveStraightLine(24); //33
         strafe(0);
         linearSlideMovement(1300, false);
-        strafeDiagonalLeft(15);
+        strafeDiagonalLeft(15); // 0.3394 // 0.8794
         //moveStraightLine(-1);
         //pivotServo.setPosition(0.635);
         linearSlideMovement(300, true);
@@ -136,13 +136,13 @@ public class AutoLeft extends LinearOpMode {
         } else if (vision == 2) {
             if (Objects.equals(s, "chamber")) {
                 if (tagProcessor2.getDetections().get(0).id == 12) {
-                    pivotServo.setPosition(0.6);
+                    pivotServo.setPosition(1-0.6);
                     gripperServo1.setPosition(0);
                     alignY(24, vision);
                     linearSlideMovement(1300, false);
                     strafeDiagonalLeft(15);
                     //moveStraightLine(-1);
-                    pivotServo.setPosition(0.635);
+                    pivotServo.setPosition(1-0.635);
                     linearSlideMovement(300, true);
                     gripperServo1.setPosition(0.3);
                 }
@@ -277,9 +277,9 @@ public class AutoLeft extends LinearOpMode {
         linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0);
+        pivotServo.setPosition(1-0);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0);
+        pivotServo.setPosition(1-0);
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
 
@@ -288,7 +288,7 @@ public class AutoLeft extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.48);
+        pivotServo.setPosition(1-0.48);
 
         linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
