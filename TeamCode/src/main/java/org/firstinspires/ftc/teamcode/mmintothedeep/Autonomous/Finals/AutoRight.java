@@ -96,19 +96,16 @@ public class AutoRight extends LinearOpMode {
         pivotServo.setPosition(0.9);
         gripperServo1.setPosition(0);
         moveStraightLine(24); //33
-        sleep(250);
-        linearSlideMovement(1300, false);
         strafeDiagonalLeft(15);
+        linearSlideMovement(1300, false);
         moveStraightLine(1);
         pivotServo.setPosition(0.7);
+        sleep(300);
         linearSlideMovement(250, true);
-        sleep(500);
+        sleep(100);
         gripperServo1.setPosition(0.3);
-        sleep(600);
         moveStraightLine(-15);
-        sleep(250);
         //linearSlideMovement(30, false);
-        sleep(1000);
         //moveStraightLine(30);
         strafe(-60);
         linearSlideMovement(10, false);

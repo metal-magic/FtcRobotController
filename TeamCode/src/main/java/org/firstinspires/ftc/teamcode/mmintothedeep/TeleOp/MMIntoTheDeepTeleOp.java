@@ -77,7 +77,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
     private DcMotor rightBackDrive = null;
 
     public Servo gripperServo1 = null;
-//    public Servo gripperServo2 = null;
+    //    public Servo gripperServo2 = null;
     public Servo pivotServo = null;
 
 //    public Servo droneServo = null;
@@ -143,7 +143,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.48);
+        pivotServo.setPosition(0.88);
 
         initPortal();
 
@@ -196,18 +196,23 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             motorFrontRight.setPower(frontRightPower * motorSpeed);
             motorBackRight.setPower(backRightPower * motorSpeed);
 
-            if (gamepad2.right_bumper) {
+            if (gamepad2.left_bumper) {
                 gripperServo1.setPosition(0.3);
-            } else if (gamepad2.left_bumper) {
+            } else if (gamepad2.right_bumper) {
                 gripperServo1.setPosition(0);
             } else if (gamepad2.dpad_up) {
                 gripperServo1.setPosition(0.1);
             }
 
-            if (gamepad2.y) {
-                pivotServo.setPosition(pivotServo.getPosition() - 0.01);
-            } else if (gamepad2.a) {
-                pivotServo.setPosition(0.99);
+            if (gamepad2.a) {
+                if (pivotServo.getPosition() > 0.352) {
+                    pivotServo.setPosition(pivotServo.getPosition() - 0.01);
+                } else {
+                    pivotServo.setPosition(0.36);
+                }
+
+            } else if (gamepad2.y) {
+                pivotServo.setPosition(pivotServo.getPosition() + 0.01);
             }
             telemetry.addData("Pivot Servo Position1", pivotServo.getPosition());
         }
@@ -226,25 +231,38 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         double out = 0;
         long time;
         long currentTime;
+        double driverPosition = 0;
         if (linearSlideMotor.getCurrentPosition() < 3200 && gamepad2.right_trigger >= 0.1F) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
             up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
             linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
+            driverPosition = linearSlideMotor.getCurrentPosition();
         } else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad2.left_trigger >= 0.1F) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
             up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
             linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
+            driverPosition = linearSlideMotor.getCurrentPosition();
         } else {
             if (linearSlideMotor.getCurrentPosition() > 3250) {
                 linearSlideMotor.setPower(-0.3);
             } else if (linearSlideMotor.getCurrentPosition() < 0) {
                 linearSlideMotor.setPower(0.3);
             } else {
-                linearSlideMotor.setPower(0);
+                if (gamepad2.dpad_left) {
+                    if (linearSlideMotor.getCurrentPosition() < driverPosition) {
+                        linearSlideMotor.setPower(0.05);
+                    }
+                    else {
+                        linearSlideMotor.setPower(0);
+                    }
+                }
+                else {
+                    linearSlideMotor.setPower(0);
+                }
                 /*
                 double Kp = 0;
                 double Ki = 0;
