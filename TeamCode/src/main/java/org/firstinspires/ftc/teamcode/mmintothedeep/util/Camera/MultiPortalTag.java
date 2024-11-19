@@ -43,7 +43,8 @@ public class MultiPortalTag extends LinearOpMode{
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
 
-    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
+    //static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = MOTOR_TICK_COUNTS / CIRCUMFERENCE_INCHES; // 41.801 for 104 mm, 45.2 or 45 for 94 mm
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
