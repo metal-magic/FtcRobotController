@@ -41,14 +41,17 @@ public class AutoRight extends LinearOpMode {
     public DcMotor linearActuatorMotor = null;
 
     CRServo armMotor = null;
-    static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
+    static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket // VALUE FROM UtilityValues = 537.7
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
-    static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
+    static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches // 104 mm from UtilityValues
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
 
-    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
+    /* probably
+     * MOTOR_TICK_COUNTS / CIRCUMFERENCE_INCHES
+     */
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = MOTOR_TICK_COUNTS / CIRCUMFERENCE_INCHES; // 41.801 for 104 mm, 45.2 or 45 for 94 mm
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
