@@ -101,7 +101,7 @@ public class QueEsElPosicion extends LinearOpMode {
         moveStraightLine(10); //33
         linearSlideMovement(1300, false);
         pivotServo.setPosition(0.7);
-        
+
         while (!isStopRequested() && opModeIsActive()) {
             tagTelemetry(2);
             tagTelemetry(1);
