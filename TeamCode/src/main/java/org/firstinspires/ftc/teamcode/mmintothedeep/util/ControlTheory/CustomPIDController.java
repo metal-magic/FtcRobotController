@@ -38,7 +38,12 @@ public class CustomPIDController extends LinearOpMode {
         moveTestMotor(TARGET_POS);
 
     }
-    void moveTestMotor(double targetPosition) {
+
+    public void moveTestPosition() {
+
+    }
+
+    public void moveTestMotor(double targetPosition) {
         double error = testMotor.getCurrentPosition();
         double lastError = 0;
         double up;

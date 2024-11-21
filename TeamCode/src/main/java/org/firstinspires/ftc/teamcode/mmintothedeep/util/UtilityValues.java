@@ -21,7 +21,7 @@ public class UtilityValues {
     public static final double WHEEL_DIAMETER_INCHES = wheelDiameter / 25.4; // in Inches
     public static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
 
-    //public static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
+    public static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
     public static final double SPEED = 0.5;
 

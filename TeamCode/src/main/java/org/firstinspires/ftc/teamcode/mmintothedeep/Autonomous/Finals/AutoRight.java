@@ -107,50 +107,12 @@ public class AutoRight extends LinearOpMode {
         linearSlideMovement(250, true);
         sleep(100);
         gripperServo1.setPosition(0.3);
-        moveStraightLine(-15);
-        //linearSlideMovement(30, false);
-        //moveStraightLine(30);
-        strafe(-60);
-        linearSlideMovement(10, false);
-        moveStraightLine(3);
-        pivotServo.setPosition(0.3);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.7);
-        linearSlideMovement(3100, true);
-
-//        sleep(250);
-//        tagTelemetry(1);
-//        sleep(1000);
-        //alignToDefault("basket", 1);
-        //align(-24, 24, 0, 1);
-        //strafe(-24);
-//        align(-5, 24, 90, 1);
-//        sleep(250);
-//        pivotServo.setPosition(0.5);
-//        gripperServo1.setPosition(0);
-//        sleep(200);
-//        pivotServo.setPosition(0.7);
-//        rotate(-70);
-//        sleep(250);
-//        strafe(-11);
-//        sleep(250);
-//        alignToDefault("basket", 1);
-//        sleep(250);
-//        rotate(10);
-//        sleep(250);
-//        moveLinearSlideRevs(3000);
-//        sleep(250);
-//        moveStraightLine(2);
-//        sleep(250);
-//        gripperServo1.setPosition(0.3);
-//        sleep(250);
-        align(11, 24, 90, 1);
-        pivotServo.setPosition(1);
-        gripperServo1.setPosition(0.6);
-        sleep(200);
-        pivotServo.setPosition(0.5);
+        moveStraightLine(-10);
         rotate(-90);
-        strafe(-11);
+        moveStraightLine(50);
+        align(-24, 16, 0, 1);
+
+
 
 
         //Termination
@@ -337,6 +299,7 @@ public class AutoRight extends LinearOpMode {
             org.opencv.core.Size myBoxFitSize;
             double boxWidth = 0.0;
             double boxHeight = 0.0;
+
             while (!centered) {
                 RotatedRect boxFit = blobs.get(0).getBoxFit();
                 myBoxFitSize = boxFit.size;
@@ -359,9 +322,6 @@ public class AutoRight extends LinearOpMode {
                 moveStraightLine(distance-340);
             }
         }
-
-
-
 
 
         sleep(20);
