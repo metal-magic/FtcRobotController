@@ -204,14 +204,14 @@ public class MMIntoTheDeepTeleOp extends OpMode {
                 gripperServo1.setPosition(0.1);
             }
 
-            if (gamepad2.a) {
+            if (gamepad2.y) {
                 if (pivotServo.getPosition() > 0.352) {
-                    pivotServo.setPosition(0.35);
+                    pivotServo.setPosition(0.33);
                 } else {
                     pivotServo.setPosition(0.36);
                 }
 
-            } else if (gamepad2.y) {
+            } else if (gamepad2.a) {
                 pivotServo.setPosition(0.71);
             }
             telemetry.addData("Pivot Servo Position1", pivotServo.getPosition());
@@ -232,11 +232,16 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         long time;
         long currentTime;
         double driverPosition = 0;
-        if (linearSlideMotor.getCurrentPosition() < 3185 && gamepad2.right_trigger >= 0.1F) {
+        if (linearSlideMotor.getCurrentPosition() < 3150 && gamepad2.right_trigger >= 0.1F) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
-            up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+            if (linearSlideMotor.getCurrentPosition() < 3000) {
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+            }
+            else {
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 8);
+            }
             linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
             driverPosition = linearSlideMotor.getCurrentPosition();
         } else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad2.left_trigger >= 0.1F) {
@@ -247,7 +252,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
             driverPosition = linearSlideMotor.getCurrentPosition();
         } else {
-            if (linearSlideMotor.getCurrentPosition() > 3185) {
+            if (linearSlideMotor.getCurrentPosition() > 3150) {
                 linearSlideMotor.setPower(-0.3);
             } else if (linearSlideMotor.getCurrentPosition() < 0) {
                 linearSlideMotor.setPower(0.3);
