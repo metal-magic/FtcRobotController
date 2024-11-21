@@ -206,13 +206,13 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
             if (gamepad2.a) {
                 if (pivotServo.getPosition() > 0.352) {
-                    pivotServo.setPosition(pivotServo.getPosition() - 0.01);
+                    pivotServo.setPosition(0.35);
                 } else {
                     pivotServo.setPosition(0.36);
                 }
 
             } else if (gamepad2.y) {
-                pivotServo.setPosition(pivotServo.getPosition() + 0.01);
+                pivotServo.setPosition(0.71);
             }
             telemetry.addData("Pivot Servo Position1", pivotServo.getPosition());
         }
@@ -232,7 +232,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         long time;
         long currentTime;
         double driverPosition = 0;
-        if (linearSlideMotor.getCurrentPosition() < 3200 && gamepad2.right_trigger >= 0.1F) {
+        if (linearSlideMotor.getCurrentPosition() < 3185 && gamepad2.right_trigger >= 0.1F) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
@@ -247,7 +247,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
             driverPosition = linearSlideMotor.getCurrentPosition();
         } else {
-            if (linearSlideMotor.getCurrentPosition() > 3250) {
+            if (linearSlideMotor.getCurrentPosition() > 3185) {
                 linearSlideMotor.setPower(-0.3);
             } else if (linearSlideMotor.getCurrentPosition() < 0) {
                 linearSlideMotor.setPower(0.3);
