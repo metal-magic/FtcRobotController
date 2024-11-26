@@ -23,6 +23,7 @@ import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 import org.opencv.core.RotatedRect;
+import org.opencv.core.Point;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -83,7 +84,7 @@ public class ColorAutonomous extends LinearOpMode
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
-    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1;
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
     private boolean USE_WEBCAM = true;
@@ -98,7 +99,7 @@ public class ColorAutonomous extends LinearOpMode
 
         initMotor();
 
-        initColorBlobsProcessor(ColorRange.RED);
+        initColorBlobsProcessor(ColorRange.YELLOW);
 
 
 //        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
@@ -138,7 +139,7 @@ public class ColorAutonomous extends LinearOpMode
         getCameraSetting();
         // myExposure = Math.min(5, minExposure);
         myExposure = 26;
-        myGain = 255;
+        myGain = 200;
         setManualExposure(myExposure, myGain);
 
         // Wait for the match to begin.
@@ -154,7 +155,7 @@ public class ColorAutonomous extends LinearOpMode
             telemetry.addLine("Use Left bump/trig to adjust Exposure.");
             telemetry.addLine("Use Right bump/trig to adjust Gain.\n");
 
-            streamWebcamRefresh();
+            // streamWebcamRefresh();
 
             // Display how many Tags Detected
             /*
@@ -205,31 +206,58 @@ public class ColorAutonomous extends LinearOpMode
 //                }
 //            }
 
+//            org.opencv.core.Size myBoxFitSize;
+//            if (!blobs.isEmpty()) {
+//                RotatedRect boxFit = blobs.get(0).getBoxFit();
+//                myBoxFitSize = boxFit.size;
+//                double boxWidth = myBoxFitSize.width;
+//                double boxHeight = myBoxFitSize.height;
+//                int currX = (int) boxFit.center.x;
+//                double error = 320 - currX;
+//                int angle = (int) boxFit.angle;
+//                if (Math.abs((currX) - 320) <= 20) {
+//                    telemetry.addLine("X CENTERED");
+//                    strafe(5);
+//                }
+//                else if (Math.abs((currX) - 320) <= 100) {
+//                    strafe(-1 * error/40);
+//                }
+//                else {
+//                    strafe(-1 * error/20);
+//
+//                }
+//                telemetry.addLine(String.valueOf((int) boxFit.center.x));
+//                telemetry.addLine(String.valueOf(18644/Math.min(boxHeight, boxWidth)));
+//                for (ColorBlobLocatorProcessor.ContourMode c : ColorBlobLocatorProcessor.ContourMode.values())
+//                    telemetry.addLine(String.valueOf(c));
+//            }
+
             org.opencv.core.Size myBoxFitSize;
             if (!blobs.isEmpty()) {
                 RotatedRect boxFit = blobs.get(0).getBoxFit();
-                myBoxFitSize = boxFit.size;
-                double boxWidth = myBoxFitSize.width;
-                double boxHeight = myBoxFitSize.height;
-                int currX = (int) boxFit.center.x;
-                double error = 320 - currX;
-                int angle = (int) boxFit.angle;
-                if (Math.abs((currX) - 320) <= 20) {
-                    telemetry.addLine("X CENTERED");
-                    strafe(5);
+                Point[] myBoxCorners = new Point[4];
+                boxFit.points(myBoxCorners);
+                // this points() method does not return values, it populates the argument
+                double minLength = 1000;
+                int point = 0;
+                for (int i = 0; i <= 3; i++)
+                {
+                    double adjacentLength = Math.sqrt(Math.pow(Math.abs((int) myBoxCorners[i].x - (int) myBoxCorners[i+1].x), 2) + Math.pow(Math.abs((int) myBoxCorners[i].y - (int) myBoxCorners[i+1].y), 2));
+                    if (adjacentLength < minLength) {
+                        minLength = adjacentLength;
+                        point = i;
+                    }
                 }
-                else if (Math.abs((currX) - 320) <= 100) {
-                    strafe(-1 * error/40);
-                }
-                else {
-                    strafe(-1 * error/20);
-                }
-                telemetry.addLine(String.valueOf((int) boxFit.center.x));
-                telemetry.addLine(String.valueOf(18644/Math.min(boxHeight, boxWidth)));
-                for (ColorBlobLocatorProcessor.ContourMode c : ColorBlobLocatorProcessor.ContourMode.values())
-                    telemetry.addLine(String.valueOf(c));
+                // Distance in cm
+                double distanceZ = 1864.4 / minLength;
+                int midX = (int) ((myBoxCorners[point].x+myBoxCorners[point+1].x)/2);
+                int midY = (int) ((myBoxCorners[point].y+myBoxCorners[point+1].y)/2);
+                double strafeX = midX - 320;
+                double moveY = midY - 240;
+                strafe(strafeX);
+                sleep(1000);
+                moveStraightLine(moveY);
             }
-
 
 
 
@@ -374,17 +402,17 @@ public class ColorAutonomous extends LinearOpMode
      */
 
     public void initColorBlobsProcessor(ColorRange color) {
-        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
+        colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(color)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.25, 0, 0.25, -1))  // search central 1/4 of camera view
                 // .setDrawContours(true)                        // Show contours on the Stream Preview
                 .setBlurSize(5)                               // Smooth the transitions between different colors in image
-                //.setErodeSize(6)
-                //.setDilateSize(6)
+                .setErodeSize(3)
+                .setDilateSize(2)
                 .build();
 
-        VisionPortal visionPortal = new VisionPortal.Builder()
+        visionPortal = new VisionPortal.Builder()
                 .addProcessor(colorLocator)
                 .setCameraResolution(new Size(640, 480))
                 .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
@@ -400,12 +428,12 @@ public class ColorAutonomous extends LinearOpMode
     /**
      * streams camera image to DS
      */
-    private void streamWebcamRefresh() {
-        // Save CPU resources; can resume streaming when needed.
-        visionPortal.resumeStreaming();
-        // Share the CPU.
-        sleep(20);
-    }
+//    private void streamWebcamRefresh() {
+//        // Save CPU resources; can resume streaming when needed.
+//        visionPortal.resumeStreaming();
+//        // Share the CPU.
+//        sleep(20);
+//    }
 
 
 
@@ -512,6 +540,13 @@ public class ColorAutonomous extends LinearOpMode
                     1.0 * movementOfWheelsInRevs,
                     1.0 * movementOfWheelsInRevs);
         }
+    }
+
+    private void moveStraightLine(double movementInInches) {
+        double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
+        telemetry.addData("Moving ", "%.3f inches", movementInInches);
+        telemetry.update();
+        drive(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
     }
 
     public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs) {

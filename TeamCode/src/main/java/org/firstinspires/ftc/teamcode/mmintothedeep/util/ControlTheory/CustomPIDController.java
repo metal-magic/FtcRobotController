@@ -24,7 +24,7 @@ public class CustomPIDController extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        testMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+        testMotor = hardwareMap.dcMotor.get("linearSlideMotor1");
 
         testMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -39,8 +39,14 @@ public class CustomPIDController extends LinearOpMode {
 
     }
 
-    public void moveTestPosition() {
 
+    public void moveTestPosition() {
+        if (gamepad1.right_trigger >= 0.3F) {
+            testMotor.setPower(0.5);
+        }
+        else {
+            testMotor.setPower(0);
+        }
     }
 
     public void moveTestMotor(double targetPosition) {
