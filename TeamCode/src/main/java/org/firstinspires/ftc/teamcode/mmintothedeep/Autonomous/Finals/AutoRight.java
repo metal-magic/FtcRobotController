@@ -98,19 +98,20 @@ public class AutoRight extends LinearOpMode {
 
         pivotServo.setPosition(0.9);
         gripperServo1.setPosition(0);
-        moveStraightLine(24); //33
-        strafeDiagonalLeft(15);
-        linearSlideMovement(1300, false);
-        moveStraightLine(1);
-        pivotServo.setPosition(0.7);
-        sleep(300);
-        linearSlideMovement(250, true);
-        sleep(100);
-        gripperServo1.setPosition(0.3);
-        moveStraightLine(-10);
-        rotate(-90);
-        moveStraightLine(50);
-        align(-24, 16, 0, 1);
+//        moveStraightLine(24); //33
+//        strafeDiagonalLeft(15);
+//        linearSlideMovement(1300, false);
+//        moveStraightLine(1);
+//        pivotServo.setPosition(0.7);
+//        sleep(300);
+//        linearSlideMovement(250, true);
+//        sleep(100);
+//        gripperServo1.setPosition(0.3);
+//        moveStraightLine(-10);
+//        rotate(-90);
+//        moveStraightLine(50);
+//        align(-24, 16, 0, 1);
+        alignSample();
 
 
 
@@ -287,40 +288,42 @@ public class AutoRight extends LinearOpMode {
     }
 
     public void alignSample() {
+        if (colorLocator != null) {
+            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+            ColorBlobLocatorProcessor.Util.filterByArea(500, 500000, blobs);
+            telemetry.addLine("DETECTED");
+            boolean centered = false;
+            if (!blobs.isEmpty()) {
 
-        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-        ColorBlobLocatorProcessor.Util.filterByArea(500, 500000, blobs);
-        sleep(200);
+                org.opencv.core.Size myBoxFitSize;
+                double boxWidth = 0.0;
+                double boxHeight = 0.0;
+                double repetitions = 0;
 
-
-        boolean centered = false;
-        if (!blobs.isEmpty()) {
-
-            org.opencv.core.Size myBoxFitSize;
-            double boxWidth = 0.0;
-            double boxHeight = 0.0;
-
-            while (!centered) {
-                RotatedRect boxFit = blobs.get(0).getBoxFit();
-                myBoxFitSize = boxFit.size;
-                boxWidth = myBoxFitSize.width;
-                boxHeight = myBoxFitSize.height;
-                int currX = (int) boxFit.center.x;
-                double error = 320 - currX;
-                if (Math.abs((currX) - 320) <= 20) {
-                    centered = true;
-                    strafe(5);
-                } else if (Math.abs((currX) - 320) <= 100) {
-                    strafe(-1 * error / 40);
-                } else {
-                    strafe(-1 * error / 20);
+                while (!centered && repetitions < 400) {
+                    RotatedRect boxFit = blobs.get(0).getBoxFit();
+                    myBoxFitSize = boxFit.size;
+                    boxWidth = myBoxFitSize.width;
+                    boxHeight = myBoxFitSize.height;
+                    int currX = (int) boxFit.center.x;
+                    double error = 320 - currX;
+                    if (Math.abs((currX) - 320) <= 20) {
+                        centered = true;
+                        strafe(5);
+                    } else if (Math.abs((currX) - 320) <= 100) {
+                        strafe(-1 * error / 40);
+                    } else {
+                        strafe(-1 * error / 20);
+                    }
+                    telemetry.addLine(String.valueOf((int) boxFit.center.x));
+                    repetitions+=1;
                 }
-                telemetry.addLine(String.valueOf((int) boxFit.center.x));
+                double distance = 18644 / Math.min(boxHeight, boxWidth);
+
             }
-            double distance = 18644 / Math.min(boxHeight, boxWidth);
-            while (Math.abs(distance - 340) <= 10) {
-                moveStraightLine(distance-340);
-            }
+        }
+        else {
+            telemetry.addLine("NO DETECTION");
         }
 
 
@@ -461,7 +464,7 @@ public class AutoRight extends LinearOpMode {
                 .setCameraResolution(new Size(640, 480))
                 .build();
 
-        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
+        colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(ColorRange.YELLOW)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view

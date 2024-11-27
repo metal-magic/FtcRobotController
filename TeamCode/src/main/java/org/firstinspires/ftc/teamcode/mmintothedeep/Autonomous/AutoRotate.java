@@ -20,15 +20,13 @@ import java.util.Date;
 import java.util.Objects;
 
 
-@Autonomous
+@Autonomous(name = "hkjhkj")
 public class AutoRotate extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
-    public Servo gripperServo1 = null;
-    public Servo pivotServo = null;public DcMotor linearActuatorMotor = null;
 
     CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
@@ -38,7 +36,7 @@ public class AutoRotate extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
 
-    static final double DEGREES_MOTOR_MOVES_IN_1_REV = MOTOR_TICK_COUNTS / CIRCUMFERENCE_INCHES; // 41.801 for 104 mm, 45.2 or 45 for 94 mm
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1; // 41.801 for 104 mm, 45.2 or 45 for 94 mm
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
@@ -78,6 +76,8 @@ public class AutoRotate extends LinearOpMode {
         rotate(90);
         moveStraightLine(10);
         rotate(-90);
+        sleep(100);
+        rotate(360);
 
 
         //Termination
@@ -122,13 +122,11 @@ public class AutoRotate extends LinearOpMode {
         } else if (vision == 2) {
             if (Objects.equals(s, "chamber")) {
                 if (tagProcessor2.getDetections().get(0).id == 12) {
-                    pivotServo.setPosition(1-0.6);
-                    gripperServo1.setPosition(0);
+
                     alignY(24, vision);
                     strafeDiagonalLeft(15);
                     //moveStraightLine(-1);
-                    pivotServo.setPosition(1-0.635);
-                    gripperServo1.setPosition(0.3);
+
                 }
             }
         }
@@ -200,8 +198,6 @@ public class AutoRotate extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
 
-        //linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
-        linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
@@ -225,15 +221,8 @@ public class AutoRotate extends LinearOpMode {
             linearSlideMotor.setPower(0.3);
         }*/
 
-        ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         //linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(1-0);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(1-0);
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
 
@@ -241,8 +230,6 @@ public class AutoRotate extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(1-0.48);
 
         //linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
         //linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
