@@ -40,7 +40,7 @@ public class AutoLeft extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
 
-    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1;
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
@@ -77,13 +77,13 @@ public class AutoLeft extends LinearOpMode {
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        pivotServo.setPosition(0.9);
-        gripperServo1.setPosition(0);
-        strafeDiagonalRight(20); //33
-        linearSlideMovement(1500, false);
-        pivotServo.setPosition(0.7);
-        align(0, 27, 0, 2);
-        linearSlideMovement(300, true);
+        strafeDiagonalRight(20);
+        alignY(30, 2);
+        strafeDiagonalRight(-16);
+        strafe(-30);
+        rotate(-90);
+        align(6, 8, -45, 1);
+        moveStraightLine(1.5);
 
 
         //Termination
