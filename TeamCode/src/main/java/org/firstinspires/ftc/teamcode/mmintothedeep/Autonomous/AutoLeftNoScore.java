@@ -81,9 +81,9 @@ public class AutoLeftNoScore extends LinearOpMode {
         strafe(-30);
         rotate(-90);
         sleep(1000);
-        align(6, 8, -45, 1);
+        align(0, 24, -45, 1);
         sleep(200);
-        moveStraightLine(1.5);
+        moveStraightLine(17);
 
 
         //Termination
