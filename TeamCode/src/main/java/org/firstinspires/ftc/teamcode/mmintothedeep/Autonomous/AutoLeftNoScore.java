@@ -9,15 +9,24 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.util.SortOrder;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
+import org.firstinspires.ftc.vision.opencv.ColorRange;
+import org.firstinspires.ftc.vision.opencv.ImageRegion;
+import org.opencv.core.RotatedRect;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 
 @Autonomous(name="NO SCORING LEFT of Gate", group="Autonomous")
@@ -42,14 +51,31 @@ public class AutoLeftNoScore extends LinearOpMode {
 
     VisionPortal visionPortal;
     VisionPortal visionPortal2;
+    VisionPortal visionPortal3;
     AprilTagProcessor tagProcessor;
     AprilTagProcessor tagProcessor2;
+    ColorBlobLocatorProcessor colorLocator;
+
+    private int myExposure;
+    private int myGain;
+
+    private boolean alignedX = false;
+    private boolean alignedY = false;
+
+    static final double MAX_PIVOT_DISTANCE_INCHES = 13.4;
 
     @Override
     public void runOpMode() {
 
         initPortal();
         initMotor();
+
+        getCameraSetting();
+        myExposure = 30;
+        myGain = 240;
+        setManualExposure(myExposure, myGain);
+
+
         waitForStart();
 
 
@@ -62,7 +88,7 @@ public class AutoLeftNoScore extends LinearOpMode {
        /*
         METAL MAGIC INTO THE DEEP
         THIS CODE STARTS ON THE LEFT SIDE OF THE BLUE SIDE (closer to backdrop)
-        STACKS PIXEL AND PARKS IN CORNER
+        SCORES SAMPLE AND PARKS IN CORNER
         THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
         */
         //sleep lines are to avoid two lines of codes running at the same time
@@ -72,18 +98,19 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
         strafeDiagonalRight(25);
         sleep(1000);
-        alignY(30, 2);
+        alignY(29, 2);
         //moveStraightLine();
-        strafeDiagonalRight(-16);
-        strafe(-30);
-        rotate(-90);
+        strafeDiagonalRight(-20);
+        strafe(-40);
+        alignToSample();
+        sleep(2000);
+        rotate(90);
         sleep(1000);
-        align(0, 24, -45, 1);
-        sleep(200);
+        align(0, 24, 90, 1);
         moveStraightLine(17);
+
 
 
         //Termination
@@ -194,6 +221,151 @@ public class AutoLeftNoScore extends LinearOpMode {
 
     }
 
+    private boolean setManualExposure(int exposureMS, int gain) {
+        // Ensure Vision Portal has been setup.
+        if (visionPortal == null) {
+            return false;
+        }
+
+        // Wait for the camera to be open
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        // Set camera controls unless we are stopping.
+        if (!isStopRequested())
+        {
+            // Set exposure. Make sure we are in Manual Mode for these values to take effect.
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+                sleep(50);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            sleep(20);
+
+            // Set Gain.
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
+            sleep(20);
+            return (true);
+        } else {
+            return (false);
+        }
+    }
+
+    // Method to stream camera frames to the driver station
+    private void getCameraSetting() {
+        // Ensure Vision Portal has been setup.
+        if (visionPortal == null) {
+            return;
+        }
+
+        // Wait for the camera to be open
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+    }
+
+    private void alignToSample() {
+        // Robot is misaligned to begin with
+        alignedX = false;
+        alignedY = false;
+        int maxRepetitions = 5;
+        // Allows while loops below to access boxFitSize
+        org.opencv.core.Size myBoxFitSize;
+
+        int i = 0;
+        while (!alignedX && i < maxRepetitions) {
+            // Blobs is an arrayList of type ColorBlobLocatorProcessor
+            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+//            // Filters by AspectRatio to remove wall when detecting yellow
+//            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
+            // Filters by Area to remove small, glitched blobs
+            ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
+            // Sorts by Area in descending order to make processing easier
+            // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+            if (!blobs.isEmpty()) {
+                // Assigned boxFit to the largest detect blob
+                RotatedRect boxFit = blobs.get(0).getBoxFit();
+
+                double errorX = boxFit.center.x - 320;
+
+                telemetry.addLine(String.valueOf(errorX));
+
+//                if (errorX > 0) {
+//                    strafe(2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5))));
+//                } else {
+//                    strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5)))));
+//                }
+
+                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.5)));
+
+                // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i / maxRepetitions + 0.5)))));
+
+                alignedX = Math.abs(errorX) <= 30;
+                i++;
+            } else {
+                strafe(-2);
+            }
+
+        }
+
+        sleep(500);
+
+
+        // Blobs is an arrayList of type ColorBlobLocatorProcessor
+        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+        // Filters by AspectRatio to remove wall when detecting yellow
+        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
+        // Filters by Area to remove small, glitched blobs
+        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobs);
+        // Sorts by Area in descending order to make processing easier
+        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+
+        if (!blobs.isEmpty()) {
+
+            RotatedRect boxFit = blobs.get(0).getBoxFit();
+            myBoxFitSize = boxFit.size;
+            double boxWidth = myBoxFitSize.width;
+            double boxHeight = myBoxFitSize.height;
+
+            double distanceZ_INCHES = 734.01575 / Math.min(boxHeight, boxWidth);
+            double errorY = distanceZ_INCHES - MAX_PIVOT_DISTANCE_INCHES;
+
+//                if (errorY > 0) {
+//                    moveStraightLine(2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5))));
+//                } else {
+//                    moveStraightLine(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5)))));
+//                }
+            moveStraightLine(errorY);
+
+            // moveStraightLine(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (j / maxRepetitions + 0.5)))));
+
+            alignedY = Math.abs(errorY) <= 0.1;
+        }
+
+    }
+
+    public void pickUpSample() {
+        // pivotServo.setPosition(0.36);
+        // gripperServo.setPosition(0.3);
+        // pivotServo.setPosition(0.85);
+        // rotate(-90);
+    }
+
     public void initMotor() {
         /* Assign all the motors */
         //drivetrain
@@ -237,12 +409,13 @@ public class AutoLeftNoScore extends LinearOpMode {
         // the SDK that we want it to split the camera monitor area into two smaller
         // areas for us. It will then give us View IDs which we can pass to the individual
         // vision portals to allow them to properly hook into the UI in tandem.
-        int[] viewIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.VERTICAL);
+        int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
 
         // We extract the two view IDs from the array to make our lives a little easier later.
         // NB: the array is 2 long because we asked for 2 portals up above.
         int portal1ViewId = viewIds[0];
         int portal2ViewId = viewIds[1];
+        int portal3ViewId = viewIds[2];
 
         //drawing information on the driver station camera screen
         tagProcessor = new AprilTagProcessor.Builder()
@@ -261,6 +434,16 @@ public class AutoLeftNoScore extends LinearOpMode {
                 .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
                 .build();
 
+        colorLocator = new ColorBlobLocatorProcessor.Builder()
+                .setTargetColorRange(ColorRange.RED)         // use a predefined color match
+                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
+                // .setDrawContours(true)                        // Show contours on the Stream Preview
+                .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                //.setErodeSize(6)
+                //.setDilateSize(6)
+                .build();
+
         //stating the webcam
         visionPortal = new VisionPortal.Builder()
                 .setLiveViewContainerId(portal1ViewId)
@@ -273,6 +456,13 @@ public class AutoLeftNoScore extends LinearOpMode {
                 .setLiveViewContainerId(portal2ViewId)
                 .addProcessor(tagProcessor2)
                 .setCamera(hardwareMap.get(WebcamName.class, "diddyCam"))
+                .setCameraResolution(new Size(640, 480))
+                .build();
+
+        visionPortal3 = new VisionPortal.Builder()
+                .setLiveViewContainerId(portal3ViewId)
+                .addProcessor(colorLocator)
+                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
                 .setCameraResolution(new Size(640, 480))
                 .build();
 

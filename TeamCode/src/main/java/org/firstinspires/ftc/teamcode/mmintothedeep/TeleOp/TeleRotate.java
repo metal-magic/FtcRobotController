@@ -153,24 +153,28 @@ public class TeleRotate extends OpMode {
             }
 
             motorFrontLeft.setPower(frontLeftPower * motorSpeed);
+            telemetry.addData("MotorFrontLeft", frontLeftPower);
             motorBackLeft.setPower(backLeftPower * motorSpeed);
+            telemetry.addData("MotorBackLeft", frontLeftPower);
             motorFrontRight.setPower(frontRightPower * motorSpeed);
+            telemetry.addData("MotorFrontRight", frontLeftPower);
             motorBackRight.setPower(backRightPower * motorSpeed);
-
-
+            telemetry.addData("MotorBackRight", frontLeftPower);
         }
 
-        if (gamepad1.y) {
-            DEGREES_MOTOR_MOVES_IN_1_REV += 0.1;
-        }
+//        if (gamepad1.y) {
+//            DEGREES_MOTOR_MOVES_IN_1_REV += 0.1;
+//        }
+//
+//        if (gamepad1.x) {
+//            DEGREES_MOTOR_MOVES_IN_1_REV -= 0.1;
+//        }
+//
+//        if (gamepad1.a) {
+//            rotate(360);
+//        }
 
-        if (gamepad1.x) {
-            DEGREES_MOTOR_MOVES_IN_1_REV -= 0.1;
-        }
 
-        if (gamepad1.a) {
-            rotate(360);
-        }
 
 
         telemetry.addData("Rotation Coefficient: ", DEGREES_MOTOR_MOVES_IN_1_REV);

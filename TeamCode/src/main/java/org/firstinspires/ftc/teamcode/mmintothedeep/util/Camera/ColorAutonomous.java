@@ -84,11 +84,14 @@ public class ColorAutonomous extends LinearOpMode
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
-    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1;
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = UtilityValues.COMPETITION_MOTOR_MOVES_IN_1_REV;
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
     private boolean USE_WEBCAM = true;
     private boolean REFRESH_WEBCAM = false;
+
+    private boolean aligned = false;
+    private boolean direction = false;
 
     @Override public void runOpMode()
     {
@@ -99,7 +102,7 @@ public class ColorAutonomous extends LinearOpMode
 
         initMotor();
 
-        initColorBlobsProcessor(ColorRange.YELLOW);
+        initColorBlobsProcessor(ColorRange.BLUE);
 
 
 //        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
@@ -184,7 +187,7 @@ public class ColorAutonomous extends LinearOpMode
             //  telemetry.update();
 
             List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-            ColorBlobLocatorProcessor.Util.filterByArea(500, 500000, blobs);
+            ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobs);
 
             sleep(200);
 
@@ -232,38 +235,48 @@ public class ColorAutonomous extends LinearOpMode
 //                    telemetry.addLine(String.valueOf(c));
 //            }
 
+            //
+
             org.opencv.core.Size myBoxFitSize;
-            if (!blobs.isEmpty()) {
+            double strafeX = 1;
+            if (!blobs.isEmpty() && !aligned) {
                 RotatedRect boxFit = blobs.get(0).getBoxFit();
                 Point[] myBoxCorners = new Point[4];
                 boxFit.points(myBoxCorners);
                 // this points() method does not return values, it populates the argument
-                double minLength = 1000;
+                double minLength = 2500;
                 int point = 0;
                 for (int i = 0; i <= 3; i++)
                 {
-                    double adjacentLength = Math.sqrt(Math.pow(Math.abs((int) myBoxCorners[i].x - (int) myBoxCorners[i+1].x), 2) + Math.pow(Math.abs((int) myBoxCorners[i].y - (int) myBoxCorners[i+1].y), 2));
+                    double adjacentLength = Math.sqrt(Math.pow(Math.abs((int) myBoxCorners[i%4].x - (int) myBoxCorners[(i+1)%4].x), 2) + Math.pow(Math.abs((int) myBoxCorners[i%4].y - (int) myBoxCorners[(i+1)%4].y), 2));
                     if (adjacentLength < minLength) {
                         minLength = adjacentLength;
                         point = i;
                     }
                 }
-                // Distance in cm
-                double distanceZ = 1864.4 / minLength;
+                // Distance in inches
+                double distanceZ = 734.01575 / minLength;
                 int midX = (int) ((myBoxCorners[point].x+myBoxCorners[point+1].x)/2);
                 int midY = (int) ((myBoxCorners[point].y+myBoxCorners[point+1].y)/2);
-                double strafeX = midX - 320;
-                double moveY = midY - 240;
+                double distanceX = (midX - 320);
+                double distanceY = (240 - midY);
+                strafeX = distanceX * distanceZ / (Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
+                double moveY = distanceY * distanceZ / (Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2)));
                 strafe(strafeX);
-                sleep(1000);
-                moveStraightLine(moveY);
+                sleep(500);
+                if (Math.abs(boxFit.center.x - 320) <= 20) {
+                    aligned = true;
+                }
+            } else {
+                strafe(-0.5 * strafeX);
             }
 
-
+            telemetry.addLine(String.valueOf(aligned));
 
 
             sleep(20);
             telemetry.update();
+
         }
     }
 
@@ -289,10 +302,10 @@ public class ColorAutonomous extends LinearOpMode
         //armMotor = hardwareMap.crservo.get("armMotor");
 
         // Set all the right motor directions
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
+        leftBackDrive.setDirection(UtilityValues.finalLeftBackDirection);
+        rightFrontDrive.setDirection(UtilityValues.finalRightFrontDirection);
+        rightBackDrive.setDirection(UtilityValues.finalRightBackDirection);
 
         // Reset encoders positions
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -405,7 +418,7 @@ public class ColorAutonomous extends LinearOpMode
         colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(color)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.25, 0, 0.25, -1))  // search central 1/4 of camera view
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.25 , 0.5, -1))  // search central 1/4 of camera view
                 // .setDrawContours(true)                        // Show contours on the Stream Preview
                 .setBlurSize(5)                               // Smooth the transitions between different colors in image
                 .setErodeSize(3)
