@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.mmcenterstage.HardwareTesting.LeftStrafeTest;
 import org.firstinspires.ftc.teamcode.mmcenterstage.other.OldSensorColor2;
@@ -52,6 +53,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.Timer;
 
 
@@ -200,8 +202,20 @@ public class MMIntoTheDeepTeleOp extends OpMode {
                 gripperServo1.setPosition(0.3);
             } else if (gamepad2.right_bumper) {
                 gripperServo1.setPosition(0);
+//                try {
+//                    TimeUnit.MILLISECONDS.sleep(800);
+//                } catch (InterruptedException e) {
+//                    telemetry.addData("Interrupted by: ", e);
+//                }
+//                pivotServo.setPosition(0.71);
             } else if (gamepad2.dpad_up) {
                 gripperServo1.setPosition(0.1);
+//                try {
+//                    TimeUnit.MILLISECONDS.sleep(800);
+//                } catch (InterruptedException e) {
+//                    telemetry.addData("Interrupted by: ", e);
+//                }
+//                pivotServo.setPosition(0.71);
             }
 
             if (gamepad2.y) {
@@ -291,11 +305,46 @@ public class MMIntoTheDeepTeleOp extends OpMode {
                     }
                 } if (!setPointIsNotReached) {
                     linearSlideMotor.setPower(0);
-                }
+                }fuc
                 */
 
             }
 
+        }
+        if (gamepad2.b) {
+            while ((linearSlideMotor.getCurrentPosition()<3120) || (!gamepad2.x || !gamepad2.dpad_down)) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                if (linearSlideMotor.getCurrentPosition() < 3000) {
+                    up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                }
+                else {
+                    up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 8);
+                }
+                linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*0.6);
+            }
+        }
+        if (gamepad2.x) {
+            if (linearSlideMotor.getCurrentPosition()<1560) {
+                while ((linearSlideMotor.getCurrentPosition() < 1560) || (!gamepad2.b || !gamepad2.dpad_down)) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                    up = Math.sin(((double) (1000 + linearSlideMotor.getCurrentPosition()) /4000)*Math.PI / 2);
+                    linearSlideMotor.setPower(/*UtilityValues.LSSPEED**/up * 0.6);
+                }
+            } else if (linearSlideMotor.getCurrentPosition()>1560) {
+                    while ((linearSlideMotor.getCurrentPosition() > 1560) || (!gamepad2.b || !gamepad2.dpad_down)) {
+                        linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                        up = Math.sin(((double) (1000 + linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                        linearSlideMotor.setPower(-1 * /*UtilityValues.LSSPEED**/up * gamepad2.left_trigger);
+                    }
+                } else {
+                linearSlideMotor.setPower(0);
+            }
         }
         //linear slide limit calculations
         //435/60 = 7.2 revolutions per second
