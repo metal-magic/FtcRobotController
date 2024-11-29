@@ -67,7 +67,7 @@ public class AutoLeftNoScore extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        initPortal();
+        initPortal(ColorRange.BLUE);
         initMotor();
 
         getCameraSetting();
@@ -403,7 +403,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
     }
 
-    public void initPortal() {
+    public void initPortal(ColorRange color) {
 
         // Because we want to show two camera feeds simultaneously, we need to inform
         // the SDK that we want it to split the camera monitor area into two smaller
@@ -435,7 +435,7 @@ public class AutoLeftNoScore extends LinearOpMode {
                 .build();
 
         colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.RED)         // use a predefined color match
+                .setTargetColorRange(color)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
                 // .setDrawContours(true)                        // Show contours on the Stream Preview
