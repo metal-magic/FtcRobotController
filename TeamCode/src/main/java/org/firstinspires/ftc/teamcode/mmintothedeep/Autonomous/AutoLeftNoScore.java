@@ -56,18 +56,21 @@ public class AutoLeftNoScore extends LinearOpMode {
     AprilTagProcessor tagProcessor2;
     ColorBlobLocatorProcessor colorLocator;
 
+    public Servo gripperServo1 = null;
+    public Servo pivotServo = null;
+
     private int myExposure;
     private int myGain;
 
     private boolean alignedX = false;
     private boolean alignedY = false;
 
-    static final double MAX_PIVOT_DISTANCE_INCHES = 13.4;
+    static final double MAX_PIVOT_DISTANCE_INCHES = 9;
 
     @Override
     public void runOpMode() {
 
-        initPortal(ColorRange.BLUE);
+        initPortal(ColorRange.RED);
         initMotor();
 
         getCameraSetting();
@@ -106,10 +109,12 @@ public class AutoLeftNoScore extends LinearOpMode {
         strafe(-40);
         alignToSample();
         sleep(2000);
-        rotate(90);
-        sleep(1000);
-        align(0, 24, 90, 1);
-        moveStraightLine(17);
+        pickUpSample();
+//        sleep(2000);
+//        rotate(90);
+//        sleep(1000);
+//        align(0, 24, 90, 1);
+//        moveStraightLine(17);
 
 
 
@@ -279,14 +284,99 @@ public class AutoLeftNoScore extends LinearOpMode {
         }
     }
 
+//    private void alignToSample() {
+//        // Robot is misaligned to begin with
+//        alignedX = false;
+//        alignedY = false;
+//        int maxRepetitions = 5;
+//        // Allows while loops below to access boxFitSize
+//        org.opencv.core.Size myBoxFitSize;
+//
+//        int i = 0;
+//        while (!alignedX && i < maxRepetitions) {
+//            // Blobs is an arrayList of type ColorBlobLocatorProcessor
+//            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+////            // Filters by AspectRatio to remove wall when detecting yellow
+////            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
+//            // Filters by Area to remove small, glitched blobs
+//            ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
+//            // Sorts by Area in descending order to make processing easier
+//            // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+//            if (!blobs.isEmpty()) {
+//                // Assigned boxFit to the largest detect blob
+//                RotatedRect boxFit = blobs.get(0).getBoxFit();
+//
+//                double errorX = boxFit.center.x - 320;
+//
+//                telemetry.addLine(String.valueOf(errorX));
+//
+////                if (errorX > 0) {
+////                    strafe(2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5))));
+////                } else {
+////                    strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5)))));
+////                }
+//
+//                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.5)));
+//
+//                // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i / maxRepetitions + 0.5)))));
+//
+//                alignedX = Math.abs(errorX) <= 30;
+//                i++;
+//            } else {
+//                strafe(-2);
+//            }
+//
+//        }
+//
+//        sleep(500);
+//
+//
+//        // Blobs is an arrayList of type ColorBlobLocatorProcessor
+//        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+//        // Filters by AspectRatio to remove wall when detecting yellow
+//        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
+//        // Filters by Area to remove small, glitched blobs
+//        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobs);
+//        // Sorts by Area in descending order to make processing easier
+//        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+//
+//        if (!blobs.isEmpty()) {
+//
+//            RotatedRect boxFit = blobs.get(0).getBoxFit();
+//            myBoxFitSize = boxFit.size;
+//            double boxWidth = myBoxFitSize.width;
+//            double boxHeight = myBoxFitSize.height;
+//
+//            double distanceZ_INCHES = 734.01575 / Math.min(boxHeight, boxWidth);
+//            double errorY = distanceZ_INCHES - MAX_PIVOT_DISTANCE_INCHES;
+//
+////                if (errorY > 0) {
+////                    moveStraightLine(2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5))));
+////                } else {
+////                    moveStraightLine(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5)))));
+////                }
+//            moveStraightLine(errorY);
+//
+//            // moveStraightLine(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (j / maxRepetitions + 0.5)))));
+//
+//            alignedY = Math.abs(errorY) <= 0.1;
+//        }
+//
+//    }
+
+
+
     private void alignToSample() {
         // Robot is misaligned to begin with
-        alignedX = false;
-        alignedY = false;
+        boolean alignedX = false;
+        boolean alignedY = false;
+        double upper = 0;
+        double lower = 0;
+        double current = 0;
         int maxRepetitions = 5;
+        double strafeDistance = 0.5;
         // Allows while loops below to access boxFitSize
         org.opencv.core.Size myBoxFitSize;
-
         int i = 0;
         while (!alignedX && i < maxRepetitions) {
             // Blobs is an arrayList of type ColorBlobLocatorProcessor
@@ -297,6 +387,9 @@ public class AutoLeftNoScore extends LinearOpMode {
             ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
             // Sorts by Area in descending order to make processing easier
             // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+
+
+
             if (!blobs.isEmpty()) {
                 // Assigned boxFit to the largest detect blob
                 RotatedRect boxFit = blobs.get(0).getBoxFit();
@@ -305,39 +398,102 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 telemetry.addLine(String.valueOf(errorX));
 
+                // V1 HORIZONTAL ALIGNMENT
 //                if (errorX > 0) {
 //                    strafe(2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5))));
 //                } else {
 //                    strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5)))));
 //                }
 
-                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.5)));
+                // V2 HORIZONTAL ALIGNMENT
+                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.1)));
+
+
+//                // V3 HORIZONTAL ALIGNMENT
+//                if (current == 0) {
+//                    if (errorX > 0) {
+//                        upper += 5;
+//                    } else {
+//                        lower -= 5;
+//                    }
+//                } else {
+//                    if (errorX > 0) {
+//                        lower = current;
+//                    } else {
+//                        upper = current;
+//                    }
+//                }
+//
+//                current = (upper+lower)/2-current;
+//                strafe(current);
 
                 // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i / maxRepetitions + 0.5)))));
 
                 alignedX = Math.abs(errorX) <= 30;
-                i++;
             } else {
                 strafe(-2);
             }
-
+            i++;
         }
 
-        sleep(500);
-
-
+//        // Sample horizontal setting
+//
+//        // Blobs is an arrayList of type ColorBlobLocatorProcessor
+//        List<ColorBlobLocatorProcessor.Blob> blobsX1 = colorLocator.getBlobs();
+//        // Filters by AspectRatio to remove wall when detecting yellow
+//        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsX1);
+//        // Filters by Area to remove small, glitched blobs
+//        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsX1);
+//        // Sorts by Area in descending order to make processing easier
+//        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+//
+//        double P1 = 320;
+//        if (!blobsX1.isEmpty()) {
+//
+//            RotatedRect boxFit = blobsX1.get(0).getBoxFit();
+//            P1 = boxFit.center.x - 320;
+//        }
+//
+//        // Sets up ratio between horizontal distance and vertical distance
+//        strafe(Math.signum(P1) * strafeDistance);
+//
+//        // Automatic Horizontal Alignment
+//
+//        // Blobs is an arrayList of type ColorBlobLocatorProcessor
+//        List<ColorBlobLocatorProcessor.Blob> blobsX2 = colorLocator.getBlobs();
+//        // Filters by AspectRatio to remove wall when detecting yellow
+//        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsX2);
+//        // Filters by Area to remove small, glitched blobs
+//        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsX2);
+//        // Sorts by Area in descending order to make processing easier
+//        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+//
+//        double P2 = 320;
+//        if (!blobsX2.isEmpty()) {
+//
+//            RotatedRect boxFit = blobsX2.get(0).getBoxFit();
+//
+//            P2 = boxFit.center.x - 320;
+//        }
+//
+//        strafe((P1 * strafeDistance) / (P1 - P2));
+//
+//
+//        sleep(500);
+//
+//
         // Blobs is an arrayList of type ColorBlobLocatorProcessor
-        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+        List<ColorBlobLocatorProcessor.Blob> blobsY = colorLocator.getBlobs();
         // Filters by AspectRatio to remove wall when detecting yellow
-        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
+        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsY);
         // Filters by Area to remove small, glitched blobs
-        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobs);
+        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsY);
         // Sorts by Area in descending order to make processing easier
         // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
 
-        if (!blobs.isEmpty()) {
+        if (!blobsY.isEmpty()) {
 
-            RotatedRect boxFit = blobs.get(0).getBoxFit();
+            RotatedRect boxFit = blobsY.get(0).getBoxFit();
             myBoxFitSize = boxFit.size;
             double boxWidth = myBoxFitSize.width;
             double boxHeight = myBoxFitSize.height;
@@ -360,10 +516,14 @@ public class AutoLeftNoScore extends LinearOpMode {
     }
 
     public void pickUpSample() {
-        // pivotServo.setPosition(0.36);
-        // gripperServo.setPosition(0.3);
-        // pivotServo.setPosition(0.85);
-        // rotate(-90);
+        gripperServo1.setPosition(0.3);
+        sleep(100);
+        pivotServo.setPosition(0.09);
+        sleep(100);
+        gripperServo1.setPosition(0);
+        sleep(100);
+        pivotServo.setPosition(0.85);
+        sleep(100);
     }
 
     public void initMotor() {
@@ -373,6 +533,9 @@ public class AutoLeftNoScore extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
