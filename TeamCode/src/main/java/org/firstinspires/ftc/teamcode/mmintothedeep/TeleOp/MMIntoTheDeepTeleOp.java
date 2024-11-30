@@ -156,7 +156,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.5);
+        pivotServo.setPosition(0.59);
 
         initPortal();
 
@@ -239,11 +239,11 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 //                pivotServo.setPosition(0.71);
 //            }
             if (gamepad2.y) {
-                pivotServo.setPosition(0.05);
+                pivotServo.setPosition(0.38);
             } else if (gamepad2.a) {
-                pivotServo.setPosition(0.59);
+                pivotServo.setPosition(0.05);
             } else if (gamepad2.dpad_right) {
-                pivotServo.setPosition(pivotServo.getPosition() + 0.01);
+                pivotServo.setPosition(0.57);
             }
 
             telemetry.addData("Pivot Servo Position1", pivotServo.getPosition());
