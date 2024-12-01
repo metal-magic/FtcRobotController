@@ -163,6 +163,12 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         gripperServo1.setPosition(0);
         pivotServo.setPosition(0.59);
 
+        hangSlideMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        hangSlideMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         initPortal();
 
 
@@ -389,17 +395,42 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 //            }
 //        }
 
-        if (gamepad1.right_bumper && (hangSlideMotor1.getCurrentPosition()<3120)) {
-            hangSlideMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
-            hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            hangSlideMotor1.setPower(1);
-        } else if (gamepad1.left_bumper && (hangSlideMotor1.getCurrentPosition() > 100)) {
-            hangSlideMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
-            hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            hangSlideMotor1.setPower(-1);
+        if (gamepad1.right_trigger >= 0.3F) {
+            if (hangSlideMotor1.getCurrentPosition() >= 0 && hangSlideMotor2.getCurrentPosition() <= 0) {
+                hangSlideMotor1.setPower(0.41);
+                hangSlideMotor2.setPower(-1);
+            }
+//            if (hangSlideMotor1.getCurrentPosition()<=2400) {
+//                hangSlideMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
+//                hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                hangSlideMotor1.setPower(1 * 0.41);
+//            }
+//            if (hangSlideMotor2.getCurrentPosition()<=0) {
+//                hangSlideMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
+//                hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                hangSlideMotor2.setPower(-1);
+//            }
+        } else if (gamepad1.left_trigger >= 0.3F) {
+
+            if (hangSlideMotor1.getCurrentPosition() <= 2125 && hangSlideMotor2.getCurrentPosition() >= -5174) {
+                hangSlideMotor1.setPower(-0.41);
+                hangSlideMotor2.setPower(1);
+            }
+//            if (hangSlideMotor1.getCurrentPosition() >= 0) {
+//                hangSlideMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
+//                hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                hangSlideMotor1.setPower(-1 * 0.41);
+//            }
+//            if (hangSlideMotor2.getCurrentPosition() >= -8300) {
+//                hangSlideMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
+//                hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//                hangSlideMotor2.setPower(1);
+//            }
         } else {
             hangSlideMotor1.setPower(0);
+            hangSlideMotor2.setPower(0);
         }
+
 
 
         //linear slide limit calculations
@@ -426,7 +457,8 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         //telemetry.addData("Linear Actuator Speed", linearActuatorMotor.getPower());
         telemetry.addData("Claw Join Position,", pivotServo.getPosition());
         telemetry.addData("slide", linearSlideMotor.getCurrentPosition());
-        telemetry.addData("Hanging slide ", hangSlideMotor1.getCurrentPosition());
+        telemetry.addData("Hanging slide 1", hangSlideMotor1.getCurrentPosition());
+        telemetry.addData("Hanging slide 2", hangSlideMotor2.getCurrentPosition());
 
         telemetry.update();
 
