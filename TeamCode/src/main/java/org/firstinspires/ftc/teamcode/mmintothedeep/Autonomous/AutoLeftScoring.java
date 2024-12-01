@@ -29,8 +29,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-@Autonomous(name="NO SCORING LEFT of Gate", group="Autonomous")
-public class AutoLeftNoScore extends LinearOpMode {
+@Autonomous(name="YES SCORING LEFT of Gate", group="Autonomous")
+public class AutoLeftScoring extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -58,6 +58,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
     public Servo gripperServo1 = null;
     public Servo pivotServo = null;
+    public DcMotor linearSlideMotor = null;
 
     private int myExposure;
     private int myGain;
@@ -65,15 +66,19 @@ public class AutoLeftNoScore extends LinearOpMode {
     private boolean alignedX = false;
     private boolean alignedY = false;
 
-    static final double MAX_PIVOT_DISTANCE_INCHES = 9;
+    static final double MAX_PIVOT_DISTANCE_INCHES = 6;
+
+    List<ColorBlobLocatorProcessor.Blob> blobs;
+
+    int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
 
     @Override
     public void runOpMode() {
 
-        initPortal(ColorRange.RED);
+        initPortal(ColorRange.YELLOW);
         initMotor();
 
-        getCameraSetting();
+//        getCameraSetting();
         myExposure = 30;
         myGain = 240;
         setManualExposure(myExposure, myGain);
@@ -102,14 +107,34 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         strafeDiagonalRight(25);
-        sleep(1000);
-        alignY(29, 2);
-        //moveStraightLine();
+//        alignY(29, 2);
+        moveStraightLine(19.5);
+        moveLinearSlide(680, 0.4);
+        pivotServo.setPosition(0.38);
+        sleep(500);
+        moveLinearSlide(10, 1);
+        sleep(100);
+        gripperServo1.setPosition(0.3);
+        moveStraightLine(-2);
         strafeDiagonalRight(-20);
-        strafe(-40);
+        strafe(-44, 0.8);
         alignToSample();
-        sleep(2000);
+        sleep(500);
+        // Offset to claw
+        strafe(1, 1.0);
         pickUpSample();
+        moveStraightLine(-5);
+        rotate(-135);
+        moveLinearSlide(4000, 0.7);
+
+        //rotate(-150);
+//        moveStraightLine(13);
+//        moveLinearSlide(4000, 0.4);
+//        pivotServo.setPosition(0.38);
+//        gripperServo1.setPosition(0.3);
+//        pivotServo.setPosition(0.5);
+//        moveLinearSlide(50, 0.4);
+
 //        sleep(2000);
 //        rotate(90);
 //        sleep(1000);
@@ -170,7 +195,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
     public void returnBackTo13Basket() {
         rotate(45);
-        strafe(0);
+        strafe(0, SPEED);
     }
 
     public void alignToDefault(String s, int vision) {
@@ -370,28 +395,23 @@ public class AutoLeftNoScore extends LinearOpMode {
         // Robot is misaligned to begin with
         boolean alignedX = false;
         boolean alignedY = false;
-        double upper = 0;
-        double lower = 0;
-        double current = 0;
-        int maxRepetitions = 5;
-        double strafeDistance = 0.5;
+        int maxRepetitions = 10;
         // Allows while loops below to access boxFitSize
         org.opencv.core.Size myBoxFitSize;
         int i = 0;
         while (!alignedX && i < maxRepetitions) {
             // Blobs is an arrayList of type ColorBlobLocatorProcessor
-            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+            blobs = colorLocator.getBlobs();
 //            // Filters by AspectRatio to remove wall when detecting yellow
-//            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
+            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
             // Filters by Area to remove small, glitched blobs
             ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
             // Sorts by Area in descending order to make processing easier
             // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
 
-
-
+//
             if (!blobs.isEmpty()) {
-                // Assigned boxFit to the largest detect blob
+                // Assigned boxFit to the largest detected blob
                 RotatedRect boxFit = blobs.get(0).getBoxFit();
 
                 double errorX = boxFit.center.x - 320;
@@ -405,8 +425,8 @@ public class AutoLeftNoScore extends LinearOpMode {
 //                    strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5)))));
 //                }
 
-                // V2 HORIZONTAL ALIGNMENT
-                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.1)));
+//                // V2 HORIZONTAL ALIGNMENT
+//                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.1)));
 
 
 //                // V3 HORIZONTAL ALIGNMENT
@@ -429,9 +449,13 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i / maxRepetitions + 0.5)))));
 
+                strafe(Math.signum(errorX) * 3 * Math.pow(2, -1 * i), 0.5);
+
                 alignedX = Math.abs(errorX) <= 30;
+
+
             } else {
-                strafe(-2);
+                sleep(10);
             }
             i++;
         }
@@ -516,14 +540,14 @@ public class AutoLeftNoScore extends LinearOpMode {
     }
 
     public void pickUpSample() {
-//        gripperServo1.setPosition(0.3);
-//        sleep(100);
-//        pivotServo.setPosition(0.09);
-//        sleep(100);
-//        gripperServo1.setPosition(0);
-//        sleep(100);
-//        pivotServo.setPosition(0.85);
-//        sleep(100);
+        gripperServo1.setPosition(0.3);
+        sleep(100);
+        pivotServo.setPosition(0.05);
+        sleep(2000);
+        gripperServo1.setPosition(0);
+        sleep(1000);
+        pivotServo.setPosition(0.59);
+        sleep(100);
     }
 
     public void initMotor() {
@@ -533,6 +557,10 @@ public class AutoLeftNoScore extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
@@ -561,6 +589,41 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(0.59);
+    }
+
+    private void moveLinearSlide (int height, double power) {
+        double scale = power;
+        // Checks if current position is within bounds
+        if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
+            while (height > linearSlideMotor.getCurrentPosition()) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(scale);
+            }
+        } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
+            while (height < linearSlideMotor.getCurrentPosition()) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(-1 * scale);
+            }
+        } else {
+            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            linearSlideMotor.setPower(0);
+        }
+    }
+
+    private double linearSlideScaling (int x) {
+        if (0 <= x && x < 50) {
+            return Math.min(1.1 - 1/(Math.pow(2.71, x)), 1);
+        } else if (50 <= x && x < 3950) {
+            return 1;
+        } else if (3950 <= x && x < 4000) {
+            return Math.min(1.1 - 1/(Math.pow(2.71, 4000-x)), 1);
+        }
+        return 0;
     }
 
     public void initPortal(ColorRange color) {
@@ -569,7 +632,6 @@ public class AutoLeftNoScore extends LinearOpMode {
         // the SDK that we want it to split the camera monitor area into two smaller
         // areas for us. It will then give us View IDs which we can pass to the individual
         // vision portals to allow them to properly hook into the UI in tandem.
-        int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
 
         // We extract the two view IDs from the array to make our lives a little easier later.
         // NB: the array is 2 long because we asked for 2 portals up above.
@@ -688,7 +750,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 rotateRadians = Math.toRadians(rotateNew);
                 correctX = Math.tan(rotateRadians) * originalY;
-                strafe(-1*correctX);
+                strafe(-1*correctX, SPEED);
 
             }
         } else if (vision == 2) {
@@ -707,7 +769,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 rotateRadians = Math.toRadians(rotateNew);
                 correctX = Math.tan(rotateRadians) * originalY;
-                strafe(correctX);
+                strafe(correctX, SPEED);
             }
         }
 
@@ -723,11 +785,11 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
                     //strafe(1);
-                    strafe(1 * xPosNew);
+                    strafe(1 * xPosNew, SPEED);
                 }
                 if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
                     //strafe(-1);
-                    strafe(1 * xPosNew);
+                    strafe(1 * xPosNew, SPEED);
                 }
             }
         } else if (vision == 2) {
@@ -736,11 +798,11 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
                     //strafe(1);
-                    strafe(-1 * xPosNew);
+                    strafe(-1 * xPosNew, SPEED);
                 }
                 if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
                     //strafe(-1);
-                    strafe(-1 * xPosNew);
+                    strafe(-1 * xPosNew, SPEED);
                 }
             }
         }
@@ -803,13 +865,13 @@ public class AutoLeftNoScore extends LinearOpMode {
         }
     }
 
-    private void strafe(double strafeInches) {
+    private void strafe(double strafeInches, double speed) {
         // We assume that strafing right means positive
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
         if (strafeInches >= 0) {
             telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
 
-            drive(SPEED,
+            drive(speed,
                     1 * strafeRevs,
                     -1 * strafeRevs,
                     -1 * strafeRevs,
@@ -817,7 +879,7 @@ public class AutoLeftNoScore extends LinearOpMode {
         } else {
             telemetry.addData("Strafing towards Left by ", "%.3f inches", Math.abs(strafeInches));
 
-            drive(SPEED,
+            drive(speed,
                     -1 * strafeRevs,
                     1 * strafeRevs,
                     1 * strafeRevs,
@@ -884,7 +946,7 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightBackDrive.setPower(0);
 
 
-        sleep(250);
+        sleep(20);
     }
 
     public void strafeDiagonalLeft(double strafeLeftInches) {

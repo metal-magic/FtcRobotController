@@ -104,7 +104,7 @@ public class AutoRight extends LinearOpMode {
 //        moveStraightLine(1);
 //        pivotServo.setPosition(0.7);
 //        sleep(300);
-//        linearSlideMovement(250, true);
+        linearSlideMovement(250, true);
 //        sleep(100);
 //        gripperServo1.setPosition(0.3);
 //        moveStraightLine(-10);

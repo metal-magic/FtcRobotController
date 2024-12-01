@@ -29,8 +29,8 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-@Autonomous(name="NO SCORING LEFT of Gate", group="Autonomous")
-public class AutoLeftNoScore extends LinearOpMode {
+@Autonomous(name="YES SCORING RIGHT of Gate", group="Autonomous")
+public class AutoRightScoring extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -58,6 +58,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
     public Servo gripperServo1 = null;
     public Servo pivotServo = null;
+    public DcMotor linearSlideMotor = null;
 
     private int myExposure;
     private int myGain;
@@ -65,15 +66,17 @@ public class AutoLeftNoScore extends LinearOpMode {
     private boolean alignedX = false;
     private boolean alignedY = false;
 
-    static final double MAX_PIVOT_DISTANCE_INCHES = 9;
+    static final double MAX_PIVOT_DISTANCE_INCHES = 8;
+
+    List<ColorBlobLocatorProcessor.Blob> blobs;
 
     @Override
     public void runOpMode() {
 
-        initPortal(ColorRange.RED);
+        initPortal(ColorRange.BLUE);
         initMotor();
 
-        getCameraSetting();
+//        getCameraSetting();
         myExposure = 30;
         myGain = 240;
         setManualExposure(myExposure, myGain);
@@ -101,15 +104,25 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        strafeDiagonalRight(25);
-        sleep(1000);
-        alignY(29, 2);
-        //moveStraightLine();
-        strafeDiagonalRight(-20);
-        strafe(-40);
-        alignToSample();
-        sleep(2000);
-        pickUpSample();
+        strafeDiagonalLeft(25);
+//        alignY(29, 2);
+        moveStraightLine(16);
+        moveLinearSlide(800);
+        pivotServo.setPosition(0.35);
+        moveStraightLine(1);
+        moveLinearSlide(600);
+        sleep(100);
+        gripperServo1.setPosition(0.3);
+        strafeDiagonalLeft(-20);
+        strafe(34, 1.0);
+        moveStraightLine(20);
+        strafe(5, 1.0);
+        moveStraightLine(-30);
+        moveStraightLine(30);
+        strafe(5, 1.0);
+        moveStraightLine(-30);
+        moveStraightLine(30);
+        strafe(5, 1.0);
 //        sleep(2000);
 //        rotate(90);
 //        sleep(1000);
@@ -170,7 +183,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
     public void returnBackTo13Basket() {
         rotate(45);
-        strafe(0);
+        strafe(0, SPEED);
     }
 
     public void alignToDefault(String s, int vision) {
@@ -370,28 +383,23 @@ public class AutoLeftNoScore extends LinearOpMode {
         // Robot is misaligned to begin with
         boolean alignedX = false;
         boolean alignedY = false;
-        double upper = 0;
-        double lower = 0;
-        double current = 0;
         int maxRepetitions = 5;
-        double strafeDistance = 0.5;
         // Allows while loops below to access boxFitSize
         org.opencv.core.Size myBoxFitSize;
         int i = 0;
         while (!alignedX && i < maxRepetitions) {
             // Blobs is an arrayList of type ColorBlobLocatorProcessor
-            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+            blobs = colorLocator.getBlobs();
 //            // Filters by AspectRatio to remove wall when detecting yellow
-//            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
+            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
             // Filters by Area to remove small, glitched blobs
             ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
             // Sorts by Area in descending order to make processing easier
             // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
 
-
-
+//
             if (!blobs.isEmpty()) {
-                // Assigned boxFit to the largest detect blob
+                // Assigned boxFit to the largest detected blob
                 RotatedRect boxFit = blobs.get(0).getBoxFit();
 
                 double errorX = boxFit.center.x - 320;
@@ -405,8 +413,8 @@ public class AutoLeftNoScore extends LinearOpMode {
 //                    strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5)))));
 //                }
 
-                // V2 HORIZONTAL ALIGNMENT
-                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.1)));
+//                // V2 HORIZONTAL ALIGNMENT
+//                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.1)));
 
 
 //                // V3 HORIZONTAL ALIGNMENT
@@ -429,9 +437,13 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i / maxRepetitions + 0.5)))));
 
+                strafe(Math.signum(errorX) * 3 * Math.pow(2, -1 * i), 0.5);
+
                 alignedX = Math.abs(errorX) <= 30;
+
+
             } else {
-                strafe(-2);
+                sleep(10);
             }
             i++;
         }
@@ -516,14 +528,14 @@ public class AutoLeftNoScore extends LinearOpMode {
     }
 
     public void pickUpSample() {
-//        gripperServo1.setPosition(0.3);
-//        sleep(100);
-//        pivotServo.setPosition(0.09);
-//        sleep(100);
-//        gripperServo1.setPosition(0);
-//        sleep(100);
-//        pivotServo.setPosition(0.85);
-//        sleep(100);
+        gripperServo1.setPosition(0.3);
+        sleep(100);
+        pivotServo.setPosition(0.05);
+        sleep(2000);
+        gripperServo1.setPosition(0);
+        sleep(1000);
+        pivotServo.setPosition(0.59);
+        sleep(100);
     }
 
     public void initMotor() {
@@ -533,6 +545,10 @@ public class AutoLeftNoScore extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
@@ -561,6 +577,29 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(0.59);
+    }
+
+    private void moveLinearSlide (int height) {
+        // Checks if current position is within bounds
+        if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
+            while (height > linearSlideMotor.getCurrentPosition()) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(0.75);
+            }
+        } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
+            while (height < linearSlideMotor.getCurrentPosition()) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(-0.75);
+            }
+        } else {
+            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            linearSlideMotor.setPower(0);
+        }
     }
 
     public void initPortal(ColorRange color) {
@@ -569,13 +608,13 @@ public class AutoLeftNoScore extends LinearOpMode {
         // the SDK that we want it to split the camera monitor area into two smaller
         // areas for us. It will then give us View IDs which we can pass to the individual
         // vision portals to allow them to properly hook into the UI in tandem.
-        int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
+        int[] viewIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.VERTICAL);
 
         // We extract the two view IDs from the array to make our lives a little easier later.
         // NB: the array is 2 long because we asked for 2 portals up above.
         int portal1ViewId = viewIds[0];
         int portal2ViewId = viewIds[1];
-        int portal3ViewId = viewIds[2];
+//        int portal3ViewId = viewIds[2];
 
         //drawing information on the driver station camera screen
         tagProcessor = new AprilTagProcessor.Builder()
@@ -586,13 +625,13 @@ public class AutoLeftNoScore extends LinearOpMode {
                 .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
                 .build();
 
-        tagProcessor2 = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
-                .build();
+//        tagProcessor2 = new AprilTagProcessor.Builder()
+//                .setDrawAxes(true)
+//                .setDrawCubeProjection(true)
+//                .setDrawTagID(true)
+//                .setDrawTagOutline(true)
+//                .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
+//                .build();
 
         colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(color)         // use a predefined color match
@@ -612,15 +651,15 @@ public class AutoLeftNoScore extends LinearOpMode {
                 .setCameraResolution(new Size(640, 480))
                 .build();
 
-        visionPortal2 = new VisionPortal.Builder()
-                .setLiveViewContainerId(portal2ViewId)
-                .addProcessor(tagProcessor2)
-                .setCamera(hardwareMap.get(WebcamName.class, "diddyCam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
+//        visionPortal2 = new VisionPortal.Builder()
+//                .setLiveViewContainerId(portal2ViewId)
+//                .addProcessor(tagProcessor2)
+//                .setCamera(hardwareMap.get(WebcamName.class, "diddyCam"))
+//                .setCameraResolution(new Size(640, 480))
+//                .build();
 
         visionPortal3 = new VisionPortal.Builder()
-                .setLiveViewContainerId(portal3ViewId)
+                .setLiveViewContainerId(portal2ViewId)
                 .addProcessor(colorLocator)
                 .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
                 .setCameraResolution(new Size(640, 480))
@@ -688,7 +727,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 rotateRadians = Math.toRadians(rotateNew);
                 correctX = Math.tan(rotateRadians) * originalY;
-                strafe(-1*correctX);
+                strafe(-1*correctX, SPEED);
 
             }
         } else if (vision == 2) {
@@ -707,7 +746,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 rotateRadians = Math.toRadians(rotateNew);
                 correctX = Math.tan(rotateRadians) * originalY;
-                strafe(correctX);
+                strafe(correctX, SPEED);
             }
         }
 
@@ -723,11 +762,11 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
                     //strafe(1);
-                    strafe(1 * xPosNew);
+                    strafe(1 * xPosNew, SPEED);
                 }
                 if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
                     //strafe(-1);
-                    strafe(1 * xPosNew);
+                    strafe(1 * xPosNew, SPEED);
                 }
             }
         } else if (vision == 2) {
@@ -736,11 +775,11 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
                     //strafe(1);
-                    strafe(-1 * xPosNew);
+                    strafe(-1 * xPosNew, SPEED);
                 }
                 if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
                     //strafe(-1);
-                    strafe(-1 * xPosNew);
+                    strafe(-1 * xPosNew, SPEED);
                 }
             }
         }
@@ -803,13 +842,13 @@ public class AutoLeftNoScore extends LinearOpMode {
         }
     }
 
-    private void strafe(double strafeInches) {
+    private void strafe(double strafeInches, double speed) {
         // We assume that strafing right means positive
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
         if (strafeInches >= 0) {
             telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
 
-            drive(SPEED,
+            drive(speed,
                     1 * strafeRevs,
                     -1 * strafeRevs,
                     -1 * strafeRevs,
@@ -817,7 +856,7 @@ public class AutoLeftNoScore extends LinearOpMode {
         } else {
             telemetry.addData("Strafing towards Left by ", "%.3f inches", Math.abs(strafeInches));
 
-            drive(SPEED,
+            drive(speed,
                     -1 * strafeRevs,
                     1 * strafeRevs,
                     1 * strafeRevs,
@@ -884,7 +923,7 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightBackDrive.setPower(0);
 
 
-        sleep(250);
+        sleep(20);
     }
 
     public void strafeDiagonalLeft(double strafeLeftInches) {
