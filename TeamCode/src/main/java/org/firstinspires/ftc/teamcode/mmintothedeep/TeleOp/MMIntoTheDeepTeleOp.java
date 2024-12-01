@@ -42,6 +42,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -115,6 +116,10 @@ public class MMIntoTheDeepTeleOp extends OpMode {
     AprilTagProcessor tagProcessor;
     AprilTagProcessor tagProcessor2;
 
+//    private static ElapsedTime stopWatch = new ElapsedTime();
+
+    long start = System.currentTimeMillis();
+
     @Override
     public void init() {
 
@@ -159,6 +164,8 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         pivotServo.setPosition(0.59);
 
         initPortal();
+
+
 
     }
 
@@ -238,12 +245,16 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 //            } else if (gamepad2.a) {
 //                pivotServo.setPosition(0.71);
 //            }
-            if (gamepad2.y) {
-                pivotServo.setPosition(0.38);
-            } else if (gamepad2.a) {
+            if (gamepad2.dpad_right) {
                 pivotServo.setPosition(0.05);
-            } else if (gamepad2.dpad_right) {
-                pivotServo.setPosition(0.57);
+            }
+
+            if (gamepad2.y && gamepad2.a) {
+                pivotServo.setPosition(0.36);
+            } else if (gamepad2.y) {
+                pivotServo.setPosition(pivotServo.getPosition() + 0.05);
+            } else if (gamepad2.a) {
+                pivotServo.setPosition(pivotServo.getPosition() - 0.05);
             }
 
             telemetry.addData("Pivot Servo Position1", pivotServo.getPosition());
