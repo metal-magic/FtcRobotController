@@ -117,7 +117,7 @@ public class AutoLeftScoring extends LinearOpMode {
         gripperServo1.setPosition(0.3);
         moveStraightLine(-2);
         strafeDiagonalRight(-20);
-        strafe(-44, 1);
+        strafe(-40, 1);
         alignToSample();
         sleep(500);
         // Offset to claw
@@ -406,11 +406,11 @@ public class AutoLeftScoring extends LinearOpMode {
             // Blobs is an arrayList of type ColorBlobLocatorProcessor
             blobs = colorLocator.getBlobs();
 //            // Filters by AspectRatio to remove wall when detecting yellow
-            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
+            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 3, blobs);
             // Filters by Area to remove small, glitched blobs
             ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
             // Sorts by Area in descending order to make processing easier
-            ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+            // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
 
 //
             if (!blobs.isEmpty()) {
@@ -512,7 +512,7 @@ public class AutoLeftScoring extends LinearOpMode {
         // Blobs is an arrayList of type ColorBlobLocatorProcessor
         List<ColorBlobLocatorProcessor.Blob> blobsY = colorLocator.getBlobs();
         // Filters by AspectRatio to remove wall when detecting yellow
-        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsY);
+        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 3, blobsY);
         // Filters by Area to remove small, glitched blobs
         ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsY);
         // Sorts by Area in descending order to make processing easier
