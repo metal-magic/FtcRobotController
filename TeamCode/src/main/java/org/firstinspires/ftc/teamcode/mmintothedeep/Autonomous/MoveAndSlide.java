@@ -155,22 +155,26 @@ public class MoveAndSlide extends LinearOpMode {
 //        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
 //
 //        }
+        boolean isReached = false;
         double scale = slide;
         double height = slide;
         while (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive) || tolerance(rightBackDrive)) {
             // Checks if current position is within bounds
-            if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(scale);
-            } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(-1 * scale);
-            } else {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(0);
+            if (!isReached) {
+                if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(scale);
+                } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(-1 * scale);
+                } else {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(0);
+                    isReached = true;
+                }
             }
         }
 
@@ -178,23 +182,24 @@ public class MoveAndSlide extends LinearOpMode {
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
-
-        if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
-            while (height > linearSlideMotor.getCurrentPosition()) {
+        if (!isReached) {
+            if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
+                while (height > linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(scale);
+                }
+            } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
+                while (height < linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(-1 * scale);
+                }
+            } else {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(scale);
+                linearSlideMotor.setPower(0);
             }
-        } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
-            while (height < linearSlideMotor.getCurrentPosition()) {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(-1 * scale);
-            }
-        } else {
-            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setPower(0);
         }
 
         linearSlideMotor.setPower(0);
