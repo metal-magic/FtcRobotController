@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Tests;
 // TESTING THE DRIVE TRAIN CLASS AND APRIL TAG ALIGNMENT
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.DriveTrain.DriveTrainFunctions;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
-import org.slf4j.helpers.Util;
 
 import java.util.Date;
 

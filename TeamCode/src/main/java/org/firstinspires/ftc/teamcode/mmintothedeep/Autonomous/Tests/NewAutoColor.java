@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -22,14 +22,13 @@ import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.opencv.core.RotatedRect;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.SortOrder;
 
 @Autonomous
-public class OpModeColor extends LinearOpMode {
+public class NewAutoColor extends LinearOpMode {
     private VisionPortal visionPortal = null;        // Used to manage the video source.
     private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
     private ColorBlobLocatorProcessor colorLocator;
@@ -67,12 +66,9 @@ public class OpModeColor extends LinearOpMode {
 
     static final double MAX_PIVOT_DISTANCE_INCHES = 10;
 
-    public void runOpMode() {
 
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    @Override public void runOpMode() {
+
         initMotor();
 
         initColorBlobsProcessor(ColorRange.YELLOW);
@@ -81,8 +77,19 @@ public class OpModeColor extends LinearOpMode {
         myExposure = 30;
         myGain = 230;
         setManualExposure(myExposure, myGain);
-    }
 
+        waitForStart();
+
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // ASSUMES THE ROBOT STARTS NEAR THE BASKET FACING THE 3 SAMPLES
+        alignToSample();
+        // Pick up sample and rotate
+        //pickUpSample();
+    }
 
 
     // Method to initialize all motors
@@ -216,6 +223,8 @@ public class OpModeColor extends LinearOpMode {
             ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobs);
             // Sorts by Area in descending order to make processing easier
             ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+
+
 
             if (!blobs.isEmpty()) {
                 // Assigned boxFit to the largest detect blob
