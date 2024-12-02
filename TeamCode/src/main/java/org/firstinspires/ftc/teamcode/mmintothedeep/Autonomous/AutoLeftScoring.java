@@ -125,7 +125,10 @@ public class AutoLeftScoring extends LinearOpMode {
         pickUpSample();
         moveStraightLine(-5);
         rotate(-135);
+        moveStraightLine(6);
         moveLinearSlide(4000, 0.7);
+        pivotServo.setPosition(0.36);
+        gripperServo1.setPosition(0.3);
 
         //rotate(-150);
 //        moveStraightLine(13);
@@ -407,7 +410,7 @@ public class AutoLeftScoring extends LinearOpMode {
             // Filters by Area to remove small, glitched blobs
             ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
             // Sorts by Area in descending order to make processing easier
-            // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+            ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
 
 //
             if (!blobs.isEmpty()) {
