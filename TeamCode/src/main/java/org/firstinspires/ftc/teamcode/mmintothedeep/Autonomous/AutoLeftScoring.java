@@ -117,7 +117,7 @@ public class AutoLeftScoring extends LinearOpMode {
         gripperServo1.setPosition(0.3);
         moveStraightLine(-2);
         strafeDiagonalRight(-20);
-        strafe(-44, 0.8);
+        strafe(-44, 1);
         alignToSample();
         sleep(500);
         // Offset to claw
@@ -125,7 +125,7 @@ public class AutoLeftScoring extends LinearOpMode {
         pickUpSample();
         moveStraightLine(-5);
         rotate(-135);
-        moveStraightLine(6);
+        moveStraightLine(10);
         moveLinearSlide(4000, 0.7);
         pivotServo.setPosition(0.36);
         gripperServo1.setPosition(0.3);
@@ -147,7 +147,7 @@ public class AutoLeftScoring extends LinearOpMode {
 
 
         //Termination
-        if (currentTime.getTime() > 20000) {
+        if (currentTime.getTime() > 35000) {
             leftBackDrive.setPower(0);
             leftFrontDrive.setPower(0);
             rightBackDrive.setPower(0);
@@ -540,6 +540,7 @@ public class AutoLeftScoring extends LinearOpMode {
             alignedY = Math.abs(errorY) <= 0.1;
         }
 
+        moveStraightLine(2);
     }
 
     public void pickUpSample() {
@@ -927,22 +928,15 @@ public class AutoLeftScoring extends LinearOpMode {
         leftBackDrive.setPower(speed);
         rightFrontDrive.setPower(speed);
         rightBackDrive.setPower(speed);
-
-        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
-//            telemetry.addLine("Current Position of the Motors")
-//                    .addData("Left Front  ", "%d", leftFrontDrive.getCurrentPosition())
-//                    .addData("Left Back ", "%d", leftBackDrive.getCurrentPosition())
-//                    .addData("Right Front ", "%d", rightFrontDrive.getCurrentPosition())
-//                    .addData("Right Back ", "%df", rightBackDrive.getCurrentPosition());
 //
-//            telemetry.addLine("Target Positions of the Motors")
-//                    .addData("Left Front  ", "%d", LFdrivetarget)
-//                    .addData("Left Back ", "%d", LBdrivetarget)
-//                    .addData("Right Front ", "%d", RFdrivetarget)
-//                    .addData("Right Back ", "%df", RBdrivetarget);
+//        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
+//
+//        }
 
-            //telemetry.update();
+        while (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive) || tolerance(rightBackDrive)) {
+
         }
+
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
@@ -950,6 +944,10 @@ public class AutoLeftScoring extends LinearOpMode {
 
 
         sleep(20);
+    }
+
+    public boolean tolerance(DcMotor motor) {
+        return Math.abs(motor.getCurrentPosition()-motor.getTargetPosition()) > 10;
     }
 
     public void strafeDiagonalLeft(double strafeLeftInches) {
