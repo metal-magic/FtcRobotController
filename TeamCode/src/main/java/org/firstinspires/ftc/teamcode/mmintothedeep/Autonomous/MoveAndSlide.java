@@ -609,7 +609,7 @@ public class MoveAndSlide extends LinearOpMode {
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         pivotServo = hardwareMap.servo.get("pivotServo");
-        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+        linearSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
@@ -625,11 +625,11 @@ public class MoveAndSlide extends LinearOpMode {
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        /*while (linearSlideMotor.getCurrentPosition() > 0) {
-            linearSlideMotor.setPower(-0.5);
+        /*while (hangSlideMotor.getCurrentPosition() > 0) {
+            hangSlideMotor.setPower(-0.5);
         }
-        while (linearSlideMotor.getCurrentPosition() < 0) {
-            linearSlideMotor.setPower(0.3);
+        while (hangSlideMotor.getCurrentPosition() < 0) {
+            hangSlideMotor.setPower(0.3);
         }*/
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET

@@ -329,7 +329,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         pivotServo = hardwareMap.servo.get("pivotServo");
 
-        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+        linearSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor");
         linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
 
         // Set all the right motor directions
@@ -347,11 +347,11 @@ public class BlueAutoLeftTest extends LinearOpMode {
 
         linearSlideMotor.setDirection(CRServo.Direction.FORWARD);
 
-        /*while (linearSlideMotor.getCurrentPosition() > 0) {
-            linearSlideMotor.setPower(-0.5);
+        /*while (hangSlideMotor.getCurrentPosition() > 0) {
+            hangSlideMotor.setPower(-0.5);
         }
-        while (linearSlideMotor.getCurrentPosition() < 0) {
-            linearSlideMotor.setPower(0.3);
+        while (hangSlideMotor.getCurrentPosition() < 0) {
+            hangSlideMotor.setPower(0.3);
         }*/
 
         ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
@@ -703,7 +703,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
             while (linearSlideMotor.getCurrentPosition() < 3064 && linearSlideMotor.getCurrentPosition() < y) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                //hangSlideMotor.setPower(1* UtilityValues.LSSPEED);
                 up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
                 linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
             }
@@ -715,7 +715,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
             while (linearSlideMotor.getCurrentPosition() > 0 && linearSlideMotor.getCurrentPosition() > y) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                ///hangSlideMotor.setPower(-1*UtilityValues.LSSPEED);
                 up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
                 linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
             }
@@ -739,7 +739,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
             while (linearSlideMotor.getCurrentPosition() < 3064 && linearSlideMotor.getCurrentPosition() < y) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                //linearSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                //hangSlideMotor.setPower(1* UtilityValues.LSSPEED);
                 up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
                 linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
             }
@@ -751,7 +751,7 @@ public class BlueAutoLeftTest extends LinearOpMode {
             while (linearSlideMotor.getCurrentPosition() > 0 && linearSlideMotor.getCurrentPosition() > y) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                ///linearSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                ///hangSlideMotor.setPower(-1*UtilityValues.LSSPEED);
                 up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
                 linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
             }

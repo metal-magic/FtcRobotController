@@ -85,7 +85,7 @@ public class actuatorTest extends OpMode {
         linearActuatorMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         linearActuatorMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
 
- //       linearSlideMotor.setDirection(CRServo.Direction.REVERSE);
+ //       hangSlideMotor.setDirection(CRServo.Direction.REVERSE);
 
         ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -131,8 +131,8 @@ public class actuatorTest extends OpMode {
         }
 
         telemetry.addData("Claw Position,", gripperServo1.getPosition());
-//        telemetry.addData("Linear Slide Position", linearSlideMotor.getCurrentPosition());
-//        telemetry.addData("Linear Slide Speed", linearSlideMotor.getPower());
+//        telemetry.addData("Linear Slide Position", hangSlideMotor.getCurrentPosition());
+//        telemetry.addData("Linear Slide Speed", hangSlideMotor.getPower());
         telemetry.addData("Linear Actuator Position", linearActuatorMotor.getCurrentPosition());
         telemetry.addData("Linear Actuator Speed", linearActuatorMotor.getPower());
         telemetry.addData("Claw Join Position,", pivotServo.getPosition());

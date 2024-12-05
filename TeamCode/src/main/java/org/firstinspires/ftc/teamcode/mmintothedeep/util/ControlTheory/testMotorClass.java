@@ -100,7 +100,7 @@ public class testMotorClass extends OpMode {
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
-    DcMotor testMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+    DcMotor testMotor = hardwareMap.dcMotor.get("hangSlideMotor");
 
     @Override
     public void init() {

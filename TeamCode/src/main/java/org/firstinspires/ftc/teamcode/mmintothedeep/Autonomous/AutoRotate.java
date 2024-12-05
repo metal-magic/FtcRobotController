@@ -212,17 +212,17 @@ public class AutoRotate extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        //linearSlideMotor.setDirection(CRServo.Direction.FORWARD);
+        //hangSlideMotor.setDirection(CRServo.Direction.FORWARD);
 
-        /*while (linearSlideMotor.getCurrentPosition() > 0) {
-            linearSlideMotor.setPower(-0.5);
+        /*while (hangSlideMotor.getCurrentPosition() > 0) {
+            hangSlideMotor.setPower(-0.5);
         }
-        while (linearSlideMotor.getCurrentPosition() < 0) {
-            linearSlideMotor.setPower(0.3);
+        while (hangSlideMotor.getCurrentPosition() < 0) {
+            hangSlideMotor.setPower(0.3);
         }*/
 
-        //linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //hangSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
 
@@ -231,8 +231,8 @@ public class AutoRotate extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-        //linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        //hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void initPortal() {

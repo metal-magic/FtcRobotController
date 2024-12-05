@@ -547,11 +547,11 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        /*while (linearSlideMotor.getCurrentPosition() > 0) {
-            linearSlideMotor.setPower(-0.5);
+        /*while (hangSlideMotor.getCurrentPosition() > 0) {
+            hangSlideMotor.setPower(-0.5);
         }
-        while (linearSlideMotor.getCurrentPosition() < 0) {
-            linearSlideMotor.setPower(0.3);
+        while (hangSlideMotor.getCurrentPosition() < 0) {
+            hangSlideMotor.setPower(0.3);
         }*/
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
