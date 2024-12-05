@@ -162,16 +162,10 @@ public class MoveAndSlide extends LinearOpMode {
             // Checks if current position is within bounds
             if (!isReached) {
                 if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
-                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     linearSlideMotor.setPower(scale);
                 } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
-                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     linearSlideMotor.setPower(-1 * scale);
                 } else {
-                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     linearSlideMotor.setPower(0);
                     isReached = true;
                 }

@@ -108,25 +108,33 @@ public class AutoLeftScoring extends LinearOpMode {
 
         strafeDiagonalRight(25);
 //        alignY(29, 2);
-        moveStraightLine(19.5);
+        moveStraightLine(19);
         moveLinearSlide(680, 0.4);
-        pivotServo.setPosition(0.38);
+        pivotServo.setPosition(0.36);
         sleep(500);
         moveLinearSlide(10, 1);
         sleep(100);
         gripperServo1.setPosition(0.3);
-        moveStraightLine(-2);
+        moveStraightLine(-5);
         strafeDiagonalRight(-20);
-        strafe(-40, 1);
+        strafe(-41, 0.8);
         alignToSample();
         sleep(500);
         // Offset to claw
-        strafe(1, 1.0);
-        pickUpSample();
+        strafe(0.5, SPEED);
+        gripperServo1.setPosition(0.3);
+        sleep(100);
+        pivotServo.setPosition(0.05);
+        sleep(2000);
+        gripperServo1.setPosition(0);
+        sleep(1000);
+        pivotServo.setPosition(0.59);
+        sleep(100);
         moveStraightLine(-5);
         rotate(-135);
-        moveStraightLine(10);
-        moveLinearSlide(4000, 0.7);
+        moveStraightLine(9);
+        moveLinearSlide(3800, 0.7);
+        moveStraightLine(2);
         pivotServo.setPosition(0.36);
         gripperServo1.setPosition(0.3);
 
@@ -398,7 +406,7 @@ public class AutoLeftScoring extends LinearOpMode {
         // Robot is misaligned to begin with
         boolean alignedX = false;
         boolean alignedY = false;
-        int maxRepetitions = 10;
+        int maxRepetitions = 5;
         // Allows while loops below to access boxFitSize
         org.opencv.core.Size myBoxFitSize;
         int i = 0;
@@ -459,6 +467,7 @@ public class AutoLeftScoring extends LinearOpMode {
 
             } else {
                 sleep(10);
+                strafe(-1, SPEED);
             }
             i++;
         }
@@ -571,6 +580,7 @@ public class AutoLeftScoring extends LinearOpMode {
         leftBackDrive.setDirection(UtilityValues.finalLeftBackDirection);
         rightFrontDrive.setDirection(UtilityValues.finalRightFrontDirection);
         rightBackDrive.setDirection(UtilityValues.finalRightBackDirection);
+        linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
 
 
         // Reset encoders positions
@@ -578,6 +588,7 @@ public class AutoLeftScoring extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         /*while (linearSlideMotor.getCurrentPosition() > 0) {
             linearSlideMotor.setPower(-0.5);
@@ -592,6 +603,7 @@ public class AutoLeftScoring extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         gripperServo1.setPosition(0);
         pivotServo.setPosition(0.59);
@@ -602,19 +614,21 @@ public class AutoLeftScoring extends LinearOpMode {
         // Checks if current position is within bounds
         if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
             while (height > linearSlideMotor.getCurrentPosition()) {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(scale);
+                if (linearSlideMotor.getCurrentPosition() < 3000) {
+                    linearSlideMotor.setPower(scale);
+                } else {
+                    linearSlideMotor.setPower(scale * 0.5);
+                }
             }
         } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
             while (height < linearSlideMotor.getCurrentPosition()) {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(-1 * scale);
+                if (linearSlideMotor.getCurrentPosition() > 1000) {
+                    linearSlideMotor.setPower(-scale);
+                } else {
+                    linearSlideMotor.setPower(-scale * 0.5);
+                }
             }
         } else {
-            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             linearSlideMotor.setPower(0);
         }
     }
@@ -638,7 +652,7 @@ public class AutoLeftScoring extends LinearOpMode {
         // vision portals to allow them to properly hook into the UI in tandem.
 
         // We extract the two view IDs from the array to make our lives a little easier later.
-        // NB: the array is 2 long because we asked for 2 portals up above.
+        // NB: the array is 2 long because we asked for 3 portals up above.
         int portal1ViewId = viewIds[0];
         int portal2ViewId = viewIds[1];
         int portal3ViewId = viewIds[2];
