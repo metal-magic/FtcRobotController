@@ -110,9 +110,15 @@ public class CubicTest extends LinearOpMode {
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        moveCubicHorizontal(2.0/3.0, 13.0/4.0);
+        moveCubicHorizontal(1.0/6.0, 13.0/4.0, 50);
 
         //Termination
+        leftBackDrive.setPower(0);
+        leftFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        sleep(200);
+
         if (currentTime.getTime() > 35000) {
             leftBackDrive.setPower(0);
             leftFrontDrive.setPower(0);
@@ -122,7 +128,7 @@ public class CubicTest extends LinearOpMode {
 
     }
 
-    public void moveCubicHorizontal(double a, double b) {
+    public void moveCubicHorizontal(double a, double b, long sleepMS) {
 
         double motorSpeed = SPEED;
 
@@ -139,10 +145,10 @@ public class CubicTest extends LinearOpMode {
 
 
         //linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         double y; // = -gamepad1.left_stick_y; // REVERSED
         double x; // = gamepad1.left_stick_x;
@@ -151,21 +157,35 @@ public class CubicTest extends LinearOpMode {
         // but only when at least one is out of range [-1, 1]
         double denominator, frontLeftPower, backLeftPower, frontRightPower, backRightPower;
 
-        for (x = -1; x <= 1; x+= 0.02) {
+        for (x = -1; x <= 1; x+= 0.05) {
 
-            y = (a)*(Math.cbrt(x*(b)));
+            double xSpeed;
+            if (x < 0) {
+                y = (a) * (Math.cbrt(x * (b)));
+                xSpeed = x;
+            } else {
+                y = -1*(a) * (Math.cbrt(x * (b)));
+                xSpeed = -x;
+            }
             denominator = Math.max(Math.abs(y) + Math.abs(x), 1);
-            frontLeftPower = (y + x) / denominator;
-            backLeftPower = (y - x) / denominator;
-            frontRightPower = (y - x) / denominator;
-            backRightPower = (y + x) / denominator;
+            frontLeftPower = (y + xSpeed) / denominator;
+            backLeftPower = (y - xSpeed) / denominator;
+            frontRightPower = (y - xSpeed) / denominator;
+            backRightPower = (y + xSpeed) / denominator;
 
             motorFrontLeft.setPower(frontLeftPower * motorSpeed);
             motorBackLeft.setPower(backLeftPower * motorSpeed);
             motorFrontRight.setPower(frontRightPower * motorSpeed);
             motorBackRight.setPower(backRightPower * motorSpeed);
 
-            sleep(200);
+            motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+            if (x != 0) {
+                sleep(sleepMS);
+            }
 
         }
 
