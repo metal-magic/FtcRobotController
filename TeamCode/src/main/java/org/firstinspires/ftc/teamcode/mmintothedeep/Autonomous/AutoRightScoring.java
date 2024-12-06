@@ -963,7 +963,7 @@ public class AutoRightScoring extends LinearOpMode {
     }
 
     public boolean tolerance(DcMotor motor, double speed) {
-        return Math.abs(motor.getCurrentPosition()-motor.getTargetPosition()) > Math.pow(50, speed) + 9;
+        return Math.abs(motor.getCurrentPosition()-motor.getTargetPosition()) > 10;
     }
 
     public void strafeDiagonalLeft(double strafeLeftInches) {
