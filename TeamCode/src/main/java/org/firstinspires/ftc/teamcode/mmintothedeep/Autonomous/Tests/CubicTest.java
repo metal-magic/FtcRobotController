@@ -165,6 +165,8 @@ public class CubicTest extends LinearOpMode {
             motorFrontRight.setPower(frontRightPower * motorSpeed);
             motorBackRight.setPower(backRightPower * motorSpeed);
 
+            sleep(200);
+
         }
 
     }
@@ -578,7 +580,7 @@ public class CubicTest extends LinearOpMode {
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         pivotServo = hardwareMap.servo.get("pivotServo");
-        linearSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor");
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
