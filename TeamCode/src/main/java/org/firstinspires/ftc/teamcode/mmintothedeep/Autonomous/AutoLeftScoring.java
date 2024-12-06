@@ -106,7 +106,8 @@ public class AutoLeftScoring extends LinearOpMode {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        strafeDiagonalRight(25);
+//        strafeDiagonalRight(25);
+        strafeAnyAngle(46.1939766256, 22.5, SPEED);
 //        alignY(29, 2);
         moveStraightLine(19);
         moveLinearSlide(680, 0.4);
@@ -573,7 +574,7 @@ public class AutoLeftScoring extends LinearOpMode {
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         pivotServo = hardwareMap.servo.get("pivotServo");
-        linearSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor");
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
@@ -590,11 +591,11 @@ public class AutoLeftScoring extends LinearOpMode {
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        /*while (hangSlideMotor.getCurrentPosition() > 0) {
-            hangSlideMotor.setPower(-0.5);
+        /*while (linearSlideMotor.getCurrentPosition() > 0) {
+            linearSlideMotor.setPower(-0.5);
         }
-        while (hangSlideMotor.getCurrentPosition() < 0) {
-            hangSlideMotor.setPower(0.3);
+        while (linearSlideMotor.getCurrentPosition() < 0) {
+            linearSlideMotor.setPower(0.3);
         }*/
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
@@ -903,6 +904,21 @@ public class AutoLeftScoring extends LinearOpMode {
                     1 * strafeRevs,
                     -1 * strafeRevs);
         }
+    }
+
+    public void strafeAnyAngle(double strafeInches, double strafeAngleDegrees, double robotSpeed) {
+        if (strafeAngleDegrees > 0 && strafeAngleDegrees < 360) {
+            double strafeAngleRadians = Math.PI/180 * strafeAngleDegrees;
+            double strafeAnyRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
+
+            double strafeLeftFrontPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
+            double strafeLeftBackPower = Math.sin(strafeAngleRadians - Math.PI/4) * strafeAnyRevs;
+            double strafeRightFrontPower = Math.sin(strafeAngleRadians - Math.PI/4) * strafeAnyRevs;
+            double strafeRightBackPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
+
+            drive(robotSpeed, strafeLeftFrontPower, strafeLeftBackPower, strafeRightFrontPower, strafeRightBackPower);
+        }
+
     }
 
     /*
