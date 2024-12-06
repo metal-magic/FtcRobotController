@@ -116,13 +116,12 @@ public class AutoRightScoring extends LinearOpMode {
         gripperServo1.setPosition(0.3);
         moveStraightLine(-5, 1);
         strafeDiagonalLeft(-20);
-        strafe(26, 1);
-        moveStraightLine(35, 1);
-        strafe(12, 1);
-        moveStraightLine(-40, 1);
-        moveStraightLine(40, 1);
-        strafe(10, 1);
-        moveStraightLine(-40, 1);
+        strafe(26, SPEED);
+        moveStraightLine(35, SPEED);
+        strafe(12, SPEED);
+        moveStraightLine(-40, SPEED);
+        moveStraightLine(10, SPEED);
+
 
 
         //rotate(-150);

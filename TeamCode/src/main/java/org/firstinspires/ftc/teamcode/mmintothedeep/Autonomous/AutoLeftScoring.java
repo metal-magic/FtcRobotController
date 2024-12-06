@@ -131,9 +131,9 @@ public class AutoLeftScoring extends LinearOpMode {
         sleep(1000);
         pivotServo.setPosition(0.59);
         sleep(100);
-        moveStraightLine(-5);
+        moveStraightLine(-6);
         rotate(-135);
-        moveStraightLine(9);
+        moveStraightLine(17);
         moveLinearSlide(3800, 0.7);
         moveStraightLine(2);
         pivotServo.setPosition(0.36);
