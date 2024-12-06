@@ -124,7 +124,7 @@ public class AutoRightScoring extends LinearOpMode {
         rotate(180);
         moveStraightLine(9, SPEED);
         gripperServo1.setPosition(0.3);
-        pivotServo.setPosition(0.5);
+        pivotServo.setPosition(0.05);
         gripperServo1.setPosition(0);
         pivotServo.setPosition(0.59);
 
