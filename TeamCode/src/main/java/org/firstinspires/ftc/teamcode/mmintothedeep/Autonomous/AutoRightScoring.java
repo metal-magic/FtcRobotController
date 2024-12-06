@@ -118,7 +118,7 @@ public class AutoRightScoring extends LinearOpMode {
         strafeDiagonalLeft(-20);
         strafe(26, SPEED);
         moveStraightLine(35, SPEED);
-        strafe(12, SPEED);
+        strafe(15, SPEED);
         moveStraightLine(-40, SPEED);
         moveStraightLine(10, SPEED);
         rotate(180);
