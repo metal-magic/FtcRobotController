@@ -116,43 +116,39 @@ public class AutoRightScoring extends LinearOpMode {
         gripperServo1.setPosition(0.3);
         moveStraightLine(-5, 1);
         strafeDiagonalLeft(-20);
-        strafe(26, SPEED);
-        moveStraightLine(35, SPEED);
-        strafe(15, SPEED);
-        moveStraightLine(-40, SPEED);
-        moveStraightLine(10, SPEED);
+        strafe(41, SPEED);
+//        moveStraightLine(35, SPEED);
+//        strafe(15, SPEED);
+//        moveStraightLine(-40, SPEED);
+        moveStraightLine(5, SPEED);
         rotate(180);
-        moveStraightLine(9, SPEED);
-        gripperServo1.setPosition(0.3);
-        pivotServo.setPosition(0.05);
+        moveStraightLine(5, SPEED);
+        gripperServo1.setPosition(0.1);
+        sleep(100);
+        pivotServo.setPosition(0.08);
+        sleep(3000);
         gripperServo1.setPosition(0);
+        sleep(1000);
         pivotServo.setPosition(0.59);
+        sleep(1000);
 
+        rotate(180);
+        strafe(-32.3 ,SPEED);
+        strafeDiagonalLeft(25);
+        moveStraightLine(3,SPEED);
+        moveLinearSlide(600, 0.4);
+        pivotServo.setPosition(0.36);
+        sleep(500);
+        moveLinearSlide(650, 1);
+        sleep(100);
+        gripperServo1.setPosition(0.3);
 
+        moveStraightLine(-28, SPEED);
 
-        //rotate(-150);
-//        moveStraightLine(13);
-//        moveLinearSlide(4000, 0.4);
-//        pivotServo.setPosition(0.38);
-//        gripperServo1.setPosition(0.3);
-//        pivotServo.setPosition(0.5);
-//        moveLinearSlide(50, 0.4);
+        strafe(50, SPEED);
 
-//        sleep(2000);
-//        rotate(90);
-//        sleep(1000);
-//        align(0, 24, 90, 1);
-//        moveStraightLine(17);
+        sleep(1000);
 
-
-
-        //Termination
-        if (currentTime.getTime() > 35000) {
-            leftBackDrive.setPower(0);
-            leftFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-        }
 
     }
 
