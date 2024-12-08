@@ -130,6 +130,9 @@ public class TeleOpOneController extends OpMode {
 
     long start = System.currentTimeMillis();
 
+    boolean moveSlideUp = false;
+    boolean moveSlideDown = false;
+
     @Override
     public void init() {
 
@@ -191,9 +194,25 @@ public class TeleOpOneController extends OpMode {
 
     @Override
     public void loop() {
+        if (gamepad2.dpad_up) {
+            moveSlideUp = true;
+        }
+        if (gamepad2.dpad_right) {
+            moveSlideDown = true;
+        }
+        if (moveSlideDown) {
+            moveSlideUp = false;
+        }
+        if (moveSlideUp) {
+            moveSlideDown = false;
+        }
+
+
+
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         double y = -gamepad2.left_stick_y - gamepad1.left_stick_y; // REVERSED -gamepad1.left_stick_y.gamestick so
-                                                                   // gamepad1 can also do movement for hanging
+        // gamepad1 can also do movement for hanging
         // making sure it doesnt go over 1 or -1
         if (y < -1) {
             y = -1;
@@ -262,7 +281,7 @@ public class TeleOpOneController extends OpMode {
             wasPresetPressed = gamepad1.b;
 
             if (gamepad2.left_bumper) {
-                gripperServo1.setPosition(0.3);
+                gripperServo1.setPosition(0.15);
             } else if (gamepad2.right_bumper) {
                 gripperServo1.setPosition(0);
             }
@@ -272,11 +291,11 @@ public class TeleOpOneController extends OpMode {
             } else if (gamepad2.a) {
                 pivotServo.setPosition(pivotServo.getPosition() - 0.009);
             } else if (gamepad2.dpad_up) {
-                pivotServo.setPosition(0.41);
+                pivotServo.setPosition(0.4661);
             } else if (gamepad2.dpad_down) {
-                pivotServo.setPosition(0.033);
+                pivotServo.setPosition(0.108);
             } else if (gamepad2.dpad_right) {
-                pivotServo.setPosition(0.13);
+                pivotServo.setPosition(0.175);
             }
         }
 
@@ -288,6 +307,21 @@ public class TeleOpOneController extends OpMode {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             linearSlideMotor.setPower(-1);
+        } else if (moveSlideUp) {
+            if (linearSlideMotor.getCurrentPosition() < 4000) {
+                linearSlideMotor.setPower(0.7);
+            } else {
+                linearSlideMotor.setPower(0);
+                moveSlideUp = false;
+            }
+        } else if (moveSlideDown) {
+            if (linearSlideMotor.getCurrentPosition() > 10) {
+                linearSlideMotor.setPower(-0.7);
+            } else {
+                pivotServo.setPosition(0.175);
+                linearSlideMotor.setPower(0);
+                moveSlideDown = false;
+            }
         } else {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

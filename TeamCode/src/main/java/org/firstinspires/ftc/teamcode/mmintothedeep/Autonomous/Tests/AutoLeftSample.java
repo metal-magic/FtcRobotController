@@ -128,6 +128,8 @@ public class AutoLeftSample extends LinearOpMode {
         sleep(500);
         // Offset to claw
         strafe(-0.8, SPEED);
+        moveStraightLine(-2);
+
         pivotServo.setPosition(0.06);
         sleep(500);
         gripperServo1.setPosition(0);
@@ -143,9 +145,11 @@ public class AutoLeftSample extends LinearOpMode {
         pivotServo.setPosition(0.36);
         linearSlideMotor.setPower(0);
         sleep(200);
-        gripperServo1.setPosition(0.3);
+        gripperServo1.setPosition(0.1);
         sleep(200);
         rotate(45);
+
+        moveLinearSlide(10, SPEED);
 
         // go to first sample and pick it up
 //        strafe(36, SPEED);

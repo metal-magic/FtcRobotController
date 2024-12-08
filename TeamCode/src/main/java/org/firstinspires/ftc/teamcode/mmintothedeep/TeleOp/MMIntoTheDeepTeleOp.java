@@ -242,7 +242,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             wasPresetPressed = gamepad1.b;
 
             if (gamepad2.left_bumper) {
-                gripperServo1.setPosition(0.3);
+                gripperServo1.setPosition(0.08);
             } else if (gamepad2.right_bumper) {
                 gripperServo1.setPosition(0);
             }
@@ -254,9 +254,9 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             } else if (gamepad2.dpad_up) {
                 pivotServo.setPosition(0.38);
             } else if (gamepad2.dpad_down) {
-                pivotServo.setPosition(0.05);
+                pivotServo.setPosition(0.3);
             } else if (gamepad2.dpad_right) {
-                pivotServo.setPosition(0.22);
+                pivotServo.setPosition(0.25);
             }
         }
 
