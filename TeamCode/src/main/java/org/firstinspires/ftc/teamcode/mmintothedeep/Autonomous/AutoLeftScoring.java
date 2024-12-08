@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-
-@Autonomous(name="YES SCORING LEFT of Gate", group="Autonomous")
+@Autonomous(name = "YES SCORING LEFT of Gate", group = "Autonomous")
 public class AutoLeftScoring extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
@@ -40,10 +39,12 @@ public class AutoLeftScoring extends LinearOpMode {
     CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
-    // the distance you drive with one turn of the wheel is the circumference of the wheel
+    // the distance you drive with one turn of the wheel is the circumference of the
+    // wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
-    static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
+    static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in
+                                                                                // inches
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1;
 
@@ -78,37 +79,35 @@ public class AutoLeftScoring extends LinearOpMode {
         initPortal(ColorRange.YELLOW);
         initMotor();
 
-//        getCameraSetting();
+        // getCameraSetting();
         myExposure = 30;
         myGain = 240;
         setManualExposure(myExposure, myGain);
 
-
         waitForStart();
 
+        /*
+         * ============================
+         * THIS IS THE ACTUAL DRIVING
+         * ============================
+         */
 
-      /*
-        ============================
-        THIS IS THE ACTUAL DRIVING
-        ============================
-       */
-
-       /*
-        METAL MAGIC INTO THE DEEP
-        THIS CODE STARTS ON THE LEFT SIDE OF THE BLUE SIDE (closer to backdrop)
-        SCORES SAMPLE AND PARKS IN CORNER
-        THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
-        */
-        //sleep lines are to avoid two lines of codes running at the same time
+        /*
+         * METAL MAGIC INTO THE DEEP
+         * THIS CODE STARTS ON THE LEFT SIDE OF THE BLUE SIDE (closer to backdrop)
+         * SCORES SAMPLE AND PARKS IN CORNER
+         * THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
+         */
+        // sleep lines are to avoid two lines of codes running at the same time
 
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-//        strafeDiagonalRight(25);
+        // strafeDiagonalRight(25);
         strafeAnyAngle(46.1939766256, 22.5, SPEED);
-//        alignY(29, 2);
+        // alignY(29, 2);
         moveStraightLine(19);
         moveLinearSlide(680, 0.4);
         pivotServo.setPosition(0.36);
@@ -139,23 +138,21 @@ public class AutoLeftScoring extends LinearOpMode {
         pivotServo.setPosition(0.36);
         gripperServo1.setPosition(0.3);
 
-        //rotate(-150);
-//        moveStraightLine(13);
-//        moveLinearSlide(4000, 0.4);
-//        pivotServo.setPosition(0.38);
-//        gripperServo1.setPosition(0.3);
-//        pivotServo.setPosition(0.5);
-//        moveLinearSlide(50, 0.4);
+        // rotate(-150);
+        // moveStraightLine(13);
+        // moveLinearSlide(4000, 0.4);
+        // pivotServo.setPosition(0.38);
+        // gripperServo1.setPosition(0.3);
+        // pivotServo.setPosition(0.5);
+        // moveLinearSlide(50, 0.4);
 
-//        sleep(2000);
-//        rotate(90);
-//        sleep(1000);
-//        align(0, 24, 90, 1);
-//        moveStraightLine(17);
+        // sleep(2000);
+        // rotate(90);
+        // sleep(1000);
+        // align(0, 24, 90, 1);
+        // moveStraightLine(17);
 
-
-
-        //Termination
+        // Termination
         if (currentTime.getTime() > 35000) {
             leftBackDrive.setPower(0);
             leftFrontDrive.setPower(0);
@@ -171,7 +168,7 @@ public class AutoLeftScoring extends LinearOpMode {
         if (vision == 1) {
             offset = UtilityValues.offsetCamera1;
             alignRotate(0, vision);
-            alignX(0+offset, vision);
+            alignX(0 + offset, vision);
             alignY(y, vision);
             rotate(dir);
         }
@@ -183,10 +180,10 @@ public class AutoLeftScoring extends LinearOpMode {
             if (Objects.equals(s, "basket")) {
                 if (tagProcessor.getDetections().get(0).id == 11) {
                     alignToOffset(0, 70, 180, vision);
-                    alignToOffset(0, 16, -45, vision); //now with tag 13
+                    alignToOffset(0, 16, -45, vision); // now with tag 13
                 } else if (tagProcessor.getDetections().get(0).id == 12) {
                     alignToOffset(-50, 16, 90, vision);
-                    alignToOffset(0, 16, -45, vision); //now with tag 13
+                    alignToOffset(0, 16, -45, vision); // now with tag 13
                 } else if (tagProcessor.getDetections().get(0).id == 13) {
                     alignToOffset(0, 16, -45, vision);
                 }
@@ -199,7 +196,7 @@ public class AutoLeftScoring extends LinearOpMode {
                 if (tagProcessor2.getDetections().get(0).id == 12) {
                     alignY(24, vision);
                     strafeDiagonalLeft(15);
-                    //moveStraightLine(-1);
+                    // moveStraightLine(-1);
                 }
             }
         }
@@ -215,10 +212,10 @@ public class AutoLeftScoring extends LinearOpMode {
             if (Objects.equals(s, "basket")) {
                 if (tagProcessor.getDetections().get(0).id == 11) {
                     align(0, 70, 180, vision);
-                    align(0, 16, -45, vision); //now with tag 13
+                    align(0, 16, -45, vision); // now with tag 13
                 } else if (tagProcessor.getDetections().get(0).id == 12) {
                     align(-50, 16, 90, vision);
-                    align(0, 16, -45, vision); //now with tag 13
+                    align(0, 16, -45, vision); // now with tag 13
                 } else if (tagProcessor.getDetections().get(0).id == 13) {
                     align(0, 16, -45, vision);
                 }
@@ -281,15 +278,15 @@ public class AutoLeftScoring extends LinearOpMode {
         }
 
         // Set camera controls unless we are stopping.
-        if (!isStopRequested())
-        {
-            // Set exposure. Make sure we are in Manual Mode for these values to take effect.
+        if (!isStopRequested()) {
+            // Set exposure. Make sure we are in Manual Mode for these values to take
+            // effect.
             ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
             if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
                 exposureControl.setMode(ExposureControl.Mode.Manual);
                 sleep(50);
             }
-            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            exposureControl.setExposure((long) exposureMS, TimeUnit.MILLISECONDS);
             sleep(20);
 
             // Set Gain.
@@ -321,87 +318,89 @@ public class AutoLeftScoring extends LinearOpMode {
         }
     }
 
-//    private void alignToSample() {
-//        // Robot is misaligned to begin with
-//        alignedX = false;
-//        alignedY = false;
-//        int maxRepetitions = 5;
-//        // Allows while loops below to access boxFitSize
-//        org.opencv.core.Size myBoxFitSize;
-//
-//        int i = 0;
-//        while (!alignedX && i < maxRepetitions) {
-//            // Blobs is an arrayList of type ColorBlobLocatorProcessor
-//            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-////            // Filters by AspectRatio to remove wall when detecting yellow
+    // private void alignToSample() {
+    // // Robot is misaligned to begin with
+    // alignedX = false;
+    // alignedY = false;
+    // int maxRepetitions = 5;
+    // // Allows while loops below to access boxFitSize
+    // org.opencv.core.Size myBoxFitSize;
+    //
+    // int i = 0;
+    // while (!alignedX && i < maxRepetitions) {
+    // // Blobs is an arrayList of type ColorBlobLocatorProcessor
+    // List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+    ////            // Filters by AspectRatio to remove wall when detecting yellow
 ////            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
 //            // Filters by Area to remove small, glitched blobs
-//            ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
-//            // Sorts by Area in descending order to make processing easier
-//            // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-//            if (!blobs.isEmpty()) {
-//                // Assigned boxFit to the largest detect blob
-//                RotatedRect boxFit = blobs.get(0).getBoxFit();
-//
-//                double errorX = boxFit.center.x - 320;
-//
-//                telemetry.addLine(String.valueOf(errorX));
-//
-////                if (errorX > 0) {
+    // ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
+    // // Sorts by Area in descending order to make processing easier
+    // // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+    // if (!blobs.isEmpty()) {
+    // // Assigned boxFit to the largest detect blob
+    // RotatedRect boxFit = blobs.get(0).getBoxFit();
+    //
+    // double errorX = boxFit.center.x - 320;
+    //
+    // telemetry.addLine(String.valueOf(errorX));
+    //
+    ////                if (errorX > 0) {
 ////                    strafe(2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5))));
 ////                } else {
 ////                    strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5)))));
 ////                }
-//
-//                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.5)));
-//
-//                // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i / maxRepetitions + 0.5)))));
-//
-//                alignedX = Math.abs(errorX) <= 30;
-//                i++;
-//            } else {
-//                strafe(-2);
-//            }
-//
-//        }
-//
-//        sleep(500);
-//
-//
-//        // Blobs is an arrayList of type ColorBlobLocatorProcessor
-//        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-//        // Filters by AspectRatio to remove wall when detecting yellow
-//        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
-//        // Filters by Area to remove small, glitched blobs
-//        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobs);
-//        // Sorts by Area in descending order to make processing easier
-//        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-//
-//        if (!blobs.isEmpty()) {
-//
-//            RotatedRect boxFit = blobs.get(0).getBoxFit();
-//            myBoxFitSize = boxFit.size;
-//            double boxWidth = myBoxFitSize.width;
-//            double boxHeight = myBoxFitSize.height;
-//
-//            double distanceZ_INCHES = 734.01575 / Math.min(boxHeight, boxWidth);
-//            double errorY = distanceZ_INCHES - MAX_PIVOT_DISTANCE_INCHES;
-//
-////                if (errorY > 0) {
+
+    //
+    // strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions),
+    // 0.5)));
+    //
+    // // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i /
+    // maxRepetitions + 0.5)))));
+    //
+    // alignedX = Math.abs(errorX) <= 30;
+    // i++;
+    // } else {
+    // strafe(-2);
+    // }
+    //
+    // }
+    //
+    // sleep(500);
+    //
+    //
+    // // Blobs is an arrayList of type ColorBlobLocatorProcessor
+    // List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+    // // Filters by AspectRatio to remove wall when detecting yellow
+    // ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
+    // // Filters by Area to remove small, glitched blobs
+    // ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobs);
+    // // Sorts by Area in descending order to make processing easier
+    // // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+    //
+    // if (!blobs.isEmpty()) {
+    //
+    // RotatedRect boxFit = blobs.get(0).getBoxFit();
+    // myBoxFitSize = boxFit.size;
+    // double boxWidth = myBoxFitSize.width;
+    // double boxHeight = myBoxFitSize.height;
+    //
+    // double distanceZ_INCHES = 734.01575 / Math.min(boxHeight, boxWidth);
+    // double errorY = distanceZ_INCHES - MAX_PIVOT_DISTANCE_INCHES;
+    //
+    ////                if (errorY > 0) {
 ////                    moveStraightLine(2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5))));
 ////                } else {
 ////                    moveStraightLine(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5)))));
 ////                }
-//            moveStraightLine(errorY);
-//
-//            // moveStraightLine(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (j / maxRepetitions + 0.5)))));
-//
-//            alignedY = Math.abs(errorY) <= 0.1;
-//        }
-//
-//    }
-
-
+    // moveStraightLine(errorY);
+    //
+    // // moveStraightLine(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double)
+    // (j / maxRepetitions + 0.5)))));
+    //
+    // alignedY = Math.abs(errorY) <= 0.1;
+    // }
+    //
+    // }
 
     private void alignToSample() {
         // Robot is misaligned to begin with
@@ -414,14 +413,14 @@ public class AutoLeftScoring extends LinearOpMode {
         while (!alignedX && i < maxRepetitions) {
             // Blobs is an arrayList of type ColorBlobLocatorProcessor
             blobs = colorLocator.getBlobs();
-//            // Filters by AspectRatio to remove wall when detecting yellow
+            // // Filters by AspectRatio to remove wall when detecting yellow
             ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 3, blobs);
             // Filters by Area to remove small, glitched blobs
             ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
             // Sorts by Area in descending order to make processing easier
             // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
 
-//
+            //
             if (!blobs.isEmpty()) {
                 // Assigned boxFit to the largest detected blob
                 RotatedRect boxFit = blobs.get(0).getBoxFit();
@@ -431,40 +430,41 @@ public class AutoLeftScoring extends LinearOpMode {
                 telemetry.addLine(String.valueOf(errorX));
 
                 // V1 HORIZONTAL ALIGNMENT
-//                if (errorX > 0) {
-//                    strafe(2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5))));
-//                } else {
-//                    strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5)))));
-//                }
+                // if (errorX > 0) {
+                // strafe(2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5))));
+                // } else {
+                // strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions +
+                // 0.5)))));
+                // }
 
-//                // V2 HORIZONTAL ALIGNMENT
-//                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.1)));
+                // // V2 HORIZONTAL ALIGNMENT
+                // strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions),
+                // 0.1)));
 
+                // // V3 HORIZONTAL ALIGNMENT
+                // if (current == 0) {
+                // if (errorX > 0) {
+                // upper += 5;
+                // } else {
+                // lower -= 5;
+                // }
+                // } else {
+                // if (errorX > 0) {
+                // lower = current;
+                // } else {
+                // upper = current;
+                // }
+                // }
+                //
+                // current = (upper+lower)/2-current;
+                // strafe(current);
 
-//                // V3 HORIZONTAL ALIGNMENT
-//                if (current == 0) {
-//                    if (errorX > 0) {
-//                        upper += 5;
-//                    } else {
-//                        lower -= 5;
-//                    }
-//                } else {
-//                    if (errorX > 0) {
-//                        lower = current;
-//                    } else {
-//                        upper = current;
-//                    }
-//                }
-//
-//                current = (upper+lower)/2-current;
-//                strafe(current);
-
-                // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i / maxRepetitions + 0.5)))));
+                // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i /
+                // maxRepetitions + 0.5)))));
 
                 strafe(Math.signum(errorX) * 3 * Math.pow(2, -1 * i), 0.5);
 
                 alignedX = Math.abs(errorX) <= 30;
-
 
             } else {
                 sleep(10);
@@ -473,52 +473,52 @@ public class AutoLeftScoring extends LinearOpMode {
             i++;
         }
 
-//        // Sample horizontal setting
-//
-//        // Blobs is an arrayList of type ColorBlobLocatorProcessor
-//        List<ColorBlobLocatorProcessor.Blob> blobsX1 = colorLocator.getBlobs();
-//        // Filters by AspectRatio to remove wall when detecting yellow
-//        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsX1);
-//        // Filters by Area to remove small, glitched blobs
-//        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsX1);
-//        // Sorts by Area in descending order to make processing easier
-//        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-//
-//        double P1 = 320;
-//        if (!blobsX1.isEmpty()) {
-//
-//            RotatedRect boxFit = blobsX1.get(0).getBoxFit();
-//            P1 = boxFit.center.x - 320;
-//        }
-//
-//        // Sets up ratio between horizontal distance and vertical distance
-//        strafe(Math.signum(P1) * strafeDistance);
-//
-//        // Automatic Horizontal Alignment
-//
-//        // Blobs is an arrayList of type ColorBlobLocatorProcessor
-//        List<ColorBlobLocatorProcessor.Blob> blobsX2 = colorLocator.getBlobs();
-//        // Filters by AspectRatio to remove wall when detecting yellow
-//        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsX2);
-//        // Filters by Area to remove small, glitched blobs
-//        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsX2);
-//        // Sorts by Area in descending order to make processing easier
-//        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-//
-//        double P2 = 320;
-//        if (!blobsX2.isEmpty()) {
-//
-//            RotatedRect boxFit = blobsX2.get(0).getBoxFit();
-//
-//            P2 = boxFit.center.x - 320;
-//        }
-//
-//        strafe((P1 * strafeDistance) / (P1 - P2));
-//
-//
-//        sleep(500);
-//
-//
+        // // Sample horizontal setting
+        //
+        // // Blobs is an arrayList of type ColorBlobLocatorProcessor
+        // List<ColorBlobLocatorProcessor.Blob> blobsX1 = colorLocator.getBlobs();
+        // // Filters by AspectRatio to remove wall when detecting yellow
+        // ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsX1);
+        // // Filters by Area to remove small, glitched blobs
+        // ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsX1);
+        // // Sorts by Area in descending order to make processing easier
+        // // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+        //
+        // double P1 = 320;
+        // if (!blobsX1.isEmpty()) {
+        //
+        // RotatedRect boxFit = blobsX1.get(0).getBoxFit();
+        // P1 = boxFit.center.x - 320;
+        // }
+        //
+        // // Sets up ratio between horizontal distance and vertical distance
+        // strafe(Math.signum(P1) * strafeDistance);
+        //
+        // // Automatic Horizontal Alignment
+        //
+        // // Blobs is an arrayList of type ColorBlobLocatorProcessor
+        // List<ColorBlobLocatorProcessor.Blob> blobsX2 = colorLocator.getBlobs();
+        // // Filters by AspectRatio to remove wall when detecting yellow
+        // ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsX2);
+        // // Filters by Area to remove small, glitched blobs
+        // ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsX2);
+        // // Sorts by Area in descending order to make processing easier
+        // // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
+        //
+        // double P2 = 320;
+        // if (!blobsX2.isEmpty()) {
+        //
+        // RotatedRect boxFit = blobsX2.get(0).getBoxFit();
+        //
+        // P2 = boxFit.center.x - 320;
+        // }
+        //
+        // strafe((P1 * strafeDistance) / (P1 - P2));
+        //
+        //
+        // sleep(500);
+        //
+        //
         // Blobs is an arrayList of type ColorBlobLocatorProcessor
         List<ColorBlobLocatorProcessor.Blob> blobsY = colorLocator.getBlobs();
         // Filters by AspectRatio to remove wall when detecting yellow
@@ -538,14 +538,17 @@ public class AutoLeftScoring extends LinearOpMode {
             double distanceZ_INCHES = 734.01575 / Math.min(boxHeight, boxWidth);
             double errorY = distanceZ_INCHES - MAX_PIVOT_DISTANCE_INCHES;
 
-//                if (errorY > 0) {
-//                    moveStraightLine(2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5))));
-//                } else {
-//                    moveStraightLine(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5)))));
-//                }
+            // if (errorY > 0) {
+            // moveStraightLine(2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions +
+            // 0.5))));
+            // } else {
+            // moveStraightLine(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) j /
+            // maxRepetitions + 0.5)))));
+            // }
             moveStraightLine(errorY);
 
-            // moveStraightLine(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (j / maxRepetitions + 0.5)))));
+            // moveStraightLine(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (j
+            // / maxRepetitions + 0.5)))));
 
             alignedY = Math.abs(errorY) <= 0.1;
         }
@@ -566,7 +569,7 @@ public class AutoLeftScoring extends LinearOpMode {
 
     public void initMotor() {
         /* Assign all the motors */
-        //drivetrain
+        // drivetrain
         leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
@@ -583,7 +586,6 @@ public class AutoLeftScoring extends LinearOpMode {
         rightBackDrive.setDirection(UtilityValues.finalRightBackDirection);
         linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
 
-
         // Reset encoders positions
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -591,12 +593,14 @@ public class AutoLeftScoring extends LinearOpMode {
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        /*while (linearSlideMotor.getCurrentPosition() > 0) {
-            linearSlideMotor.setPower(-0.5);
-        }
-        while (linearSlideMotor.getCurrentPosition() < 0) {
-            linearSlideMotor.setPower(0.3);
-        }*/
+        /*
+         * while (linearSlideMotor.getCurrentPosition() > 0) {
+         * linearSlideMotor.setPower(-0.5);
+         * }
+         * while (linearSlideMotor.getCurrentPosition() < 0) {
+         * linearSlideMotor.setPower(0.3);
+         * }
+         */
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
 
@@ -610,7 +614,7 @@ public class AutoLeftScoring extends LinearOpMode {
         pivotServo.setPosition(0.59);
     }
 
-    private void moveLinearSlide (int height, double power) {
+    private void moveLinearSlide(int height, double power) {
         double scale = power;
         // Checks if current position is within bounds
         if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
@@ -634,13 +638,13 @@ public class AutoLeftScoring extends LinearOpMode {
         }
     }
 
-    private double linearSlideScaling (int x) {
+    private double linearSlideScaling(int x) {
         if (0 <= x && x < 50) {
-            return Math.min(1.1 - 1/(Math.pow(2.71, x)), 1);
+            return Math.min(1.1 - 1 / (Math.pow(2.71, x)), 1);
         } else if (50 <= x && x < 3950) {
             return 1;
         } else if (3950 <= x && x < 4000) {
-            return Math.min(1.1 - 1/(Math.pow(2.71, 4000-x)), 1);
+            return Math.min(1.1 - 1 / (Math.pow(2.71, 4000 - x)), 1);
         }
         return 0;
     }
@@ -649,16 +653,18 @@ public class AutoLeftScoring extends LinearOpMode {
 
         // Because we want to show two camera feeds simultaneously, we need to inform
         // the SDK that we want it to split the camera monitor area into two smaller
-        // areas for us. It will then give us View IDs which we can pass to the individual
+        // areas for us. It will then give us View IDs which we can pass to the
+        // individual
         // vision portals to allow them to properly hook into the UI in tandem.
 
-        // We extract the two view IDs from the array to make our lives a little easier later.
+        // We extract the two view IDs from the array to make our lives a little easier
+        // later.
         // NB: the array is 2 long because we asked for 3 portals up above.
         int portal1ViewId = viewIds[0];
         int portal2ViewId = viewIds[1];
         int portal3ViewId = viewIds[2];
 
-        //drawing information on the driver station camera screen
+        // drawing information on the driver station camera screen
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
@@ -676,16 +682,16 @@ public class AutoLeftScoring extends LinearOpMode {
                 .build();
 
         colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(color)         // use a predefined color match
-                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
-                // .setDrawContours(true)                        // Show contours on the Stream Preview
-                .setBlurSize(5)                               // Smooth the transitions between different colors in image
-                //.setErodeSize(6)
-                //.setDilateSize(6)
+                .setTargetColorRange(color) // use a predefined color match
+                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY) // exclude blobs inside blobs
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1)) // search central 1/4 of camera view
+                // .setDrawContours(true) // Show contours on the Stream Preview
+                .setBlurSize(5) // Smooth the transitions between different colors in image
+                // .setErodeSize(6)
+                // .setDilateSize(6)
                 .build();
 
-        //stating the webcam
+        // stating the webcam
         visionPortal = new VisionPortal.Builder()
                 .setLiveViewContainerId(portal1ViewId)
                 .addProcessor(tagProcessor)
@@ -714,7 +720,7 @@ public class AutoLeftScoring extends LinearOpMode {
         if (vision == 1) {
             if (tagProcessor.getDetections().size() > 0) {
                 AprilTagDetection tag = tagProcessor.getDetections().get(0);
-                //sending telemetry values to the driver station
+                // sending telemetry values to the driver station
                 telemetry.addData("x", tag.ftcPose.x);
                 telemetry.addData("y", tag.ftcPose.y);
                 telemetry.addData("z", tag.ftcPose.z);
@@ -726,7 +732,7 @@ public class AutoLeftScoring extends LinearOpMode {
         } else if (vision == 2) {
             if (tagProcessor2.getDetections().size() > 0) {
                 AprilTagDetection tag = tagProcessor2.getDetections().get(0);
-                //sending telemetry values to the driver station
+                // sending telemetry values to the driver station
                 telemetry.addData("x", tag.ftcPose.x);
                 telemetry.addData("y", tag.ftcPose.y);
                 telemetry.addData("z", tag.ftcPose.z);
@@ -758,18 +764,17 @@ public class AutoLeftScoring extends LinearOpMode {
                 rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw - dir;
                 originalY = tagProcessor.getDetections().get(0).ftcPose.y;
 
-                if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { // 0.5 is buffer
+                    // strafe(1);
                     rotate(-rotateNew);
-                }
-                else if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
-                    //strafe(-1);
+                } else if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { // 0.5 is buffer
+                    // strafe(-1);
                     rotate(-rotateNew);
                 }
 
                 rotateRadians = Math.toRadians(rotateNew);
                 correctX = Math.tan(rotateRadians) * originalY;
-                strafe(-1*correctX, SPEED);
+                strafe(-1 * correctX, SPEED);
 
             }
         } else if (vision == 2) {
@@ -777,12 +782,12 @@ public class AutoLeftScoring extends LinearOpMode {
                 rotateNew = tagProcessor2.getDetections().get(0).ftcPose.yaw - dir;
                 originalY = tagProcessor2.getDetections().get(0).ftcPose.y;
 
-                if (tagProcessor2.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { // 0.5 is buffer
+                    // strafe(1);
                     rotate(-rotateNew);
                 }
-                if (tagProcessor2.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
-                    //strafe(-1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { // 0.5 is buffer
+                    // strafe(-1);
                     rotate(-rotateNew);
                 }
 
@@ -797,17 +802,17 @@ public class AutoLeftScoring extends LinearOpMode {
     public void alignX(double x, int vision) {
 
         double xPosNew;
-        //alignX(-1, 1, 12);
+        // alignX(-1, 1, 12);
         if (vision == 1) {
             if (tagProcessor.getDetections().size() > 0) {
                 xPosNew = tagProcessor.getDetections().get(0).ftcPose.x - x;
 
-                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { // 0.5 is buffer
+                    // strafe(1);
                     strafe(1 * xPosNew, SPEED);
                 }
-                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
-                    //strafe(-1);
+                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { // 0.5 is buffer
+                    // strafe(-1);
                     strafe(1 * xPosNew, SPEED);
                 }
             }
@@ -815,12 +820,12 @@ public class AutoLeftScoring extends LinearOpMode {
             if (tagProcessor2.getDetections().size() > 0) {
                 xPosNew = tagProcessor2.getDetections().get(0).ftcPose.x - x;
 
-                if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { // 0.5 is buffer
+                    // strafe(1);
                     strafe(-1 * xPosNew, SPEED);
                 }
-                if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
-                    //strafe(-1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { // 0.5 is buffer
+                    // strafe(-1);
                     strafe(-1 * xPosNew, SPEED);
                 }
             }
@@ -829,33 +834,33 @@ public class AutoLeftScoring extends LinearOpMode {
 
     public void alignY(double y, int vision) {
         double yPosNew;
-        //double moveInRevs;
-        //alignX(-1, 1, 12);
+        // double moveInRevs;
+        // alignX(-1, 1, 12);
         if (vision == 1) {
             if (tagProcessor.getDetections().size() > 0) {
                 yPosNew = tagProcessor.getDetections().get(0).ftcPose.y - y;
-                //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
+                // moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
 
-                if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + y)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + y)) { // 0.5 is buffer
+                    // strafe(1);
                     moveStraightLine(1 * yPosNew);
                 }
-                if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + y)) { //0.5 is buffer
-                    //strafe(-1);
+                if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + y)) { // 0.5 is buffer
+                    // strafe(-1);
                     moveStraightLine(1 * yPosNew);
                 }
             }
         } else if (vision == 2) {
             if (tagProcessor2.getDetections().size() > 0) {
                 yPosNew = tagProcessor2.getDetections().get(0).ftcPose.y - y;
-                //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
+                // moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
 
-                if (tagProcessor2.getDetections().get(0).ftcPose.y < (-0.5 + y)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.y < (-0.5 + y)) { // 0.5 is buffer
+                    // strafe(1);
                     moveStraightLine(-1 * yPosNew);
                 }
-                if (tagProcessor2.getDetections().get(0).ftcPose.y > (0.5 + y)) { //0.5 is buffer
-                    //strafe(-1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.y > (0.5 + y)) { // 0.5 is buffer
+                    // strafe(-1);
                     moveStraightLine(-1 * yPosNew);
                 }
             }
@@ -908,13 +913,13 @@ public class AutoLeftScoring extends LinearOpMode {
 
     public void strafeAnyAngle(double strafeInches, double strafeAngleDegrees, double robotSpeed) {
         if (strafeAngleDegrees > 0 && strafeAngleDegrees < 360) {
-            double strafeAngleRadians = Math.PI/180 * strafeAngleDegrees;
+            double strafeAngleRadians = Math.PI / 180 * strafeAngleDegrees;
             double strafeAnyRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
 
-            double strafeLeftFrontPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
-            double strafeLeftBackPower = Math.sin(strafeAngleRadians - Math.PI/4) * strafeAnyRevs;
-            double strafeRightFrontPower = Math.sin(strafeAngleRadians - Math.PI/4) * strafeAnyRevs;
-            double strafeRightBackPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
+            double strafeLeftFrontPower = Math.sin(strafeAngleRadians + Math.PI / 4) * strafeAnyRevs;
+            double strafeLeftBackPower = Math.sin(strafeAngleRadians - Math.PI / 4) * strafeAnyRevs;
+            double strafeRightFrontPower = Math.sin(strafeAngleRadians - Math.PI / 4) * strafeAnyRevs;
+            double strafeRightBackPower = Math.sin(strafeAngleRadians + Math.PI / 4) * strafeAnyRevs;
 
             drive(robotSpeed, strafeLeftFrontPower, strafeLeftBackPower, strafeRightFrontPower, strafeRightBackPower);
         }
@@ -922,13 +927,13 @@ public class AutoLeftScoring extends LinearOpMode {
     }
 
     /*
-    =====================================================
-    MOVE IN STRAIGHT LINE FUNCTION
-    to call:
-        moveStraightLine(# of inches);
-        positive # of inches -> forward
-    =====================================================
-    */
+     * =====================================================
+     * MOVE IN STRAIGHT LINE FUNCTION
+     * to call:
+     * moveStraightLine(# of inches);
+     * positive # of inches -> forward
+     * =====================================================
+     */
     private void moveStraightLine(double movementInInches) {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
         telemetry.addData("Moving ", "%.3f inches", movementInInches);
@@ -936,12 +941,13 @@ public class AutoLeftScoring extends LinearOpMode {
         drive(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
     }
 
-    public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs) {
+    public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs,
+            double rightBackRevs) {
 
         int LFdrivetarget = (int) (leftFrontRevs * MOTOR_TICK_COUNTS) + leftFrontDrive.getCurrentPosition();
         int LBdrivetarget = (int) (leftBackRevs * MOTOR_TICK_COUNTS) + leftBackDrive.getCurrentPosition();
         int RFdrivetarget = (int) (rightFrontRevs * MOTOR_TICK_COUNTS) + rightFrontDrive.getCurrentPosition();
-        int RBdrivetarget = (int) (rightBackRevs * MOTOR_TICK_COUNTS) +  rightBackDrive.getCurrentPosition();
+        int RBdrivetarget = (int) (rightBackRevs * MOTOR_TICK_COUNTS) + rightBackDrive.getCurrentPosition();
 
         leftFrontDrive.setTargetPosition(LFdrivetarget);
         leftBackDrive.setTargetPosition(LBdrivetarget);
@@ -953,17 +959,18 @@ public class AutoLeftScoring extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
         leftFrontDrive.setPower(speed);
         leftBackDrive.setPower(speed);
         rightFrontDrive.setPower(speed);
         rightBackDrive.setPower(speed);
-//
-//        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
-//
-//        }
+        //
+        // while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() ||
+        // rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
+        //
+        // }
 
-        while (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive) || tolerance(rightBackDrive)) {
+        while (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive)
+                || tolerance(rightBackDrive)) {
 
         }
 
@@ -972,12 +979,11 @@ public class AutoLeftScoring extends LinearOpMode {
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
 
-
         sleep(20);
     }
 
     public boolean tolerance(DcMotor motor) {
-        return Math.abs(motor.getCurrentPosition()-motor.getTargetPosition()) > 10;
+        return Math.abs(motor.getCurrentPosition() - motor.getTargetPosition()) > 10;
     }
 
     public void strafeDiagonalLeft(double strafeLeftInches) {

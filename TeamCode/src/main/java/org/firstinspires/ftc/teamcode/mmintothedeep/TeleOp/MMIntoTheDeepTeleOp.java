@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp;
 
-
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -58,7 +57,6 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.Timer;
 
-
 /*
   =========================================
   This OpMode was preserved because Om
@@ -81,12 +79,12 @@ public class MMIntoTheDeepTeleOp extends OpMode {
     private DcMotor rightBackDrive = null;
 
     public Servo gripperServo1 = null;
-    //    public Servo gripperServo2 = null;
+    // public Servo gripperServo2 = null;
     public Servo pivotServo = null;
     public Servo fakeServo = null;
     public Servo fakeServo2 = null;
 
-//    public Servo droneServo = null;
+    // public Servo droneServo = null;
 
     public DcMotor linearSlideMotor = null;
     public DcMotor hangSlideMotor = null;
@@ -100,7 +98,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
     boolean swPreset = false;
 
     boolean isPressedEndOHYE = false;
-    //public DcMotor linearActuatorMotor = null;
+    // public DcMotor linearActuatorMotor = null;
 
     public Date previousTime = new Date();
 
@@ -112,10 +110,12 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
     static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
-    // the distance you drive with one turn of the wheel is the circumference of the wheel
+    // the distance you drive with one turn of the wheel is the circumference of the
+    // wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
-    static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
+    static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in
+                                                                                // inches
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
@@ -126,7 +126,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
     AprilTagProcessor tagProcessor;
     AprilTagProcessor tagProcessor2;
 
-//    private static ElapsedTime stopWatch = new ElapsedTime();
+    // private static ElapsedTime stopWatch = new ElapsedTime();
 
     long start = System.currentTimeMillis();
 
@@ -139,7 +139,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
-//        gripperServo2 = hardwareMap.servo.get("gripperServo2");
+        // gripperServo2 = hardwareMap.servo.get("gripperServo2");
         pivotServo = hardwareMap.servo.get("pivotServo");
         fakeServo = hardwareMap.servo.get("fakeServo");
         fakeServo2 = hardwareMap.servo.get("fakeServo2");
@@ -152,7 +152,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         hangSlideMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
+        // linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
 
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -164,12 +164,11 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         hangSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangSlideMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        //linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
-        //linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -183,12 +182,10 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         hangSlideMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
         hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
         hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         initPortal();
-
 
     }
 
@@ -213,7 +210,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
         telemetry.addData("Cutpower", CutPower);
         if (gamepad1.back && !CutPower) {
-            //Button cuts all power except linear slides/actuators
+            // Button cuts all power except linear slides/actuators
             CutPower = true;
         }
         if (gamepad1.back && CutPower) {
@@ -222,7 +219,6 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
         if (!CutPower) {
             telemetry.addData("slide", linearSlideMotor.getCurrentPosition());
-
 
             if (gamepad1.right_trigger >= 0.3F) {
                 // Fine controls
@@ -334,7 +330,6 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             }
         }
 
-
         if (gamepad1.dpad_up) {
             isPressedEndOHYE = true;
         } else {
@@ -345,7 +340,6 @@ public class MMIntoTheDeepTeleOp extends OpMode {
                 hangSlideMotor2.setPower(-0.7 * 0.41);
             }
         }
-
 
         if (gamepad1.dpad_left) {
             isPressed2 = true;
@@ -364,12 +358,13 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             hangSlideMotor2.setPower(0);
         }
 
-
         telemetry.addData("Claw Position,", gripperServo1.getPosition());
-//      telemetry.addData("Linear Slide Position", hangSlideMotor.getCurrentPosition());
-//      telemetry.addData("Linear Slide Speed", hangSlideMotor.getPower());
-        //telemetry.addData("Linear Actuator Position", linearActuatorMotor.getCurrentPosition());
-        //telemetry.addData("Linear Actuator Speed", linearActuatorMotor.getPower());
+        // telemetry.addData("Linear Slide Position",
+        // hangSlideMotor.getCurrentPosition());
+        // telemetry.addData("Linear Slide Speed", hangSlideMotor.getPower());
+        // telemetry.addData("Linear Actuator Position",
+        // linearActuatorMotor.getCurrentPosition());
+        // telemetry.addData("Linear Actuator Speed", linearActuatorMotor.getPower());
         telemetry.addData("Claw Join Position,", pivotServo.getPosition());
         telemetry.addData("slide", linearSlideMotor.getCurrentPosition());
         telemetry.addData("Hanging slide 1", hangSlideMotor.getCurrentPosition());
@@ -384,10 +379,10 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             if (Objects.equals(s, "basket")) {
                 if (tagProcessor.getDetections().get(0).id == 11) {
                     align(0, 70, 180, vision);
-                    align(0, 16, -45, vision); //now with tag 13
+                    align(0, 16, -45, vision); // now with tag 13
                 } else if (tagProcessor.getDetections().get(0).id == 12) {
                     align(-50, 16, 90, vision);
-                    align(0, 16, -45, vision); //now with tag 13
+                    align(0, 16, -45, vision); // now with tag 13
                 } else if (tagProcessor.getDetections().get(0).id == 13) {
                     align(0, 16, -45, vision);
                 }
@@ -436,16 +431,18 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
         // Because we want to show two camera feeds simultaneously, we need to inform
         // the SDK that we want it to split the camera monitor area into two smaller
-        // areas for us. It will then give us View IDs which we can pass to the individual
+        // areas for us. It will then give us View IDs which we can pass to the
+        // individual
         // vision portals to allow them to properly hook into the UI in tandem.
         int[] viewIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.VERTICAL);
 
-        // We extract the two view IDs from the array to make our lives a little easier later.
+        // We extract the two view IDs from the array to make our lives a little easier
+        // later.
         // NB: the array is 2 long because we asked for 2 portals up above.
         int portal1ViewId = viewIds[0];
         int portal2ViewId = viewIds[1];
 
-        //drawing information on the driver station camera screen
+        // drawing information on the driver station camera screen
         tagProcessor = new AprilTagProcessor.Builder()
                 .setDrawAxes(true)
                 .setDrawCubeProjection(true)
@@ -462,7 +459,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
                 .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
                 .build();
 
-        //stating the webcam
+        // stating the webcam
         visionPortal = new VisionPortal.Builder()
                 .setLiveViewContainerId(portal1ViewId)
                 .addProcessor(tagProcessor)
@@ -484,7 +481,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         if (vision == 1) {
             if (tagProcessor.getDetections().size() > 0) {
                 AprilTagDetection tag = tagProcessor.getDetections().get(0);
-                //sending telemetry values to the driver station
+                // sending telemetry values to the driver station
                 telemetry.addData("x", tag.ftcPose.x);
                 telemetry.addData("y", tag.ftcPose.y);
                 telemetry.addData("z", tag.ftcPose.z);
@@ -496,7 +493,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         } else if (vision == 2) {
             if (tagProcessor2.getDetections().size() > 0) {
                 AprilTagDetection tag = tagProcessor2.getDetections().get(0);
-                //sending telemetry values to the driver station
+                // sending telemetry values to the driver station
                 telemetry.addData("x", tag.ftcPose.x);
                 telemetry.addData("y", tag.ftcPose.y);
                 telemetry.addData("z", tag.ftcPose.z);
@@ -527,11 +524,11 @@ public class MMIntoTheDeepTeleOp extends OpMode {
                 rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw - dir;
                 originalY = tagProcessor.getDetections().get(0).ftcPose.y;
 
-                if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { // 0.5 is buffer
+                    // strafe(1);
                     rotate(-rotateNew);
-                } else if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
-                    //strafe(-1);
+                } else if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { // 0.5 is buffer
+                    // strafe(-1);
                     rotate(-rotateNew);
                 }
 
@@ -545,12 +542,12 @@ public class MMIntoTheDeepTeleOp extends OpMode {
                 rotateNew = tagProcessor2.getDetections().get(0).ftcPose.yaw - dir;
                 originalY = tagProcessor2.getDetections().get(0).ftcPose.y;
 
-                if (tagProcessor2.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { // 0.5 is buffer
+                    // strafe(1);
                     rotate(-rotateNew);
                 }
-                if (tagProcessor2.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { //0.5 is buffer
-                    //strafe(-1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { // 0.5 is buffer
+                    // strafe(-1);
                     rotate(-rotateNew);
                 }
 
@@ -565,17 +562,17 @@ public class MMIntoTheDeepTeleOp extends OpMode {
     public void alignX(double x, int vision) {
 
         double xPosNew;
-        //alignX(-1, 1, 12);
+        // alignX(-1, 1, 12);
         if (vision == 1) {
             if (tagProcessor.getDetections().size() > 0) {
                 xPosNew = tagProcessor.getDetections().get(0).ftcPose.x - x;
 
-                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { // 0.5 is buffer
+                    // strafe(1);
                     strafe(1 * xPosNew);
                 }
-                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
-                    //strafe(-1);
+                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { // 0.5 is buffer
+                    // strafe(-1);
                     strafe(1 * xPosNew);
                 }
             }
@@ -583,12 +580,12 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             if (tagProcessor2.getDetections().size() > 0) {
                 xPosNew = tagProcessor2.getDetections().get(0).ftcPose.x - x;
 
-                if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { // 0.5 is buffer
+                    // strafe(1);
                     strafe(-1 * xPosNew);
                 }
-                if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
-                    //strafe(-1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { // 0.5 is buffer
+                    // strafe(-1);
                     strafe(-1 * xPosNew);
                 }
             }
@@ -597,33 +594,33 @@ public class MMIntoTheDeepTeleOp extends OpMode {
 
     public void alignY(double y, int vision) {
         double yPosNew;
-        //double moveInRevs;
-        //alignX(-1, 1, 12);
+        // double moveInRevs;
+        // alignX(-1, 1, 12);
         if (vision == 1) {
             if (tagProcessor.getDetections().size() > 0) {
                 yPosNew = tagProcessor.getDetections().get(0).ftcPose.y - y;
-                //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
+                // moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
 
-                if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + y)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + y)) { // 0.5 is buffer
+                    // strafe(1);
                     moveStraightLine(1 * yPosNew);
                 }
-                if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + y)) { //0.5 is buffer
-                    //strafe(-1);
+                if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + y)) { // 0.5 is buffer
+                    // strafe(-1);
                     moveStraightLine(1 * yPosNew);
                 }
             }
         } else if (vision == 2) {
             if (tagProcessor2.getDetections().size() > 0) {
                 yPosNew = tagProcessor2.getDetections().get(0).ftcPose.y - y;
-                //moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
+                // moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
 
-                if (tagProcessor2.getDetections().get(0).ftcPose.y < (-0.5 + y)) { //0.5 is buffer
-                    //strafe(1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.y < (-0.5 + y)) { // 0.5 is buffer
+                    // strafe(1);
                     moveStraightLine(-1 * yPosNew);
                 }
-                if (tagProcessor2.getDetections().get(0).ftcPose.y > (0.5 + y)) { //0.5 is buffer
-                    //strafe(-1);
+                if (tagProcessor2.getDetections().get(0).ftcPose.y > (0.5 + y)) { // 0.5 is buffer
+                    // strafe(-1);
                     moveStraightLine(-1 * yPosNew);
                 }
             }
@@ -674,13 +671,13 @@ public class MMIntoTheDeepTeleOp extends OpMode {
     }
 
     /*
-    =====================================================
-    MOVE IN STRAIGHT LINE FUNCTION
-    to call:
-        moveStraightLine(# of inches);
-        positive # of inches -> forward
-    =====================================================
-    */
+     * =====================================================
+     * MOVE IN STRAIGHT LINE FUNCTION
+     * to call:
+     * moveStraightLine(# of inches);
+     * positive # of inches -> forward
+     * =====================================================
+     */
     private void moveStraightLine(double movementInInches) {
         double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
         telemetry.addData("Moving ", "%.3f inches", movementInInches);
@@ -688,7 +685,8 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         drive(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
     }
 
-    public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs) {
+    public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs,
+            double rightBackRevs) {
 
         int LFdrivetarget = (int) (leftFrontRevs * MOTOR_TICK_COUNTS) + leftFrontDrive.getCurrentPosition();
         int LBdrivetarget = (int) (leftBackRevs * MOTOR_TICK_COUNTS) + leftBackDrive.getCurrentPosition();
@@ -705,34 +703,32 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
         leftFrontDrive.setPower(speed);
         leftBackDrive.setPower(speed);
         rightFrontDrive.setPower(speed);
         rightBackDrive.setPower(speed);
 
-        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
-//            telemetry.addLine("Current Position of the Motors")
-//                    .addData("Left Front  ", "%d", leftFrontDrive.getCurrentPosition())
-//                    .addData("Left Back ", "%d", leftBackDrive.getCurrentPosition())
-//                    .addData("Right Front ", "%d", rightFrontDrive.getCurrentPosition())
-//                    .addData("Right Back ", "%df", rightBackDrive.getCurrentPosition());
-//
-//            telemetry.addLine("Target Positions of the Motors")
-//                    .addData("Left Front  ", "%d", LFdrivetarget)
-//                    .addData("Left Back ", "%d", LBdrivetarget)
-//                    .addData("Right Front ", "%d", RFdrivetarget)
-//                    .addData("Right Back ", "%df", RBdrivetarget);
+        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy()
+                || rightBackDrive.isBusy()) {
+            // telemetry.addLine("Current Position of the Motors")
+            // .addData("Left Front ", "%d", leftFrontDrive.getCurrentPosition())
+            // .addData("Left Back ", "%d", leftBackDrive.getCurrentPosition())
+            // .addData("Right Front ", "%d", rightFrontDrive.getCurrentPosition())
+            // .addData("Right Back ", "%df", rightBackDrive.getCurrentPosition());
+            //
+            // telemetry.addLine("Target Positions of the Motors")
+            // .addData("Left Front ", "%d", LFdrivetarget)
+            // .addData("Left Back ", "%d", LBdrivetarget)
+            // .addData("Right Front ", "%d", RFdrivetarget)
+            // .addData("Right Back ", "%df", RBdrivetarget);
 
-            //telemetry.update();
+            // telemetry.update();
         }
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
 
-
     }
-
 
 }
