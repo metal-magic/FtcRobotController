@@ -141,8 +141,8 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         // gripperServo2 = hardwareMap.servo.get("gripperServo2");
         pivotServo = hardwareMap.servo.get("pivotServo");
-        fakeServo = hardwareMap.servo.get("fakeServo");
-        fakeServo2 = hardwareMap.servo.get("fakeServo2");
+//        fakeServo = hardwareMap.servo.get("fakeServo");
+//        fakeServo2 = hardwareMap.servo.get("fakeServo2");
 
         linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
         hangSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor1");
@@ -205,8 +205,8 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         double backRightPower = (y + x - rx) / denominator;
         boolean CutPower = false;
         double motorSpeed;
-        fakeServo.setPosition(1);
-        fakeServo2.setPosition(1);
+//        fakeServo.setPosition(1);
+//        fakeServo2.setPosition(1);
 
         telemetry.addData("Cutpower", CutPower);
         if (gamepad1.back && !CutPower) {
@@ -263,11 +263,11 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         if (linearSlideMotor.getCurrentPosition() < 4000 && gamepad2.right_trigger >= 0.1F) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setPower(0.75);
+            linearSlideMotor.setPower(1);
         } else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad2.left_trigger >= 0.1F) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setPower(-0.5);
+            linearSlideMotor.setPower(-1);
         } else {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -295,7 +295,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
             hangSlideMotor.setPower(0);
         }
 
-        if (gamepad1.right_bumper) {
+        if (gamepad1.b) {
             hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -314,7 +314,7 @@ public class MMIntoTheDeepTeleOp extends OpMode {
         }
         telemetry.addData("Slide position, ", hangSlideMotor.getCurrentPosition());
 
-        if (gamepad1.right_trigger >= 0.3F) {
+        if (gamepad1.y) {
             hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
             hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             hangSlideMotor2.setPower(-0.7 * 0.41);

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Tests;
 
 import android.util.Size;
 
@@ -104,62 +104,97 @@ public class AutoLeftSample extends LinearOpMode {
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //score preloaded sample
+        strafe(5, SPEED);
         moveAndSlide(20, 4000);
-        pivotServo.setPosition(0.36);
-        sleep(200);
-        gripperServo1.setPosition(0.3);
-        moveStraightLine(-5);
-        moveAndSlide(-15, 10);
-        // go to first sample and pick it up
-        strafe(60, SPEED);
-        gripperServo1.setPosition(0.4);
-        sleep(100);
-        pivotServo.setPosition(0.06);
-        sleep(1000);
-        gripperServo1.setPosition(0);
-        sleep(1000);
-        pivotServo.setPosition(0.59);
-        sleep(100);
-        //score sample
-        strafe(-60, SPEED);
-        moveAndSlide(20, 4000);
-        pivotServo.setPosition(0.36);
-        sleep(200);
-        gripperServo1.setPosition(0.3);
-        moveStraightLine(-5);
-        moveAndSlide(-15, 10);
-        // go to next sample and pick it up
-        strafe(60, SPEED);
-        gripperServo1.setPosition(0.4);
-        sleep(100);
-        pivotServo.setPosition(0.06);
-        sleep(1000);
-        gripperServo1.setPosition(0);
-        sleep(1000);
-        pivotServo.setPosition(0.59);
-        sleep(100);
-        //score it
-        strafe(-48, SPEED);
         rotate(-45);
-        moveAndSlide(3, 4000);
+        //moveLinearSlide(4000, 0.7);
+        moveStraightLine(2);
         pivotServo.setPosition(0.36);
+        linearSlideMotor.setPower(0);
         sleep(200);
         gripperServo1.setPosition(0.3);
-        moveStraightLine(-5);
-        moveAndSlide(-15, 10);
+        pivotServo.setPosition(0.59);
+        sleep(200);
+        rotate(45);
+        // go to sample
+        moveAndSlide(-23, 10);
+        gripperServo1.setPosition(0.4);
+        strafe(30, SPEED);
+        sleep(500);
+        alignToSample();
+        sleep(500);
+        // Offset to claw
+        strafe(-0.8, SPEED);
+        pivotServo.setPosition(0.06);
+        sleep(500);
+        gripperServo1.setPosition(0);
+        sleep(500);
+        pivotServo.setPosition(0.59);
+        strafe(-30, SPEED);
+        //score
+        strafe(5, SPEED);
+        moveAndSlide(20, 4000);
+        rotate(-45);
+        //moveLinearSlide(4000, 0.7);
+        moveStraightLine(2);
+        pivotServo.setPosition(0.36);
+        linearSlideMotor.setPower(0);
+        sleep(200);
+        gripperServo1.setPosition(0.3);
+        sleep(200);
+        rotate(45);
+
+        // go to first sample and pick it up
+//        strafe(36, SPEED);
+//        gripperServo1.setPosition(0.4);
+//        sleep(100);
+//        pivotServo.setPosition(0.06);
+//        sleep(1000);
+//        gripperServo1.setPosition(0);
+//        sleep(1000);
+//        pivotServo.setPosition(0.59);
+//        sleep(100);
+//        //score sample
+//        strafe(-36, SPEED);
+//        moveAndSlide(20, 4000);
+//        rotate(-45);
+//        pivotServo.setPosition(0.36);
+//        sleep(200);
+//        gripperServo1.setPosition(0.3);
+//        rotate(45);
+//        moveStraightLine(-5);
+//        moveAndSlide(-15, 10);
+//        // go to next sample and pick it up
+//        strafe(36, SPEED);
+//        gripperServo1.setPosition(0.4);
+//        sleep(100);
+//        pivotServo.setPosition(0.06);
+//        sleep(1000);
+//        gripperServo1.setPosition(0);
+//        sleep(1000);
+//        pivotServo.setPosition(0.59);
+//        sleep(100);
+//        //score it
+//        strafe(-24, SPEED);
+//        rotate(-45);
+//        moveAndSlide(3, 4000);
+//        pivotServo.setPosition(0.36);
+//        sleep(200);
+//        gripperServo1.setPosition(0.3);
+//        moveStraightLine(-5);
+//        moveAndSlide(-15, 10);
         
 
         // Termination
-        if (currentTime.getTime() > 35000) {
-            leftBackDrive.setPower(0);
-            leftFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-        }
-
+        leftBackDrive.setPower(0);
+        leftFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
     }
+
 
     public void moveAndSlide(double movementInInches, int slide) {
 
@@ -199,7 +234,7 @@ public class AutoLeftSample extends LinearOpMode {
         boolean isReached = false;
         double scale = slide;
         double height = slide;
-        while (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive) || tolerance(rightBackDrive)) {
+        while (opModeIsActive() && (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive) || tolerance(rightBackDrive))) {
             // Checks if current position is within bounds
             if (!isReached) {
                 if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
@@ -493,7 +528,7 @@ public class AutoLeftSample extends LinearOpMode {
         // Allows while loops below to access boxFitSize
         org.opencv.core.Size myBoxFitSize;
         int i = 0;
-        while (!alignedX && i < maxRepetitions) {
+        while ((!alignedX && i < maxRepetitions) && opModeIsActive()) {
             // Blobs is an arrayList of type ColorBlobLocatorProcessor
             blobs = colorLocator.getBlobs();
             // // Filters by AspectRatio to remove wall when detecting yellow
@@ -551,7 +586,7 @@ public class AutoLeftSample extends LinearOpMode {
 
             } else {
                 sleep(10);
-                strafe(-1, SPEED);
+                strafe(1, SPEED);
             }
             i++;
         }
@@ -628,7 +663,7 @@ public class AutoLeftSample extends LinearOpMode {
             // moveStraightLine(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) j /
             // maxRepetitions + 0.5)))));
             // }
-            moveStraightLine(errorY);
+           // moveStraightLine(errorY);
 
             // moveStraightLine(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (j
             // / maxRepetitions + 0.5)))));
@@ -636,7 +671,7 @@ public class AutoLeftSample extends LinearOpMode {
             alignedY = Math.abs(errorY) <= 0.1;
         }
 
-        moveStraightLine(2);
+        //moveStraightLine(2);
     }
 
     public void pickUpSample() {
