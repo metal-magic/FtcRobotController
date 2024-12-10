@@ -147,8 +147,8 @@ public class AutoLeftSample extends LinearOpMode {
         sleep(200);
         moveStraightLine(15);
         strafe(-57, 1);
-        moveStraightLine(20);
-        pivotServo.setPosition(0.34);
+        pivotServo.setPosition(0.37);
+        moveStraightLine(20, 0.4);
 
         // Termination
         leftBackDrive.setPower(0);
@@ -960,6 +960,13 @@ public class AutoLeftSample extends LinearOpMode {
         telemetry.addData("Moving ", "%.3f inches", movementInInches);
         telemetry.update();
         drive(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
+    }
+
+    private void moveStraightLine(double movementInInches, double speed) {
+        double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
+        telemetry.addData("Moving ", "%.3f inches", movementInInches);
+        telemetry.update();
+        drive(speed, moveInRevs, moveInRevs, moveInRevs, moveInRevs);
     }
 
     public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs,
