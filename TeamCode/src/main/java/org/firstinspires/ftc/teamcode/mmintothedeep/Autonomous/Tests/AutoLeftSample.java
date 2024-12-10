@@ -106,10 +106,17 @@ public class AutoLeftSample extends LinearOpMode {
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        double moveCoefficient; // for apriltags
+
         //score preloaded sample
         strafe(5, SPEED);
+        if (!tagProcessor.getDetections().isEmpty()) {
+            moveCoefficient = -55 - tagProcessor.getDetections().get(0).ftcPose.yaw;
+        } else {
+            moveCoefficient = -55;
+        }
         moveAndSlide(20, 4000);
-        rotate(-55);
+        rotate(moveCoefficient);
         //moveLinearSlide(4000, 0.7);
         moveStraightLine(2);
         pivotServo.setPosition(0.36);
@@ -146,6 +153,12 @@ public class AutoLeftSample extends LinearOpMode {
         rotateAndSlide(-120, 10);
         sleep(200);
         moveStraightLine(15);
+        // move back if its gonna hit the submersible
+        if (!tagProcessor2.getDetections().isEmpty()) {
+            if (tagProcessor2.getDetections().get(0).ftcPose.y > 30) {
+                moveStraightLine(-(tagProcessor2.getDetections().get(0).ftcPose.y - 30));
+            }
+        }
         strafe(-57, 1);
         pivotServo.setPosition(0.37);
         moveStraightLine(20, 0.4);
