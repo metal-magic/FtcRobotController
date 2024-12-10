@@ -109,7 +109,7 @@ public class AutoLeftSample extends LinearOpMode {
         //score preloaded sample
         strafe(5, SPEED);
         moveAndSlide(20, 4000);
-        rotate(-45);
+        rotate(-55);
         //moveLinearSlide(4000, 0.7);
         moveStraightLine(2);
         pivotServo.setPosition(0.36);
@@ -118,7 +118,7 @@ public class AutoLeftSample extends LinearOpMode {
         gripperServo1.setPosition(0.3);
         pivotServo.setPosition(0.59);
         sleep(200);
-        rotateAndSlide(135, 10);
+        rotateAndSlide(145, 10);
         // go to sample
         strafe(6, SPEED);
         gripperServo1.setPosition(0.5);
@@ -149,75 +149,6 @@ public class AutoLeftSample extends LinearOpMode {
         strafe(-57, 1);
         moveStraightLine(20);
         pivotServo.setPosition(0.34);
-
-
-//        strafe(30, SPEED);
-//        sleep(500);
-//        alignToSample();
-//        sleep(500);
-//        // Offset to claw
-//        strafe(1.8, SPEED);
-//        pivotServo.setPosition(0.07);
-//        sleep(500);
-//        gripperServo1.setPosition(0);
-//        sleep(500);
-//        pivotServo.setPosition(0.59);
-//        strafe(-30, SPEED);
-//        //score
-//        strafe(5, SPEED);
-//        moveAndSlide(20, 4000);
-//        rotate(-45);
-//        //moveLinearSlide(4000, 0.7);
-//        moveStraightLine(2);
-//        pivotServo.setPosition(0.36);
-//        linearSlideMotor.setPower(0);
-//        sleep(200);
-//        gripperServo1.setPosition(0.1);
-//        sleep(200);
-//        rotate(45);
-//
-//        moveLinearSlide(10, SPEED);
-
-        // go to first sample and pick it up
-//        strafe(36, SPEED);
-//        gripperServo1.setPosition(0.4);
-//        sleep(100);
-//        pivotServo.setPosition(0.06);
-//        sleep(1000);
-//        gripperServo1.setPosition(0);
-//        sleep(1000);
-//        pivotServo.setPosition(0.59);
-//        sleep(100);
-//        //score sample
-//        strafe(-36, SPEED);
-//        moveAndSlide(20, 4000);
-//        rotate(-45);
-//        pivotServo.setPosition(0.36);
-//        sleep(200);
-//        gripperServo1.setPosition(0.3);
-//        rotate(45);
-//        moveStraightLine(-5);
-//        moveAndSlide(-15, 10);
-//        // go to next sample and pick it up
-//        strafe(36, SPEED);
-//        gripperServo1.setPosition(0.4);
-//        sleep(100);
-//        pivotServo.setPosition(0.06);
-//        sleep(1000);
-//        gripperServo1.setPosition(0);
-//        sleep(1000);
-//        pivotServo.setPosition(0.59);
-//        sleep(100);
-//        //score it
-//        strafe(-24, SPEED);
-//        rotate(-45);
-//        moveAndSlide(3, 4000);
-//        pivotServo.setPosition(0.36);
-//        sleep(200);
-//        gripperServo1.setPosition(0.3);
-//        moveStraightLine(-5);
-//        moveAndSlide(-15, 10);
-        
 
         // Termination
         leftBackDrive.setPower(0);
