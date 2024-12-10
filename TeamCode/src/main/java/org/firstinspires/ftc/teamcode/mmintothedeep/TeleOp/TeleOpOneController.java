@@ -81,8 +81,8 @@ public class TeleOpOneController extends OpMode {
     public Servo gripperServo1 = null;
     // public Servo gripperServo2 = null;
     public Servo pivotServo = null;
-//    public Servo fakeServo = null;
-//    public Servo fakeServo2 = null;
+    // public Servo fakeServo = null;
+    // public Servo fakeServo2 = null;
 
     // public Servo droneServo = null;
 
@@ -144,8 +144,8 @@ public class TeleOpOneController extends OpMode {
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         // gripperServo2 = hardwareMap.servo.get("gripperServo2");
         pivotServo = hardwareMap.servo.get("pivotServo");
-//        fakeServo = hardwareMap.servo.get("fakeServo");
-//        fakeServo2 = hardwareMap.servo.get("fakeServo2");
+        // fakeServo = hardwareMap.servo.get("fakeServo");
+        // fakeServo2 = hardwareMap.servo.get("fakeServo2");
 
         linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
         hangSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor1");
@@ -207,11 +207,13 @@ public class TeleOpOneController extends OpMode {
             moveSlideDown = false;
         }
 
-
-
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        double y = -gamepad2.left_stick_y - gamepad1.left_stick_y; // REVERSED -gamepad1.left_stick_y.gamestick so
+        /*
+         * GAMEPAD 2 IS MAIN AND GAMEPAD 1 IS HANGING
+         * 
+         */
+        double y = -gamepad2.left_stick_y + gamepad1.left_stick_y; // REVERSED -gamepad1.left_stick_y.gamestick so
         // gamepad1 can also do movement for hanging
         // making sure it doesnt go over 1 or -1
         if (y < -1) {
@@ -219,7 +221,7 @@ public class TeleOpOneController extends OpMode {
         } else if (y > 1) {
             y = 1;
         }
-        double x = gamepad2.left_stick_x + gamepad1.left_stick_x; // gamepad1 can also do movement for hanging
+        double x = gamepad2.left_stick_x - gamepad1.left_stick_x; // gamepad1 can also do movement for hanging
         // making sure it doesnt go over 1 or -1
         if (x > 1) {
             x = 1;
@@ -244,8 +246,8 @@ public class TeleOpOneController extends OpMode {
         double backRightPower = (y + x - rx) / denominator;
         boolean CutPower = false;
         double motorSpeed;
-//        fakeServo.setPosition(1);
-//        fakeServo2.setPosition(1);
+        // fakeServo.setPosition(1);
+        // fakeServo2.setPosition(1);
 
         telemetry.addData("Cutpower", CutPower);
         if (gamepad1.back && !CutPower) {
