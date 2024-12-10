@@ -67,7 +67,7 @@ public class AutoLeftSample extends LinearOpMode {
     private boolean alignedX = false;
     private boolean alignedY = false;
 
-    static final double MAX_PIVOT_DISTANCE_INCHES = 6;
+    static final double MAX_PIVOT_DISTANCE_INCHES = 7;
 
     List<ColorBlobLocatorProcessor.Blob> blobs;
 
@@ -118,38 +118,65 @@ public class AutoLeftSample extends LinearOpMode {
         gripperServo1.setPosition(0.3);
         pivotServo.setPosition(0.59);
         sleep(200);
-        rotate(45);
+        rotateAndSlide(135, 10);
         // go to sample
-        moveAndSlide(-23, 10);
-        gripperServo1.setPosition(0.4);
-        strafe(30, SPEED);
-        sleep(500);
-        alignToSample();
-        sleep(500);
-        // Offset to claw
-        strafe(-0.8, SPEED);
-        moveStraightLine(-2);
-
-        pivotServo.setPosition(0.06);
-        sleep(500);
+        strafe(6, SPEED);
+        gripperServo1.setPosition(0.5);
+        sleep(2000);
+        moveStraightLine(15);
+        //alignToSample();
+        sleep(200);
+        pivotServo.setPosition(0.05);
+        sleep(1000);
         gripperServo1.setPosition(0);
-        sleep(500);
+        sleep(1000);
         pivotServo.setPosition(0.59);
-        strafe(-30, SPEED);
-        //score
-        strafe(5, SPEED);
-        moveAndSlide(20, 4000);
-        rotate(-45);
-        //moveLinearSlide(4000, 0.7);
-        moveStraightLine(2);
+        strafe(3, SPEED);
+        moveStraightLine(-5);
+        rotateAndSlide(-150, 4000);
+        moveStraightLine(10);
         pivotServo.setPosition(0.36);
         linearSlideMotor.setPower(0);
+        sleep(500);
+        gripperServo1.setPosition(0.3);
+        pivotServo.setPosition(0.59);
         sleep(200);
-        gripperServo1.setPosition(0.1);
+        moveStraightLine(-2);
         sleep(200);
-        rotate(45);
+        rotateAndSlide(-120, 10);
+        sleep(200);
+        moveStraightLine(15);
+        strafe(-57, 1);
+        moveStraightLine(20);
+        pivotServo.setPosition(0.34);
 
-        moveLinearSlide(10, SPEED);
+
+//        strafe(30, SPEED);
+//        sleep(500);
+//        alignToSample();
+//        sleep(500);
+//        // Offset to claw
+//        strafe(1.8, SPEED);
+//        pivotServo.setPosition(0.07);
+//        sleep(500);
+//        gripperServo1.setPosition(0);
+//        sleep(500);
+//        pivotServo.setPosition(0.59);
+//        strafe(-30, SPEED);
+//        //score
+//        strafe(5, SPEED);
+//        moveAndSlide(20, 4000);
+//        rotate(-45);
+//        //moveLinearSlide(4000, 0.7);
+//        moveStraightLine(2);
+//        pivotServo.setPosition(0.36);
+//        linearSlideMotor.setPower(0);
+//        sleep(200);
+//        gripperServo1.setPosition(0.1);
+//        sleep(200);
+//        rotate(45);
+//
+//        moveLinearSlide(10, SPEED);
 
         // go to first sample and pick it up
 //        strafe(36, SPEED);
@@ -206,6 +233,29 @@ public class AutoLeftSample extends LinearOpMode {
         telemetry.addData("Moving ", "%.3f inches", movementInInches);
         telemetry.update();
         driveWithSlide(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs, slide);
+
+    }
+
+    public void rotateAndSlide(double degrees, int slide) {
+
+        double robotSpeed = SPEED;
+        // Assume positive degrees means moving towards the right
+        double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
+
+        if (degrees >= 0) {
+            driveWithSlide(robotSpeed,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,slide);
+        } else {
+            // Moving negative means rotating left
+            driveWithSlide(robotSpeed,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs, slide);
+        }
 
     }
 
@@ -532,7 +582,7 @@ public class AutoLeftSample extends LinearOpMode {
         // Allows while loops below to access boxFitSize
         org.opencv.core.Size myBoxFitSize;
         int i = 0;
-        while ((!alignedX && i < maxRepetitions) && opModeIsActive()) {
+        while (!alignedX && i < maxRepetitions) {
             // Blobs is an arrayList of type ColorBlobLocatorProcessor
             blobs = colorLocator.getBlobs();
             // // Filters by AspectRatio to remove wall when detecting yellow
@@ -586,96 +636,14 @@ public class AutoLeftSample extends LinearOpMode {
 
                 strafe(Math.signum(errorX) * 3 * Math.pow(2, -1 * i), 0.5);
 
-                alignedX = Math.abs(errorX) <= 30;
+                alignedX = Math.abs(errorX) <= 20;
 
             } else {
                 sleep(10);
-                strafe(1, SPEED);
+                strafe(-1, SPEED);
             }
             i++;
         }
-
-        // // Sample horizontal setting
-        //
-        // // Blobs is an arrayList of type ColorBlobLocatorProcessor
-        // List<ColorBlobLocatorProcessor.Blob> blobsX1 = colorLocator.getBlobs();
-        // // Filters by AspectRatio to remove wall when detecting yellow
-        // ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsX1);
-        // // Filters by Area to remove small, glitched blobs
-        // ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsX1);
-        // // Sorts by Area in descending order to make processing easier
-        // // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-        //
-        // double P1 = 320;
-        // if (!blobsX1.isEmpty()) {
-        //
-        // RotatedRect boxFit = blobsX1.get(0).getBoxFit();
-        // P1 = boxFit.center.x - 320;
-        // }
-        //
-        // // Sets up ratio between horizontal distance and vertical distance
-        // strafe(Math.signum(P1) * strafeDistance);
-        //
-        // // Automatic Horizontal Alignment
-        //
-        // // Blobs is an arrayList of type ColorBlobLocatorProcessor
-        // List<ColorBlobLocatorProcessor.Blob> blobsX2 = colorLocator.getBlobs();
-        // // Filters by AspectRatio to remove wall when detecting yellow
-        // ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsX2);
-        // // Filters by Area to remove small, glitched blobs
-        // ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsX2);
-        // // Sorts by Area in descending order to make processing easier
-        // // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-        //
-        // double P2 = 320;
-        // if (!blobsX2.isEmpty()) {
-        //
-        // RotatedRect boxFit = blobsX2.get(0).getBoxFit();
-        //
-        // P2 = boxFit.center.x - 320;
-        // }
-        //
-        // strafe((P1 * strafeDistance) / (P1 - P2));
-        //
-        //
-        // sleep(500);
-        //
-        //
-        // Blobs is an arrayList of type ColorBlobLocatorProcessor
-        List<ColorBlobLocatorProcessor.Blob> blobsY = colorLocator.getBlobs();
-        // Filters by AspectRatio to remove wall when detecting yellow
-        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 3, blobsY);
-        // Filters by Area to remove small, glitched blobs
-        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsY);
-        // Sorts by Area in descending order to make processing easier
-        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-
-        if (!blobsY.isEmpty()) {
-
-            RotatedRect boxFit = blobsY.get(0).getBoxFit();
-            myBoxFitSize = boxFit.size;
-            double boxWidth = myBoxFitSize.width;
-            double boxHeight = myBoxFitSize.height;
-
-            double distanceZ_INCHES = 734.01575 / Math.min(boxHeight, boxWidth);
-            double errorY = distanceZ_INCHES - MAX_PIVOT_DISTANCE_INCHES;
-
-            // if (errorY > 0) {
-            // moveStraightLine(2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions +
-            // 0.5))));
-            // } else {
-            // moveStraightLine(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) j /
-            // maxRepetitions + 0.5)))));
-            // }
-           // moveStraightLine(errorY);
-
-            // moveStraightLine(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (j
-            // / maxRepetitions + 0.5)))));
-
-            alignedY = Math.abs(errorY) <= 0.1;
-        }
-
-        //moveStraightLine(2);
     }
 
     public void pickUpSample() {
