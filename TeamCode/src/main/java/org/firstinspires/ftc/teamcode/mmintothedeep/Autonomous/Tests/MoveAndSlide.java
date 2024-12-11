@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Tests;
 
 import android.util.Size;
 
@@ -7,10 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.util.SortOrder;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -30,9 +27,9 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-@Autonomous
+@Autonomous(name="I put the new Forgis on the Jeep I trap until the bloody bottoms is underneath", group="Autonomous")
 @Disabled
-public class OyeAuto extends LinearOpMode {
+public class MoveAndSlide extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -108,11 +105,8 @@ public class OyeAuto extends LinearOpMode {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // aligning to basket
-        alignX(1.5, 1);
-        alignY(10, 1);
 
-        pivotWheel3AndSlide(-45, 4000);
+        moveAndSlide(10, 4000);
 
 
         //Termination
@@ -125,28 +119,13 @@ public class OyeAuto extends LinearOpMode {
 
     }
 
-    public void pivotWheel3AndSlide(double degrees, int slideHeight) {
-        double robotSpeed = SPEED;
-        // Assume positive degrees means moving towards the right
-        double movementOfWheelsInRevs; // OLD: = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
-        double circumfrence = 2*Math.PI*15.5; //15.5 is radius
-        double degreeRatio = (90-degrees) / 360; // offset 90 because the input is with robot center
-        movementOfWheelsInRevs = Math.abs(circumfrence * degreeRatio);
+    public void moveAndSlide(double movementInInches, int slide) {
 
-        if (degrees >= 0) {
-            driveWithSlide(robotSpeed,
-                    1.0 * movementOfWheelsInRevs,
-                    0 * movementOfWheelsInRevs,
-                    -1 * movementOfWheelsInRevs,
-                    -1 * movementOfWheelsInRevs, slideHeight);
-        } else {
-            // Moving negative means rotating left
-            driveWithSlide(robotSpeed,
-                    -1 * movementOfWheelsInRevs,
-                    0 * movementOfWheelsInRevs,
-                    1.0 * movementOfWheelsInRevs,
-                    1.0 * movementOfWheelsInRevs, slideHeight);
-        }
+        double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
+        telemetry.addData("Moving ", "%.3f inches", movementInInches);
+        telemetry.update();
+        driveWithSlide(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs, slide);
+
     }
 
     public void driveWithSlide(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs, int slide) {
@@ -182,16 +161,10 @@ public class OyeAuto extends LinearOpMode {
             // Checks if current position is within bounds
             if (!isReached) {
                 if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
-                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    linearSlideMotor.setPower(linearSlideMotor.getCurrentPosition() < 3000 ? scale : 0.4*scale);
+                    linearSlideMotor.setPower(scale);
                 } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
-                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    linearSlideMotor.setPower(linearSlideMotor.getCurrentPosition() > 1000 ? -scale : -0.4*scale);
+                    linearSlideMotor.setPower(-1 * scale);
                 } else {
-                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     linearSlideMotor.setPower(0);
                     isReached = true;
                 }
@@ -228,40 +201,6 @@ public class OyeAuto extends LinearOpMode {
         sleep(20);
     }
 
-
-    public void pivotOnWheel(double degrees, int wheelsInQuadrants) {
-
-        double robotSpeed = SPEED;
-        // Assume positive degrees means moving towards the right
-        double movementOfWheelsInRevs; // OLD: = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
-        double circumfrence = 2*Math.PI*15.5; //15.5 is radius
-        double degreeRatio = degrees / 360;
-        movementOfWheelsInRevs = Math.abs(circumfrence * degreeRatio);
-
-        if (wheelsInQuadrants == 1) {
-
-        } else if (wheelsInQuadrants == 2) {
-
-        } else if (wheelsInQuadrants == 3) {
-            if (degrees >= 0) {
-                drive(robotSpeed,
-                        1.0 * movementOfWheelsInRevs,
-                        0 * movementOfWheelsInRevs,
-                        -1 * movementOfWheelsInRevs,
-                        -1 * movementOfWheelsInRevs);
-            } else {
-                // Moving negative means rotating left
-                drive(robotSpeed,
-                        -1 * movementOfWheelsInRevs,
-                        0 * movementOfWheelsInRevs,
-                        1.0 * movementOfWheelsInRevs,
-                        1.0 * movementOfWheelsInRevs);
-            }
-        } else {
-
-        }
-
-    }
 
     public void alignToOffset(double x, double y, double dir, int vision) {
 
@@ -301,22 +240,6 @@ public class OyeAuto extends LinearOpMode {
                 }
             }
         }
-    }
-
-    public void strafeAnyAngle(double strafeInches, double strafeAngleDegrees, double robotSpeed) {
-        if (strafeAngleDegrees > 0 && strafeAngleDegrees < 360) {
-            double strafeAngleRadians = Math.PI/180 * strafeAngleDegrees;
-            double strafeAnyRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
-
-            double strafeLeftFrontPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
-            double strafeLeftBackPower = Math.sin(strafeAngleRadians - Math.PI/4) * strafeAnyRevs;
-            double strafeRightFrontPower = Math.sin(strafeAngleRadians - Math.PI/4) * strafeAnyRevs;
-            double strafeRightBackPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
-
-
-            drive(robotSpeed, strafeLeftFrontPower, strafeLeftBackPower, strafeRightFrontPower, strafeRightBackPower);
-        }
-
     }
 
     public void returnBackTo13Basket() {
@@ -515,8 +438,6 @@ public class OyeAuto extends LinearOpMode {
 //
 //    }
 
-
-
     private void alignToSample() {
         // Robot is misaligned to begin with
         boolean alignedX = false;
@@ -687,7 +608,7 @@ public class OyeAuto extends LinearOpMode {
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         pivotServo = hardwareMap.servo.get("pivotServo");
-        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+        linearSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
@@ -701,12 +622,13 @@ public class OyeAuto extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        /*while (linearSlideMotor.getCurrentPosition() > 0) {
-            linearSlideMotor.setPower(-0.5);
+        /*while (hangSlideMotor.getCurrentPosition() > 0) {
+            hangSlideMotor.setPower(-0.5);
         }
-        while (linearSlideMotor.getCurrentPosition() < 0) {
-            linearSlideMotor.setPower(0.3);
+        while (hangSlideMotor.getCurrentPosition() < 0) {
+            hangSlideMotor.setPower(0.3);
         }*/
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
@@ -715,6 +637,7 @@ public class OyeAuto extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         gripperServo1.setPosition(0);
         pivotServo.setPosition(0.59);

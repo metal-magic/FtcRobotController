@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Tests;
 
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,14 +20,17 @@ import java.util.Date;
 import java.util.Objects;
 
 
-@Autonomous(name = "hkjhkj")
-@Disabled
-public class AutoRotate extends LinearOpMode {
+@Autonomous(name="LEFT of Gate", group="Autonomous")
+public class AutoLeft extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    public Servo gripperServo1 = null;
+    public Servo pivotServo = null;
+    public DcMotor linearSlideMotor = null;
+    public DcMotor linearActuatorMotor = null;
 
     CRServo armMotor = null;
     static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
@@ -38,7 +40,7 @@ public class AutoRotate extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
 
-    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1; // 41.801 for 104 mm, 45.2 or 45 for 94 mm
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1;
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
@@ -75,11 +77,13 @@ public class AutoRotate extends LinearOpMode {
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        rotate(90);
-        moveStraightLine(10);
+        strafeDiagonalRight(20);
+        alignY(30, 2);
+        strafeDiagonalRight(-16);
+        strafe(-30);
         rotate(-90);
-        sleep(100);
-        rotate(360);
+        align(6, 8, -45, 1);
+        moveStraightLine(1.5);
 
 
         //Termination
@@ -124,13 +128,43 @@ public class AutoRotate extends LinearOpMode {
         } else if (vision == 2) {
             if (Objects.equals(s, "chamber")) {
                 if (tagProcessor2.getDetections().get(0).id == 12) {
-
+                    pivotServo.setPosition(1-0.6);
+                    gripperServo1.setPosition(0);
                     alignY(24, vision);
+                    linearSlideMovement(1300, false);
                     strafeDiagonalLeft(15);
                     //moveStraightLine(-1);
-
+                    pivotServo.setPosition(1-0.635);
+                    linearSlideMovement(300, true);
+                    gripperServo1.setPosition(0.3);
                 }
             }
+        }
+    }
+
+    public void linearSlideMovement(double y, boolean maxPower) {
+        double up;
+        if (y > linearSlideMotor.getCurrentPosition()) {
+            while (linearSlideMotor.getCurrentPosition() < y) {
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                if (maxPower) {
+                    linearSlideMotor.setPower(1);
+                } else {
+                    linearSlideMotor.setPower(up);
+                }
+            }
+            linearSlideMotor.setPower(0);
+        } else {
+            while (linearSlideMotor.getCurrentPosition() > y) {
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                if (maxPower) {
+                    linearSlideMotor.setPower(-1);
+                } else {
+                    linearSlideMotor.setPower(-1*up);
+                }
+
+            }
+            linearSlideMotor.setPower(0);
         }
     }
 
@@ -200,6 +234,12 @@ public class AutoRotate extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
 
+        //claw
+        gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");
+
+        linearSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor");
+        linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
@@ -214,7 +254,7 @@ public class AutoRotate extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        //hangSlideMotor.setDirection(CRServo.Direction.FORWARD);
+        linearSlideMotor.setDirection(CRServo.Direction.FORWARD);
 
         /*while (hangSlideMotor.getCurrentPosition() > 0) {
             hangSlideMotor.setPower(-0.5);
@@ -223,8 +263,15 @@ public class AutoRotate extends LinearOpMode {
             hangSlideMotor.setPower(0.3);
         }*/
 
-        //hangSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(1-0);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(1-0);
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
 
@@ -232,9 +279,11 @@ public class AutoRotate extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(1-0.48);
 
-        //hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-        //hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void initPortal() {
@@ -437,7 +486,70 @@ public class AutoRotate extends LinearOpMode {
         }
     }
 
+    public void moveLinearSlideRevs(double y) {
+        double up;
+        if (y > 0) {
+            while (linearSlideMotor.getCurrentPosition() < 3064 && linearSlideMotor.getCurrentPosition() < y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                //hangSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() > 3064) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        } else if (y < 0) {
+            while (linearSlideMotor.getCurrentPosition() > 0 && linearSlideMotor.getCurrentPosition() > y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                ///hangSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        }
+    }
 
+    public void moveLinearSlide(double inches) {
+        double inchesWithoutRobotHeight = inches - 3;
+        if (inchesWithoutRobotHeight < 0) {
+            inchesWithoutRobotHeight = 0;
+        }
+        //double mm = inches * 25.4;
+        double y; // = mm * (984.0 / 3064.0);
+        y = inchesWithoutRobotHeight * (3064.0 / 40.5);
+        double up;
+        if (y > 0) {
+            while (linearSlideMotor.getCurrentPosition() < 3064 && linearSlideMotor.getCurrentPosition() < y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                //hangSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() > 3064) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        } else if (y < 0) {
+            while (linearSlideMotor.getCurrentPosition() > 0 && linearSlideMotor.getCurrentPosition() > y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                ///hangSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        }
+    }
 
     public void rotate(double degrees) {
 

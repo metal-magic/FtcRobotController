@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Tests;
 
 import android.util.Size;
 
@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.util.SortOrder;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -30,24 +29,31 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-@Autonomous(name="I put the new Forgis on the Jeep I trap until the bloody bottoms is underneath", group="Autonomous")
+@Autonomous(name="RIGHT of Gate", group="Autonomous")
 @Disabled
-public class MoveAndSlide extends LinearOpMode {
+public class AutoRight extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    public Servo gripperServo1 = null;
+    public Servo pivotServo = null;
+    public DcMotor linearSlideMotor = null;
+    public DcMotor linearActuatorMotor = null;
 
     CRServo armMotor = null;
-    static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
+    static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket // VALUE FROM UtilityValues = 537.7
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
-    static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
+    static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches // 104 mm from UtilityValues
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
 
-    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1;
+    /* probably
+     * MOTOR_TICK_COUNTS / CIRCUMFERENCE_INCHES
+     */
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = MOTOR_TICK_COUNTS / CIRCUMFERENCE_INCHES; // 41.801 for 104 mm, 45.2 or 45 for 94 mm
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
@@ -57,35 +63,18 @@ public class MoveAndSlide extends LinearOpMode {
     AprilTagProcessor tagProcessor;
     AprilTagProcessor tagProcessor2;
     ColorBlobLocatorProcessor colorLocator;
-
-    public Servo gripperServo1 = null;
-    public Servo pivotServo = null;
-    public DcMotor linearSlideMotor = null;
-
     private int myExposure;
     private int myGain;
-
-    private boolean alignedX = false;
-    private boolean alignedY = false;
-
-    static final double MAX_PIVOT_DISTANCE_INCHES = 6;
-
-    List<ColorBlobLocatorProcessor.Blob> blobs;
-
-    int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
 
     @Override
     public void runOpMode() {
 
-        initPortal(ColorRange.YELLOW);
+        initPortal();
         initMotor();
-
-//        getCameraSetting();
-        myExposure = 30;
-        myGain = 240;
+        getCameraSetting();
+        myExposure = 26;
+        myGain = 255;
         setManualExposure(myExposure, myGain);
-
-
         waitForStart();
 
 
@@ -98,7 +87,7 @@ public class MoveAndSlide extends LinearOpMode {
        /*
         METAL MAGIC INTO THE DEEP
         THIS CODE STARTS ON THE LEFT SIDE OF THE BLUE SIDE (closer to backdrop)
-        SCORES SAMPLE AND PARKS IN CORNER
+        STACKS PIXEL AND PARKS IN CORNER
         THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
         */
         //sleep lines are to avoid two lines of codes running at the same time
@@ -109,11 +98,28 @@ public class MoveAndSlide extends LinearOpMode {
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-        moveAndSlide(10, 4000);
+        pivotServo.setPosition(0.9);
+        gripperServo1.setPosition(0);
+//        moveStraightLine(24); //33
+//        strafeDiagonalLeft(15);
+//        linearSlideMovement(1300, false);
+//        moveStraightLine(1);
+//        pivotServo.setPosition(0.7);
+//        sleep(300);
+        linearSlideMovement(250, true);
+//        sleep(100);
+//        gripperServo1.setPosition(0.3);
+//        moveStraightLine(-10);
+//        rotate(-90);
+//        moveStraightLine(50);
+//        align(-24, 16, 0, 1);
+        alignSample();
+
+
 
 
         //Termination
-        if (currentTime.getTime() > 35000) {
+        if (currentTime.getTime() > 20000) {
             leftBackDrive.setPower(0);
             leftFrontDrive.setPower(0);
             rightBackDrive.setPower(0);
@@ -121,89 +127,6 @@ public class MoveAndSlide extends LinearOpMode {
         }
 
     }
-
-    public void moveAndSlide(double movementInInches, int slide) {
-
-        double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
-        telemetry.addData("Moving ", "%.3f inches", movementInInches);
-        telemetry.update();
-        driveWithSlide(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs, slide);
-
-    }
-
-    public void driveWithSlide(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs, int slide) {
-
-        int LFdrivetarget = (int) (leftFrontRevs * MOTOR_TICK_COUNTS) + leftFrontDrive.getCurrentPosition();
-        int LBdrivetarget = (int) (leftBackRevs * MOTOR_TICK_COUNTS) + leftBackDrive.getCurrentPosition();
-        int RFdrivetarget = (int) (rightFrontRevs * MOTOR_TICK_COUNTS) + rightFrontDrive.getCurrentPosition();
-        int RBdrivetarget = (int) (rightBackRevs * MOTOR_TICK_COUNTS) +  rightBackDrive.getCurrentPosition();
-
-        leftFrontDrive.setTargetPosition(LFdrivetarget);
-        leftBackDrive.setTargetPosition(LBdrivetarget);
-        rightFrontDrive.setTargetPosition(RFdrivetarget);
-        rightBackDrive.setTargetPosition(RBdrivetarget);
-
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-        leftFrontDrive.setPower(speed);
-        leftBackDrive.setPower(speed);
-        rightFrontDrive.setPower(speed);
-        rightBackDrive.setPower(speed);
-//
-//        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
-//
-//        }
-        boolean isReached = false;
-        double scale = slide;
-        double height = slide;
-        while (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive) || tolerance(rightBackDrive)) {
-            // Checks if current position is within bounds
-            if (!isReached) {
-                if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
-                    linearSlideMotor.setPower(scale);
-                } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
-                    linearSlideMotor.setPower(-1 * scale);
-                } else {
-                    linearSlideMotor.setPower(0);
-                    isReached = true;
-                }
-            }
-        }
-
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        if (!isReached) {
-            if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
-                while (height > linearSlideMotor.getCurrentPosition()) {
-                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    linearSlideMotor.setPower(scale);
-                }
-            } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
-                while (height < linearSlideMotor.getCurrentPosition()) {
-                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    linearSlideMotor.setPower(-1 * scale);
-                }
-            } else {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(0);
-            }
-        }
-
-        linearSlideMotor.setPower(0);
-
-
-        sleep(20);
-    }
-
 
     public void alignToOffset(double x, double y, double dir, int vision) {
 
@@ -237,17 +160,49 @@ public class MoveAndSlide extends LinearOpMode {
         } else if (vision == 2) {
             if (Objects.equals(s, "chamber")) {
                 if (tagProcessor2.getDetections().get(0).id == 12) {
+                    pivotServo.setPosition(1-0.6);
+                    gripperServo1.setPosition(0);
                     alignY(24, vision);
+                    linearSlideMovement(1300, false);
                     strafeDiagonalLeft(15);
                     //moveStraightLine(-1);
+                    pivotServo.setPosition(1-0.635);
+                    linearSlideMovement(300, true);
+                    gripperServo1.setPosition(0.3);
                 }
             }
         }
     }
 
+    public void linearSlideMovement(double y, boolean maxPower) {
+        double up;
+        if (y > linearSlideMotor.getCurrentPosition()) {
+            while (linearSlideMotor.getCurrentPosition() < y) {
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                if (maxPower) {
+                    linearSlideMotor.setPower(1);
+                } else {
+                    linearSlideMotor.setPower(up);
+                }
+            }
+            linearSlideMotor.setPower(0);
+        } else {
+            while (linearSlideMotor.getCurrentPosition() > y) {
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                if (maxPower) {
+                    linearSlideMotor.setPower(-1);
+                } else {
+                    linearSlideMotor.setPower(-1*up);
+                }
+
+            }
+            linearSlideMotor.setPower(0);
+        }
+    }
+
     public void returnBackTo13Basket() {
         rotate(45);
-        strafe(0, SPEED);
+        strafe(0);
     }
 
     public void alignToDefault(String s, int vision) {
@@ -274,33 +229,6 @@ public class MoveAndSlide extends LinearOpMode {
                 }
             }
         }
-    }
-
-    public void alignTo(String s, int tagID, int vision) {
-
-        if (Objects.equals(s, "basket")) {
-            if (tagID == 12) {
-                align(55, 16, 45, vision);
-            }
-
-        }
-
-        if (Objects.equals(s, "chamber")) {
-            if (tagID == 12) {
-                align(0, 26, 180, vision);
-            }
-        }
-
-        if (tagID == 13) {
-            if (Objects.equals(s, "basket")) {
-                alignRotate(0, vision);
-                alignY(16, vision);
-                alignX(-16, vision);
-                alignRotate(-45, vision);
-
-            }
-        }
-
     }
 
     private boolean setManualExposure(int exposureMS, int gain) {
@@ -342,7 +270,6 @@ public class MoveAndSlide extends LinearOpMode {
         }
     }
 
-    // Method to stream camera frames to the driver station
     private void getCameraSetting() {
         // Ensure Vision Portal has been setup.
         if (visionPortal == null) {
@@ -359,246 +286,78 @@ public class MoveAndSlide extends LinearOpMode {
             telemetry.addData("Camera", "Ready");
             telemetry.update();
         }
+
     }
 
-//    private void alignToSample() {
-//        // Robot is misaligned to begin with
-//        alignedX = false;
-//        alignedY = false;
-//        int maxRepetitions = 5;
-//        // Allows while loops below to access boxFitSize
-//        org.opencv.core.Size myBoxFitSize;
-//
-//        int i = 0;
-//        while (!alignedX && i < maxRepetitions) {
-//            // Blobs is an arrayList of type ColorBlobLocatorProcessor
-//            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-////            // Filters by AspectRatio to remove wall when detecting yellow
-////            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
-//            // Filters by Area to remove small, glitched blobs
-//            ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
-//            // Sorts by Area in descending order to make processing easier
-//            // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-//            if (!blobs.isEmpty()) {
-//                // Assigned boxFit to the largest detect blob
-//                RotatedRect boxFit = blobs.get(0).getBoxFit();
-//
-//                double errorX = boxFit.center.x - 320;
-//
-//                telemetry.addLine(String.valueOf(errorX));
-//
-////                if (errorX > 0) {
-////                    strafe(2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5))));
-////                } else {
-////                    strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5)))));
-////                }
-//
-//                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.5)));
-//
-//                // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i / maxRepetitions + 0.5)))));
-//
-//                alignedX = Math.abs(errorX) <= 30;
-//                i++;
-//            } else {
-//                strafe(-2);
-//            }
-//
-//        }
-//
-//        sleep(500);
-//
-//
-//        // Blobs is an arrayList of type ColorBlobLocatorProcessor
-//        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-//        // Filters by AspectRatio to remove wall when detecting yellow
-//        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
-//        // Filters by Area to remove small, glitched blobs
-//        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobs);
-//        // Sorts by Area in descending order to make processing easier
-//        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-//
-//        if (!blobs.isEmpty()) {
-//
-//            RotatedRect boxFit = blobs.get(0).getBoxFit();
-//            myBoxFitSize = boxFit.size;
-//            double boxWidth = myBoxFitSize.width;
-//            double boxHeight = myBoxFitSize.height;
-//
-//            double distanceZ_INCHES = 734.01575 / Math.min(boxHeight, boxWidth);
-//            double errorY = distanceZ_INCHES - MAX_PIVOT_DISTANCE_INCHES;
-//
-////                if (errorY > 0) {
-////                    moveStraightLine(2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5))));
-////                } else {
-////                    moveStraightLine(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5)))));
-////                }
-//            moveStraightLine(errorY);
-//
-//            // moveStraightLine(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (j / maxRepetitions + 0.5)))));
-//
-//            alignedY = Math.abs(errorY) <= 0.1;
-//        }
-//
-//    }
-
-    private void alignToSample() {
-        // Robot is misaligned to begin with
-        boolean alignedX = false;
-        boolean alignedY = false;
-        int maxRepetitions = 10;
-        // Allows while loops below to access boxFitSize
-        org.opencv.core.Size myBoxFitSize;
-        int i = 0;
-        while (!alignedX && i < maxRepetitions) {
-            // Blobs is an arrayList of type ColorBlobLocatorProcessor
-            blobs = colorLocator.getBlobs();
-//            // Filters by AspectRatio to remove wall when detecting yellow
-            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 3, blobs);
-            // Filters by Area to remove small, glitched blobs
-            ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
-            // Sorts by Area in descending order to make processing easier
-            // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-
-//
+    public void alignSample() {
+        if (colorLocator != null) {
+            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+            ColorBlobLocatorProcessor.Util.filterByArea(500, 500000, blobs);
+            telemetry.addLine("DETECTED");
+            boolean centered = false;
             if (!blobs.isEmpty()) {
-                // Assigned boxFit to the largest detected blob
-                RotatedRect boxFit = blobs.get(0).getBoxFit();
 
-                double errorX = boxFit.center.x - 320;
+                org.opencv.core.Size myBoxFitSize;
+                double boxWidth = 0.0;
+                double boxHeight = 0.0;
+                double repetitions = 0;
 
-                telemetry.addLine(String.valueOf(errorX));
+                while (!centered && repetitions < 400) {
+                    RotatedRect boxFit = blobs.get(0).getBoxFit();
+                    myBoxFitSize = boxFit.size;
+                    boxWidth = myBoxFitSize.width;
+                    boxHeight = myBoxFitSize.height;
+                    int currX = (int) boxFit.center.x;
+                    double error = 320 - currX;
+                    if (Math.abs((currX) - 320) <= 20) {
+                        centered = true;
+                        strafe(5);
+                    } else if (Math.abs((currX) - 320) <= 100) {
+                        strafe(-1 * error / 40);
+                    } else {
+                        strafe(-1 * error / 20);
+                    }
+                    telemetry.addLine(String.valueOf((int) boxFit.center.x));
+                    repetitions+=1;
+                }
+                double distance = 18644 / Math.min(boxHeight, boxWidth);
 
-                // V1 HORIZONTAL ALIGNMENT
-//                if (errorX > 0) {
-//                    strafe(2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5))));
-//                } else {
-//                    strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5)))));
-//                }
-
-//                // V2 HORIZONTAL ALIGNMENT
-//                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.1)));
-
-
-//                // V3 HORIZONTAL ALIGNMENT
-//                if (current == 0) {
-//                    if (errorX > 0) {
-//                        upper += 5;
-//                    } else {
-//                        lower -= 5;
-//                    }
-//                } else {
-//                    if (errorX > 0) {
-//                        lower = current;
-//                    } else {
-//                        upper = current;
-//                    }
-//                }
-//
-//                current = (upper+lower)/2-current;
-//                strafe(current);
-
-                // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i / maxRepetitions + 0.5)))));
-
-                strafe(Math.signum(errorX) * 3 * Math.pow(2, -1 * i), 0.5);
-
-                alignedX = Math.abs(errorX) <= 30;
-
-
-            } else {
-                sleep(10);
             }
-            i++;
+        }
+        else {
+            telemetry.addLine("NO DETECTION");
         }
 
-//        // Sample horizontal setting
-//
-//        // Blobs is an arrayList of type ColorBlobLocatorProcessor
-//        List<ColorBlobLocatorProcessor.Blob> blobsX1 = colorLocator.getBlobs();
-//        // Filters by AspectRatio to remove wall when detecting yellow
-//        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsX1);
-//        // Filters by Area to remove small, glitched blobs
-//        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsX1);
-//        // Sorts by Area in descending order to make processing easier
-//        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-//
-//        double P1 = 320;
-//        if (!blobsX1.isEmpty()) {
-//
-//            RotatedRect boxFit = blobsX1.get(0).getBoxFit();
-//            P1 = boxFit.center.x - 320;
-//        }
-//
-//        // Sets up ratio between horizontal distance and vertical distance
-//        strafe(Math.signum(P1) * strafeDistance);
-//
-//        // Automatic Horizontal Alignment
-//
-//        // Blobs is an arrayList of type ColorBlobLocatorProcessor
-//        List<ColorBlobLocatorProcessor.Blob> blobsX2 = colorLocator.getBlobs();
-//        // Filters by AspectRatio to remove wall when detecting yellow
-//        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsX2);
-//        // Filters by Area to remove small, glitched blobs
-//        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsX2);
-//        // Sorts by Area in descending order to make processing easier
-//        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
-//
-//        double P2 = 320;
-//        if (!blobsX2.isEmpty()) {
-//
-//            RotatedRect boxFit = blobsX2.get(0).getBoxFit();
-//
-//            P2 = boxFit.center.x - 320;
-//        }
-//
-//        strafe((P1 * strafeDistance) / (P1 - P2));
-//
-//
-//        sleep(500);
-//
-//
-        // Blobs is an arrayList of type ColorBlobLocatorProcessor
-        List<ColorBlobLocatorProcessor.Blob> blobsY = colorLocator.getBlobs();
-        // Filters by AspectRatio to remove wall when detecting yellow
-        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 3, blobsY);
-        // Filters by Area to remove small, glitched blobs
-        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsY);
-        // Sorts by Area in descending order to make processing easier
-        // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
 
-        if (!blobsY.isEmpty()) {
-
-            RotatedRect boxFit = blobsY.get(0).getBoxFit();
-            myBoxFitSize = boxFit.size;
-            double boxWidth = myBoxFitSize.width;
-            double boxHeight = myBoxFitSize.height;
-
-            double distanceZ_INCHES = 734.01575 / Math.min(boxHeight, boxWidth);
-            double errorY = distanceZ_INCHES - MAX_PIVOT_DISTANCE_INCHES;
-
-//                if (errorY > 0) {
-//                    moveStraightLine(2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5))));
-//                } else {
-//                    moveStraightLine(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) j / maxRepetitions + 0.5)))));
-//                }
-            moveStraightLine(errorY);
-
-            // moveStraightLine(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (j / maxRepetitions + 0.5)))));
-
-            alignedY = Math.abs(errorY) <= 0.1;
-        }
-
-        moveStraightLine(2);
+        sleep(20);
+        telemetry.update();
     }
 
-    public void pickUpSample() {
-        gripperServo1.setPosition(0.3);
-        sleep(100);
-        pivotServo.setPosition(0.05);
-        sleep(2000);
-        gripperServo1.setPosition(0);
-        sleep(1000);
-        pivotServo.setPosition(0.59);
-        sleep(100);
+    public void alignTo(String s, int tagID, int vision) {
+
+        if (Objects.equals(s, "basket")) {
+            if (tagID == 12) {
+                align(55, 16, 45, vision);
+            }
+
+        }
+
+        if (Objects.equals(s, "chamber")) {
+            if (tagID == 12) {
+                align(0, 26, 180, vision);
+            }
+        }
+
+        if (tagID == 13) {
+            if (Objects.equals(s, "basket")) {
+                alignRotate(0, vision);
+                alignY(16, vision);
+                alignX(-16, vision);
+                alignRotate(-45, vision);
+
+            }
+        }
+
     }
 
     public void initMotor() {
@@ -609,9 +368,12 @@ public class MoveAndSlide extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
 
+        //claw
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         pivotServo = hardwareMap.servo.get("pivotServo");
+
         linearSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor");
+        linearActuatorMotor = hardwareMap.dcMotor.get("linearActuatorMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
@@ -625,7 +387,8 @@ public class MoveAndSlide extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        linearSlideMotor.setDirection(CRServo.Direction.FORWARD);
 
         /*while (hangSlideMotor.getCurrentPosition() > 0) {
             hangSlideMotor.setPower(-0.5);
@@ -634,57 +397,36 @@ public class MoveAndSlide extends LinearOpMode {
             hangSlideMotor.setPower(0.3);
         }*/
 
+        ((ServoImplEx) pivotServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(1-0);
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(1-0);
+
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
 
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.59);
+        pivotServo.setPosition(0.9);
+
+        linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    private void moveLinearSlide (int height, double power) {
-        double scale = power;
-        // Checks if current position is within bounds
-        if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
-            while (height > linearSlideMotor.getCurrentPosition()) {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(scale);
-            }
-        } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
-            while (height < linearSlideMotor.getCurrentPosition()) {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(-1 * scale);
-            }
-        } else {
-            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setPower(0);
-        }
-    }
-
-    private double linearSlideScaling (int x) {
-        if (0 <= x && x < 50) {
-            return Math.min(1.1 - 1/(Math.pow(2.71, x)), 1);
-        } else if (50 <= x && x < 3950) {
-            return 1;
-        } else if (3950 <= x && x < 4000) {
-            return Math.min(1.1 - 1/(Math.pow(2.71, 4000-x)), 1);
-        }
-        return 0;
-    }
-
-    public void initPortal(ColorRange color) {
+    public void initPortal() {
 
         // Because we want to show two camera feeds simultaneously, we need to inform
         // the SDK that we want it to split the camera monitor area into two smaller
         // areas for us. It will then give us View IDs which we can pass to the individual
         // vision portals to allow them to properly hook into the UI in tandem.
+        int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
 
         // We extract the two view IDs from the array to make our lives a little easier later.
         // NB: the array is 2 long because we asked for 2 portals up above.
@@ -709,16 +451,6 @@ public class MoveAndSlide extends LinearOpMode {
                 .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
                 .build();
 
-        colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(color)         // use a predefined color match
-                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
-                // .setDrawContours(true)                        // Show contours on the Stream Preview
-                .setBlurSize(5)                               // Smooth the transitions between different colors in image
-                //.setErodeSize(6)
-                //.setDilateSize(6)
-                .build();
-
         //stating the webcam
         visionPortal = new VisionPortal.Builder()
                 .setLiveViewContainerId(portal1ViewId)
@@ -734,11 +466,21 @@ public class MoveAndSlide extends LinearOpMode {
                 .setCameraResolution(new Size(640, 480))
                 .build();
 
+        colorLocator = new ColorBlobLocatorProcessor.Builder()
+                .setTargetColorRange(ColorRange.YELLOW)         // use a predefined color match
+                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
+                // .setDrawContours(true)                        // Show contours on the Stream Preview
+                .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                //.setErodeSize(6)
+                //.setDilateSize(6)
+                .build();
+
         visionPortal3 = new VisionPortal.Builder()
                 .setLiveViewContainerId(portal3ViewId)
                 .addProcessor(colorLocator)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
                 .setCameraResolution(new Size(640, 480))
+                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
                 .build();
 
     }
@@ -801,9 +543,9 @@ public class MoveAndSlide extends LinearOpMode {
                     rotate(-rotateNew);
                 }
 
-                rotateRadians = Math.toRadians(rotateNew);
-                correctX = Math.tan(rotateRadians) * originalY;
-                strafe(-1*correctX, SPEED);
+                //rotateRadians = Math.toRadians(rotateNew);
+                //correctX = Math.tan(rotateRadians) * originalY;
+                //strafe(1*correctX);
 
             }
         } else if (vision == 2) {
@@ -820,9 +562,9 @@ public class MoveAndSlide extends LinearOpMode {
                     rotate(-rotateNew);
                 }
 
-                rotateRadians = Math.toRadians(rotateNew);
-                correctX = Math.tan(rotateRadians) * originalY;
-                strafe(correctX, SPEED);
+                //rotateRadians = Math.toRadians(rotateNew);
+                //correctX = Math.tan(rotateRadians) * originalY;
+                //strafe(correctX);
             }
         }
 
@@ -834,15 +576,17 @@ public class MoveAndSlide extends LinearOpMode {
         //alignX(-1, 1, 12);
         if (vision == 1) {
             if (tagProcessor.getDetections().size() > 0) {
-                xPosNew = tagProcessor.getDetections().get(0).ftcPose.x - x;
+                if (tagProcessor.getDetections().size() > 0) {
+                    xPosNew = tagProcessor.getDetections().get(0).ftcPose.x-x;
 
-                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
-                    //strafe(1);
-                    strafe(1 * xPosNew, SPEED);
-                }
-                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
-                    //strafe(-1);
-                    strafe(1 * xPosNew, SPEED);
+                    if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5+x)) { //0.5 is buffer
+                        //strafe(1);
+                        strafe(1*xPosNew);
+                    }
+                    if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5+x)) { //0.5 is buffer
+                        //strafe(-1);
+                        strafe(1*xPosNew);
+                    }
                 }
             }
         } else if (vision == 2) {
@@ -851,11 +595,11 @@ public class MoveAndSlide extends LinearOpMode {
 
                 if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
                     //strafe(1);
-                    strafe(-1 * xPosNew, SPEED);
+                    strafe(-1 * xPosNew);
                 }
                 if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
                     //strafe(-1);
-                    strafe(-1 * xPosNew, SPEED);
+                    strafe(-1 * xPosNew);
                 }
             }
         }
@@ -896,6 +640,71 @@ public class MoveAndSlide extends LinearOpMode {
         }
     }
 
+    public void moveLinearSlideRevs(double y) {
+        double up;
+        if (y > 0) {
+            while (linearSlideMotor.getCurrentPosition() < 3064 && linearSlideMotor.getCurrentPosition() < y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                //hangSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() > 3064) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        } else if (y < 0) {
+            while (linearSlideMotor.getCurrentPosition() > 0 && linearSlideMotor.getCurrentPosition() > y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                ///hangSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        }
+    }
+
+    public void moveLinearSlide(double inches) {
+        double inchesWithoutRobotHeight = inches - 3;
+        if (inchesWithoutRobotHeight < 0) {
+            inchesWithoutRobotHeight = 0;
+        }
+        //double mm = inches * 25.4;
+        double y; // = mm * (984.0 / 3064.0);
+        y = inchesWithoutRobotHeight * (3064.0 / 40.5);
+        double up;
+        if (y > 0) {
+            while (linearSlideMotor.getCurrentPosition() < 3064 && linearSlideMotor.getCurrentPosition() < y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                //hangSlideMotor.setPower(1* UtilityValues.LSSPEED);
+                up = Math.sin(((double) (4000 - linearSlideMotor.getCurrentPosition()) / 4000) * Math.PI / 2);
+                linearSlideMotor.setPower(/*UtilityValues.LSSPEED * */up*gamepad2.right_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() > 3064) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        } else if (y < 0) {
+            while (linearSlideMotor.getCurrentPosition() > 0 && linearSlideMotor.getCurrentPosition() > y) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                ///hangSlideMotor.setPower(-1*UtilityValues.LSSPEED);
+                up = Math.sin(((double) (1000+linearSlideMotor.getCurrentPosition()) /4000)*Math.PI/2);
+                linearSlideMotor.setPower(-1* /*UtilityValues.LSSPEED**/up*gamepad2.left_trigger);
+            }
+            while (linearSlideMotor.getCurrentPosition() < 0) {
+                linearSlideMotor.setPower(-0.3);
+            }
+            linearSlideMotor.setPower(0);
+        }
+    }
+
     public void rotate(double degrees) {
 
         double robotSpeed = SPEED;
@@ -918,13 +727,13 @@ public class MoveAndSlide extends LinearOpMode {
         }
     }
 
-    private void strafe(double strafeInches, double speed) {
+    private void strafe(double strafeInches) {
         // We assume that strafing right means positive
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
         if (strafeInches >= 0) {
             telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
 
-            drive(speed,
+            drive(SPEED,
                     1 * strafeRevs,
                     -1 * strafeRevs,
                     -1 * strafeRevs,
@@ -932,7 +741,7 @@ public class MoveAndSlide extends LinearOpMode {
         } else {
             telemetry.addData("Strafing towards Left by ", "%.3f inches", Math.abs(strafeInches));
 
-            drive(speed,
+            drive(SPEED,
                     -1 * strafeRevs,
                     1 * strafeRevs,
                     1 * strafeRevs,
@@ -972,31 +781,39 @@ public class MoveAndSlide extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         leftFrontDrive.setPower(speed);
         leftBackDrive.setPower(speed);
         rightFrontDrive.setPower(speed);
         rightBackDrive.setPower(speed);
-//
-//        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
-//
-//        }
 
-        while (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive) || tolerance(rightBackDrive)) {
+        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
+//            telemetry.addLine("Current Position of the Motors")
+//                    .addData("Left Front  ", "%d", leftFrontDrive.getCurrentPosition())
+//                    .addData("Left Back ", "%d", leftBackDrive.getCurrentPosition())
+//                    .addData("Right Front ", "%d", rightFrontDrive.getCurrentPosition())
+//                    .addData("Right Back ", "%df", rightBackDrive.getCurrentPosition());
+//
+//            telemetry.addLine("Target Positions of the Motors")
+//                    .addData("Left Front  ", "%d", LFdrivetarget)
+//                    .addData("Left Back ", "%d", LBdrivetarget)
+//                    .addData("Right Front ", "%d", RFdrivetarget)
+//                    .addData("Right Back ", "%df", RBdrivetarget);
 
+            //telemetry.update();
         }
-
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
 
 
-        sleep(20);
-    }
-
-    public boolean tolerance(DcMotor motor) {
-        return Math.abs(motor.getCurrentPosition()-motor.getTargetPosition()) > 10;
+        sleep(250);
     }
 
     public void strafeDiagonalLeft(double strafeLeftInches) {

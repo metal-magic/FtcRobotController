@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Tests;
 
 import android.util.Size;
 
@@ -7,10 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.util.SortOrder;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
@@ -30,9 +27,9 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-@Autonomous(name="NO SCORING LEFT of Gate", group="Autonomous")
+@Autonomous
 @Disabled
-public class AutoLeftNoScore extends LinearOpMode {
+public class OyeAuto extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -60,6 +57,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
     public Servo gripperServo1 = null;
     public Servo pivotServo = null;
+    public DcMotor linearSlideMotor = null;
 
     private int myExposure;
     private int myGain;
@@ -67,15 +65,19 @@ public class AutoLeftNoScore extends LinearOpMode {
     private boolean alignedX = false;
     private boolean alignedY = false;
 
-    static final double MAX_PIVOT_DISTANCE_INCHES = 9;
+    static final double MAX_PIVOT_DISTANCE_INCHES = 6;
+
+    List<ColorBlobLocatorProcessor.Blob> blobs;
+
+    int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
 
     @Override
     public void runOpMode() {
 
-        initPortal(ColorRange.RED);
+        initPortal(ColorRange.YELLOW);
         initMotor();
 
-        getCameraSetting();
+//        getCameraSetting();
         myExposure = 30;
         myGain = 240;
         setManualExposure(myExposure, myGain);
@@ -103,29 +105,157 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        strafeDiagonalRight(25);
-        sleep(1000);
-        alignY(29, 2);
-        //moveStraightLine();
-        strafeDiagonalRight(-20);
-        strafe(-40);
-        alignToSample();
-        sleep(2000);
-        pickUpSample();
-//        sleep(2000);
-//        rotate(90);
-//        sleep(1000);
-//        align(0, 24, 90, 1);
-//        moveStraightLine(17);
+        // aligning to basket
+        alignX(1.5, 1);
+        alignY(10, 1);
 
+        pivotWheel3AndSlide(-45, 4000);
 
 
         //Termination
-        if (currentTime.getTime() > 20000) {
+        if (currentTime.getTime() > 35000) {
             leftBackDrive.setPower(0);
             leftFrontDrive.setPower(0);
             rightBackDrive.setPower(0);
             rightFrontDrive.setPower(0);
+        }
+
+    }
+
+    public void pivotWheel3AndSlide(double degrees, int slideHeight) {
+        double robotSpeed = SPEED;
+        // Assume positive degrees means moving towards the right
+        double movementOfWheelsInRevs; // OLD: = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
+        double circumfrence = 2*Math.PI*15.5; //15.5 is radius
+        double degreeRatio = (90-degrees) / 360; // offset 90 because the input is with robot center
+        movementOfWheelsInRevs = Math.abs(circumfrence * degreeRatio);
+
+        if (degrees >= 0) {
+            driveWithSlide(robotSpeed,
+                    1.0 * movementOfWheelsInRevs,
+                    0 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs, slideHeight);
+        } else {
+            // Moving negative means rotating left
+            driveWithSlide(robotSpeed,
+                    -1 * movementOfWheelsInRevs,
+                    0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs, slideHeight);
+        }
+    }
+
+    public void driveWithSlide(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs, int slide) {
+
+        int LFdrivetarget = (int) (leftFrontRevs * MOTOR_TICK_COUNTS) + leftFrontDrive.getCurrentPosition();
+        int LBdrivetarget = (int) (leftBackRevs * MOTOR_TICK_COUNTS) + leftBackDrive.getCurrentPosition();
+        int RFdrivetarget = (int) (rightFrontRevs * MOTOR_TICK_COUNTS) + rightFrontDrive.getCurrentPosition();
+        int RBdrivetarget = (int) (rightBackRevs * MOTOR_TICK_COUNTS) +  rightBackDrive.getCurrentPosition();
+
+        leftFrontDrive.setTargetPosition(LFdrivetarget);
+        leftBackDrive.setTargetPosition(LBdrivetarget);
+        rightFrontDrive.setTargetPosition(RFdrivetarget);
+        rightBackDrive.setTargetPosition(RBdrivetarget);
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        leftFrontDrive.setPower(speed);
+        leftBackDrive.setPower(speed);
+        rightFrontDrive.setPower(speed);
+        rightBackDrive.setPower(speed);
+//
+//        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
+//
+//        }
+        boolean isReached = false;
+        double scale = slide;
+        double height = slide;
+        while (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive) || tolerance(rightBackDrive)) {
+            // Checks if current position is within bounds
+            if (!isReached) {
+                if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(linearSlideMotor.getCurrentPosition() < 3000 ? scale : 0.4*scale);
+                } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(linearSlideMotor.getCurrentPosition() > 1000 ? -scale : -0.4*scale);
+                } else {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(0);
+                    isReached = true;
+                }
+            }
+        }
+
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        if (!isReached) {
+            if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
+                while (height > linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(scale);
+                }
+            } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
+                while (height < linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(-1 * scale);
+                }
+            } else {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(0);
+            }
+        }
+
+        linearSlideMotor.setPower(0);
+
+
+        sleep(20);
+    }
+
+
+    public void pivotOnWheel(double degrees, int wheelsInQuadrants) {
+
+        double robotSpeed = SPEED;
+        // Assume positive degrees means moving towards the right
+        double movementOfWheelsInRevs; // OLD: = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
+        double circumfrence = 2*Math.PI*15.5; //15.5 is radius
+        double degreeRatio = degrees / 360;
+        movementOfWheelsInRevs = Math.abs(circumfrence * degreeRatio);
+
+        if (wheelsInQuadrants == 1) {
+
+        } else if (wheelsInQuadrants == 2) {
+
+        } else if (wheelsInQuadrants == 3) {
+            if (degrees >= 0) {
+                drive(robotSpeed,
+                        1.0 * movementOfWheelsInRevs,
+                        0 * movementOfWheelsInRevs,
+                        -1 * movementOfWheelsInRevs,
+                        -1 * movementOfWheelsInRevs);
+            } else {
+                // Moving negative means rotating left
+                drive(robotSpeed,
+                        -1 * movementOfWheelsInRevs,
+                        0 * movementOfWheelsInRevs,
+                        1.0 * movementOfWheelsInRevs,
+                        1.0 * movementOfWheelsInRevs);
+            }
+        } else {
+
         }
 
     }
@@ -170,9 +300,25 @@ public class AutoLeftNoScore extends LinearOpMode {
         }
     }
 
+    public void strafeAnyAngle(double strafeInches, double strafeAngleDegrees, double robotSpeed) {
+        if (strafeAngleDegrees > 0 && strafeAngleDegrees < 360) {
+            double strafeAngleRadians = Math.PI/180 * strafeAngleDegrees;
+            double strafeAnyRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
+
+            double strafeLeftFrontPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
+            double strafeLeftBackPower = Math.sin(strafeAngleRadians - Math.PI/4) * strafeAnyRevs;
+            double strafeRightFrontPower = Math.sin(strafeAngleRadians - Math.PI/4) * strafeAnyRevs;
+            double strafeRightBackPower = Math.sin(strafeAngleRadians + Math.PI/4) * strafeAnyRevs;
+
+
+            drive(robotSpeed, strafeLeftFrontPower, strafeLeftBackPower, strafeRightFrontPower, strafeRightBackPower);
+        }
+
+    }
+
     public void returnBackTo13Basket() {
         rotate(45);
-        strafe(0);
+        strafe(0, SPEED);
     }
 
     public void alignToDefault(String s, int vision) {
@@ -372,28 +518,23 @@ public class AutoLeftNoScore extends LinearOpMode {
         // Robot is misaligned to begin with
         boolean alignedX = false;
         boolean alignedY = false;
-        double upper = 0;
-        double lower = 0;
-        double current = 0;
-        int maxRepetitions = 5;
-        double strafeDistance = 0.5;
+        int maxRepetitions = 10;
         // Allows while loops below to access boxFitSize
         org.opencv.core.Size myBoxFitSize;
         int i = 0;
         while (!alignedX && i < maxRepetitions) {
             // Blobs is an arrayList of type ColorBlobLocatorProcessor
-            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+            blobs = colorLocator.getBlobs();
 //            // Filters by AspectRatio to remove wall when detecting yellow
-//            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobs);
+            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 3, blobs);
             // Filters by Area to remove small, glitched blobs
             ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
             // Sorts by Area in descending order to make processing easier
             // ColorBlobLocatorProcessor.Util.sortByArea(SortOrder.DESCENDING, blobs);
 
-
-
+//
             if (!blobs.isEmpty()) {
-                // Assigned boxFit to the largest detect blob
+                // Assigned boxFit to the largest detected blob
                 RotatedRect boxFit = blobs.get(0).getBoxFit();
 
                 double errorX = boxFit.center.x - 320;
@@ -407,8 +548,8 @@ public class AutoLeftNoScore extends LinearOpMode {
 //                    strafe(-1 * (2 - 2 / (1 + Math.pow(100000, ((double) i / maxRepetitions + 0.5)))));
 //                }
 
-                // V2 HORIZONTAL ALIGNMENT
-                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.1)));
+//                // V2 HORIZONTAL ALIGNMENT
+//                strafe(Math.signum(errorX) * 3 * (1-Math.pow(((double) i/maxRepetitions), 0.1)));
 
 
 //                // V3 HORIZONTAL ALIGNMENT
@@ -431,9 +572,13 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 // strafe(Math.signum(errorX) * (1-1/(1+Math.pow(100000, ((double) (i / maxRepetitions + 0.5)))));
 
+                strafe(Math.signum(errorX) * 3 * Math.pow(2, -1 * i), 0.5);
+
                 alignedX = Math.abs(errorX) <= 30;
+
+
             } else {
-                strafe(-2);
+                sleep(10);
             }
             i++;
         }
@@ -487,7 +632,7 @@ public class AutoLeftNoScore extends LinearOpMode {
         // Blobs is an arrayList of type ColorBlobLocatorProcessor
         List<ColorBlobLocatorProcessor.Blob> blobsY = colorLocator.getBlobs();
         // Filters by AspectRatio to remove wall when detecting yellow
-        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 5, blobsY);
+        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 3, blobsY);
         // Filters by Area to remove small, glitched blobs
         ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsY);
         // Sorts by Area in descending order to make processing easier
@@ -515,17 +660,18 @@ public class AutoLeftNoScore extends LinearOpMode {
             alignedY = Math.abs(errorY) <= 0.1;
         }
 
+        moveStraightLine(2);
     }
 
     public void pickUpSample() {
-//        gripperServo1.setPosition(0.3);
-//        sleep(100);
-//        pivotServo.setPosition(0.09);
-//        sleep(100);
-//        gripperServo1.setPosition(0);
-//        sleep(100);
-//        pivotServo.setPosition(0.85);
-//        sleep(100);
+        gripperServo1.setPosition(0.3);
+        sleep(100);
+        pivotServo.setPosition(0.05);
+        sleep(2000);
+        gripperServo1.setPosition(0);
+        sleep(1000);
+        pivotServo.setPosition(0.59);
+        sleep(100);
     }
 
     public void initMotor() {
@@ -535,6 +681,10 @@ public class AutoLeftNoScore extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        pivotServo = hardwareMap.servo.get("pivotServo");
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
 
         // Set all the right motor directions
         leftFrontDrive.setDirection(UtilityValues.finalLeftFrontDirection);
@@ -549,11 +699,11 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        /*while (hangSlideMotor.getCurrentPosition() > 0) {
-            hangSlideMotor.setPower(-0.5);
+        /*while (linearSlideMotor.getCurrentPosition() > 0) {
+            linearSlideMotor.setPower(-0.5);
         }
-        while (hangSlideMotor.getCurrentPosition() < 0) {
-            hangSlideMotor.setPower(0.3);
+        while (linearSlideMotor.getCurrentPosition() < 0) {
+            linearSlideMotor.setPower(0.3);
         }*/
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
@@ -563,6 +713,41 @@ public class AutoLeftNoScore extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        gripperServo1.setPosition(0);
+        pivotServo.setPosition(0.59);
+    }
+
+    private void moveLinearSlide (int height, double power) {
+        double scale = power;
+        // Checks if current position is within bounds
+        if (linearSlideMotor.getCurrentPosition() < 4000 && height > linearSlideMotor.getCurrentPosition()) {
+            while (height > linearSlideMotor.getCurrentPosition()) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(scale);
+            }
+        } else if (linearSlideMotor.getCurrentPosition() > 50 && height < linearSlideMotor.getCurrentPosition()) {
+            while (height < linearSlideMotor.getCurrentPosition()) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(-1 * scale);
+            }
+        } else {
+            linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            linearSlideMotor.setPower(0);
+        }
+    }
+
+    private double linearSlideScaling (int x) {
+        if (0 <= x && x < 50) {
+            return Math.min(1.1 - 1/(Math.pow(2.71, x)), 1);
+        } else if (50 <= x && x < 3950) {
+            return 1;
+        } else if (3950 <= x && x < 4000) {
+            return Math.min(1.1 - 1/(Math.pow(2.71, 4000-x)), 1);
+        }
+        return 0;
     }
 
     public void initPortal(ColorRange color) {
@@ -571,7 +756,6 @@ public class AutoLeftNoScore extends LinearOpMode {
         // the SDK that we want it to split the camera monitor area into two smaller
         // areas for us. It will then give us View IDs which we can pass to the individual
         // vision portals to allow them to properly hook into the UI in tandem.
-        int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
 
         // We extract the two view IDs from the array to make our lives a little easier later.
         // NB: the array is 2 long because we asked for 2 portals up above.
@@ -690,7 +874,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 rotateRadians = Math.toRadians(rotateNew);
                 correctX = Math.tan(rotateRadians) * originalY;
-                strafe(-1*correctX);
+                strafe(-1*correctX, SPEED);
 
             }
         } else if (vision == 2) {
@@ -709,7 +893,7 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 rotateRadians = Math.toRadians(rotateNew);
                 correctX = Math.tan(rotateRadians) * originalY;
-                strafe(correctX);
+                strafe(correctX, SPEED);
             }
         }
 
@@ -725,11 +909,11 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
                     //strafe(1);
-                    strafe(1 * xPosNew);
+                    strafe(1 * xPosNew, SPEED);
                 }
                 if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
                     //strafe(-1);
-                    strafe(1 * xPosNew);
+                    strafe(1 * xPosNew, SPEED);
                 }
             }
         } else if (vision == 2) {
@@ -738,11 +922,11 @@ public class AutoLeftNoScore extends LinearOpMode {
 
                 if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
                     //strafe(1);
-                    strafe(-1 * xPosNew);
+                    strafe(-1 * xPosNew, SPEED);
                 }
                 if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
                     //strafe(-1);
-                    strafe(-1 * xPosNew);
+                    strafe(-1 * xPosNew, SPEED);
                 }
             }
         }
@@ -805,13 +989,13 @@ public class AutoLeftNoScore extends LinearOpMode {
         }
     }
 
-    private void strafe(double strafeInches) {
+    private void strafe(double strafeInches, double speed) {
         // We assume that strafing right means positive
         double strafeRevs = Math.abs(strafeInches / CIRCUMFERENCE_INCHES);
         if (strafeInches >= 0) {
             telemetry.addData("Strafing towards right by ", "%.3f inches", strafeInches);
 
-            drive(SPEED,
+            drive(speed,
                     1 * strafeRevs,
                     -1 * strafeRevs,
                     -1 * strafeRevs,
@@ -819,7 +1003,7 @@ public class AutoLeftNoScore extends LinearOpMode {
         } else {
             telemetry.addData("Strafing towards Left by ", "%.3f inches", Math.abs(strafeInches));
 
-            drive(SPEED,
+            drive(speed,
                     -1 * strafeRevs,
                     1 * strafeRevs,
                     1 * strafeRevs,
@@ -864,29 +1048,26 @@ public class AutoLeftNoScore extends LinearOpMode {
         leftBackDrive.setPower(speed);
         rightFrontDrive.setPower(speed);
         rightBackDrive.setPower(speed);
-
-        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
-//            telemetry.addLine("Current Position of the Motors")
-//                    .addData("Left Front  ", "%d", leftFrontDrive.getCurrentPosition())
-//                    .addData("Left Back ", "%d", leftBackDrive.getCurrentPosition())
-//                    .addData("Right Front ", "%d", rightFrontDrive.getCurrentPosition())
-//                    .addData("Right Back ", "%df", rightBackDrive.getCurrentPosition());
 //
-//            telemetry.addLine("Target Positions of the Motors")
-//                    .addData("Left Front  ", "%d", LFdrivetarget)
-//                    .addData("Left Back ", "%d", LBdrivetarget)
-//                    .addData("Right Front ", "%d", RFdrivetarget)
-//                    .addData("Right Back ", "%df", RBdrivetarget);
+//        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
+//
+//        }
 
-            //telemetry.update();
+        while (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive) || tolerance(rightBackDrive)) {
+
         }
+
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
 
 
-        sleep(250);
+        sleep(20);
+    }
+
+    public boolean tolerance(DcMotor motor) {
+        return Math.abs(motor.getCurrentPosition()-motor.getTargetPosition()) > 10;
     }
 
     public void strafeDiagonalLeft(double strafeLeftInches) {
