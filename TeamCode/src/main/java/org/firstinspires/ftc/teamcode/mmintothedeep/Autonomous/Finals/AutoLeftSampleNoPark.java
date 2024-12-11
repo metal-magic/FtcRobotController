@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Finals;
 
 import android.util.Size;
 
@@ -172,7 +172,7 @@ public class AutoLeftSampleNoPark extends LinearOpMode {
             rotateAndSlide(145, 10);
             sleep(200);
             // go to second sample
-            strafe(-3, SPEED);
+            strafe(-6, SPEED);
             gripperServo1.setPosition(0.38);
             sleep(2000);
             moveStraightLine(14);
@@ -198,7 +198,7 @@ public class AutoLeftSampleNoPark extends LinearOpMode {
             gripperServo1.setPosition(0.3);
             pivotServo.setPosition(0.59);
             sleep(200);
-            moveStraightLine(-4);
+            moveAndSlide(-4, 10);
 
             // Termination
             leftBackDrive.setPower(0);
