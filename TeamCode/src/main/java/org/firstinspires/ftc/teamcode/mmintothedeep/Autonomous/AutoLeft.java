@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Finals;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 
 import android.util.Size;
 
@@ -20,8 +20,8 @@ import java.util.Date;
 import java.util.Objects;
 
 
-@Autonomous(name="Test right of Gate", group="Autonomous")
-public class Autotestright extends LinearOpMode {
+@Autonomous(name="LEFT of Gate", group="Autonomous")
+public class AutoLeft extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -40,7 +40,7 @@ public class Autotestright extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
 
-    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1;
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
@@ -70,28 +70,20 @@ public class Autotestright extends LinearOpMode {
         THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
         */
         //sleep lines are to avoid two lines of codes running at the same time
-        //pivotServo.setPosition(0.6);
-        //gripperServo1.setPosition(0);
-        //moveStraightLine(24); //33
-        strafe(0);
-        linearSlideMovement(1300, false);
-        strafeDiagonalLeft(15);
-        //moveStraightLine(-1);
-        //pivotServo.setPosition(0.635);
-        linearSlideMovement(300, true);
-        sleep(500);
-        //gripperServo1.setPosition(0.3);
-        sleep(600);
-        moveStraightLine(-10);
-        linearSlideMovement(50, false);
-        rotate(-80);
-        sleep(1000);
-        //moveStraightLine(30);
-        moveStraightLine(20);
-        tagTelemetry(1);
-        sleep(1000);
-        align(-24, 24, 0, 1);
-        alignToDefault("basket", 1);
+
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        strafeDiagonalRight(20);
+        alignY(30, 2);
+        strafeDiagonalRight(-16);
+        strafe(-30);
+        rotate(-90);
+        align(6, 8, -45, 1);
+        moveStraightLine(1.5);
 
 
         //Termination
@@ -136,13 +128,13 @@ public class Autotestright extends LinearOpMode {
         } else if (vision == 2) {
             if (Objects.equals(s, "chamber")) {
                 if (tagProcessor2.getDetections().get(0).id == 12) {
-                    pivotServo.setPosition(0.6);
+                    pivotServo.setPosition(1-0.6);
                     gripperServo1.setPosition(0);
                     alignY(24, vision);
                     linearSlideMovement(1300, false);
                     strafeDiagonalLeft(15);
                     //moveStraightLine(-1);
-                    pivotServo.setPosition(0.635);
+                    pivotServo.setPosition(1-0.635);
                     linearSlideMovement(300, true);
                     gripperServo1.setPosition(0.3);
                 }
@@ -277,9 +269,9 @@ public class Autotestright extends LinearOpMode {
         linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0);
+        pivotServo.setPosition(1-0);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0);
+        pivotServo.setPosition(1-0);
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
 
@@ -288,7 +280,7 @@ public class Autotestright extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.48);
+        pivotServo.setPosition(1-0.48);
 
         linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -703,7 +695,6 @@ public class Autotestright extends LinearOpMode {
                     0,
                     -1 * strafeLeftRevs);
         }
-
     }
 
 }

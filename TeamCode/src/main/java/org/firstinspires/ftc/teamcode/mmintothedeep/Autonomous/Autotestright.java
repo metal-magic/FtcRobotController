@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Finals;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 
 import android.util.Size;
 
@@ -11,25 +11,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
-import org.firstinspires.ftc.vision.opencv.ColorRange;
-import org.firstinspires.ftc.vision.opencv.ImageRegion;
-import org.opencv.core.RotatedRect;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 
-@Autonomous(name="RIGHT of Gate", group="Autonomous")
-public class AutoRight extends LinearOpMode {
+@Autonomous(name="Test right of Gate", group="Autonomous")
+public class Autotestright extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -41,38 +33,27 @@ public class AutoRight extends LinearOpMode {
     public DcMotor linearActuatorMotor = null;
 
     CRServo armMotor = null;
-    static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket // VALUE FROM UtilityValues = 537.7
+    static final double MOTOR_TICK_COUNTS = UtilityValues.motorTicks; // goBILDA 5203 series Yellow Jacket
     // figure out how many times we need to turn the wheels to go a certain distance
     // the distance you drive with one turn of the wheel is the circumference of the wheel
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
-    static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches // 104 mm from UtilityValues
+    static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in inches
 
-    /* probably
-     * MOTOR_TICK_COUNTS / CIRCUMFERENCE_INCHES
-     */
-    static final double DEGREES_MOTOR_MOVES_IN_1_REV = MOTOR_TICK_COUNTS / CIRCUMFERENCE_INCHES; // 41.801 for 104 mm, 45.2 or 45 for 94 mm
+    static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
     VisionPortal visionPortal;
     VisionPortal visionPortal2;
-    VisionPortal visionPortal3;
     AprilTagProcessor tagProcessor;
     AprilTagProcessor tagProcessor2;
-    ColorBlobLocatorProcessor colorLocator;
-    private int myExposure;
-    private int myGain;
 
     @Override
     public void runOpMode() {
 
         initPortal();
         initMotor();
-        getCameraSetting();
-        myExposure = 26;
-        myGain = 255;
-        setManualExposure(myExposure, myGain);
         waitForStart();
 
 
@@ -89,31 +70,28 @@ public class AutoRight extends LinearOpMode {
         THIS IS A TEST FILE TO TEST AUTONOMOUS CODE TO BE EVENTUALLY USED
         */
         //sleep lines are to avoid two lines of codes running at the same time
-
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-        pivotServo.setPosition(0.9);
-        gripperServo1.setPosition(0);
-//        moveStraightLine(24); //33
-//        strafeDiagonalLeft(15);
-//        linearSlideMovement(1300, false);
-//        moveStraightLine(1);
-//        pivotServo.setPosition(0.7);
-//        sleep(300);
-        linearSlideMovement(250, true);
-//        sleep(100);
-//        gripperServo1.setPosition(0.3);
-//        moveStraightLine(-10);
-//        rotate(-90);
-//        moveStraightLine(50);
-//        align(-24, 16, 0, 1);
-        alignSample();
-
-
+        //pivotServo.setPosition(0.6);
+        //gripperServo1.setPosition(0);
+        //moveStraightLine(24); //33
+        strafe(0);
+        linearSlideMovement(1300, false);
+        strafeDiagonalLeft(15);
+        //moveStraightLine(-1);
+        //pivotServo.setPosition(0.635);
+        linearSlideMovement(300, true);
+        sleep(500);
+        //gripperServo1.setPosition(0.3);
+        sleep(600);
+        moveStraightLine(-10);
+        linearSlideMovement(50, false);
+        rotate(-80);
+        sleep(1000);
+        //moveStraightLine(30);
+        moveStraightLine(20);
+        tagTelemetry(1);
+        sleep(1000);
+        align(-24, 24, 0, 1);
+        alignToDefault("basket", 1);
 
 
         //Termination
@@ -158,13 +136,13 @@ public class AutoRight extends LinearOpMode {
         } else if (vision == 2) {
             if (Objects.equals(s, "chamber")) {
                 if (tagProcessor2.getDetections().get(0).id == 12) {
-                    pivotServo.setPosition(1-0.6);
+                    pivotServo.setPosition(0.6);
                     gripperServo1.setPosition(0);
                     alignY(24, vision);
                     linearSlideMovement(1300, false);
                     strafeDiagonalLeft(15);
                     //moveStraightLine(-1);
-                    pivotServo.setPosition(1-0.635);
+                    pivotServo.setPosition(0.635);
                     linearSlideMovement(300, true);
                     gripperServo1.setPosition(0.3);
                 }
@@ -227,108 +205,6 @@ public class AutoRight extends LinearOpMode {
                 }
             }
         }
-    }
-
-    private boolean setManualExposure(int exposureMS, int gain) {
-        // Ensure Vision Portal has been setup.
-        if (visionPortal == null) {
-            return false;
-        }
-
-        // Wait for the camera to be open
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
-            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep(20);
-            }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
-        }
-
-        // Set camera controls unless we are stopping.
-        if (!isStopRequested())
-        {
-            // Set exposure. Make sure we are in Manual Mode for these values to take effect.
-            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
-            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
-                exposureControl.setMode(ExposureControl.Mode.Manual);
-                sleep(50);
-            }
-            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
-            sleep(20);
-
-            // Set Gain.
-            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
-            gainControl.setGain(gain);
-            sleep(20);
-            return (true);
-        } else {
-            return (false);
-        }
-    }
-
-    private void getCameraSetting() {
-        // Ensure Vision Portal has been setup.
-        if (visionPortal == null) {
-            return;
-        }
-
-        // Wait for the camera to be open
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
-            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep(20);
-            }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
-        }
-
-    }
-
-    public void alignSample() {
-        if (colorLocator != null) {
-            List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-            ColorBlobLocatorProcessor.Util.filterByArea(500, 500000, blobs);
-            telemetry.addLine("DETECTED");
-            boolean centered = false;
-            if (!blobs.isEmpty()) {
-
-                org.opencv.core.Size myBoxFitSize;
-                double boxWidth = 0.0;
-                double boxHeight = 0.0;
-                double repetitions = 0;
-
-                while (!centered && repetitions < 400) {
-                    RotatedRect boxFit = blobs.get(0).getBoxFit();
-                    myBoxFitSize = boxFit.size;
-                    boxWidth = myBoxFitSize.width;
-                    boxHeight = myBoxFitSize.height;
-                    int currX = (int) boxFit.center.x;
-                    double error = 320 - currX;
-                    if (Math.abs((currX) - 320) <= 20) {
-                        centered = true;
-                        strafe(5);
-                    } else if (Math.abs((currX) - 320) <= 100) {
-                        strafe(-1 * error / 40);
-                    } else {
-                        strafe(-1 * error / 20);
-                    }
-                    telemetry.addLine(String.valueOf((int) boxFit.center.x));
-                    repetitions+=1;
-                }
-                double distance = 18644 / Math.min(boxHeight, boxWidth);
-
-            }
-        }
-        else {
-            telemetry.addLine("NO DETECTION");
-        }
-
-
-        sleep(20);
-        telemetry.update();
     }
 
     public void alignTo(String s, int tagID, int vision) {
@@ -401,9 +277,9 @@ public class AutoRight extends LinearOpMode {
         linearActuatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearActuatorMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(1-0);
+        pivotServo.setPosition(0);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(1-0);
+        pivotServo.setPosition(0);
 
         // ABOVE THIS, THE ENCODERS AND MOTOR ARE NOW RESET
 
@@ -412,7 +288,7 @@ public class AutoRight extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.9);
+        pivotServo.setPosition(0.48);
 
         linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -424,13 +300,12 @@ public class AutoRight extends LinearOpMode {
         // the SDK that we want it to split the camera monitor area into two smaller
         // areas for us. It will then give us View IDs which we can pass to the individual
         // vision portals to allow them to properly hook into the UI in tandem.
-        int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
+        int[] viewIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.VERTICAL);
 
         // We extract the two view IDs from the array to make our lives a little easier later.
         // NB: the array is 2 long because we asked for 2 portals up above.
         int portal1ViewId = viewIds[0];
         int portal2ViewId = viewIds[1];
-        int portal3ViewId = viewIds[2];
 
         //drawing information on the driver station camera screen
         tagProcessor = new AprilTagProcessor.Builder()
@@ -462,23 +337,6 @@ public class AutoRight extends LinearOpMode {
                 .addProcessor(tagProcessor2)
                 .setCamera(hardwareMap.get(WebcamName.class, "diddyCam"))
                 .setCameraResolution(new Size(640, 480))
-                .build();
-
-        colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.YELLOW)         // use a predefined color match
-                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0, 0.5, -1))  // search central 1/4 of camera view
-                // .setDrawContours(true)                        // Show contours on the Stream Preview
-                .setBlurSize(5)                               // Smooth the transitions between different colors in image
-                //.setErodeSize(6)
-                //.setDilateSize(6)
-                .build();
-
-        visionPortal3 = new VisionPortal.Builder()
-                .setLiveViewContainerId(portal3ViewId)
-                .addProcessor(colorLocator)
-                .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
                 .build();
 
     }
@@ -541,9 +399,9 @@ public class AutoRight extends LinearOpMode {
                     rotate(-rotateNew);
                 }
 
-                //rotateRadians = Math.toRadians(rotateNew);
-                //correctX = Math.tan(rotateRadians) * originalY;
-                //strafe(1*correctX);
+                rotateRadians = Math.toRadians(rotateNew);
+                correctX = Math.tan(rotateRadians) * originalY;
+                strafe(-1*correctX);
 
             }
         } else if (vision == 2) {
@@ -560,9 +418,9 @@ public class AutoRight extends LinearOpMode {
                     rotate(-rotateNew);
                 }
 
-                //rotateRadians = Math.toRadians(rotateNew);
-                //correctX = Math.tan(rotateRadians) * originalY;
-                //strafe(correctX);
+                rotateRadians = Math.toRadians(rotateNew);
+                correctX = Math.tan(rotateRadians) * originalY;
+                strafe(correctX);
             }
         }
 
@@ -574,17 +432,15 @@ public class AutoRight extends LinearOpMode {
         //alignX(-1, 1, 12);
         if (vision == 1) {
             if (tagProcessor.getDetections().size() > 0) {
-                if (tagProcessor.getDetections().size() > 0) {
-                    xPosNew = tagProcessor.getDetections().get(0).ftcPose.x-x;
+                xPosNew = tagProcessor.getDetections().get(0).ftcPose.x - x;
 
-                    if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5+x)) { //0.5 is buffer
-                        //strafe(1);
-                        strafe(1*xPosNew);
-                    }
-                    if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5+x)) { //0.5 is buffer
-                        //strafe(-1);
-                        strafe(1*xPosNew);
-                    }
+                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { //0.5 is buffer
+                    //strafe(1);
+                    strafe(1 * xPosNew);
+                }
+                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { //0.5 is buffer
+                    //strafe(-1);
+                    strafe(1 * xPosNew);
                 }
             }
         } else if (vision == 2) {
@@ -779,11 +635,6 @@ public class AutoRight extends LinearOpMode {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
         leftFrontDrive.setPower(speed);
         leftBackDrive.setPower(speed);
@@ -852,6 +703,7 @@ public class AutoRight extends LinearOpMode {
                     0,
                     -1 * strafeLeftRevs);
         }
+
     }
 
 }

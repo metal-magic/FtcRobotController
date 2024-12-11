@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Tests;
+package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Finals;
 
 import android.util.Size;
 
@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
@@ -26,8 +25,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "LEFT 0 + 3 + park", group = "Autonomous")
-public class AutoLeftSamplePark extends LinearOpMode {
+@Autonomous(name = "LEFT ONLY park", group = "Autonomous")
+public class AutoLeftPark extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
@@ -42,7 +41,7 @@ public class AutoLeftSamplePark extends LinearOpMode {
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in
-                                                                                // inches
+    // inches
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1;
 
@@ -110,74 +109,7 @@ public class AutoLeftSamplePark extends LinearOpMode {
 
         while (opModeIsActive() && step == 0) {
 
-            double moveCoefficient; // for apriltags
-
-            //score preloaded sample
-            if (!tagProcessor2.getDetections().isEmpty()) {
-                moveCoefficient = tagProcessor2.getDetections().get(0).ftcPose.x - 7;
-            } else {
-                moveCoefficient = 5;
-            }
-            strafe(moveCoefficient, SPEED);
-            if (!tagProcessor2.getDetections().isEmpty()) {
-                moveCoefficient = tagProcessor2.getDetections().get(0).ftcPose.y - 27;
-            } else {
-                moveCoefficient = 0;
-            }
-            moveStraightLine(moveCoefficient);
-            if (!tagProcessor2.getDetections().isEmpty()) {
-                moveCoefficient = -55 - tagProcessor2.getDetections().get(0).ftcPose.yaw;
-            } else {
-                moveCoefficient = -55;
-            }
-            moveAndSlide(20, 4050);
-            rotate(moveCoefficient);
-            //moveLinearSlide(4000, 0.7);
-            moveStraightLine(2);
-            pivotServo.setPosition(0.36);
-            linearSlideMotor.setPower(0);
-            sleep(200);
-            gripperServo1.setPosition(0.3);
-            pivotServo.setPosition(0.59);
-            sleep(200);
-            rotateAndSlide(145, 10);
-            // go to sample
-            strafe(7, SPEED);
-            gripperServo1.setPosition(0.38);
-            sleep(2000);
-            moveStraightLine(14);
-            //alignToSample();
-            sleep(200);
-            pivotServo.setPosition(0.18);
-            sleep(300);
-            pivotServo.setPosition(0.115);
-            sleep(1000);
-            gripperServo1.setPosition(0);
-            sleep(1000);
-            pivotServo.setPosition(0.59);
-            strafe(3, SPEED);
-            moveStraightLine(-6);
-            rotateAndSlide(-145, 4000);
-            moveStraightLine(10);
-            pivotServo.setPosition(0.36);
-            moveAndSlide(1.5, 4050);
-            linearSlideMotor.setPower(0);
-            sleep(500);
-            gripperServo1.setPosition(0.3);
-            pivotServo.setPosition(0.59);
-            sleep(200);
-            moveStraightLine(-4);
-            sleep(200);
-            rotateAndSlide(-125, 10);
-            sleep(200);
-            moveStraightLine(15);
-            // move back if its gonna hit the submersible
-            if (!tagProcessor2.getDetections().isEmpty()) {
-                if (tagProcessor2.getDetections().get(0).ftcPose.y > 100) {
-                    moveStraightLine(tagProcessor2.getDetections().get(0).ftcPose.y - 100);
-                }
-            }
-            strafe(-54, 1);
+            strafe(-60, 1);
             moveStraightLine(20, 0.4);
             pivotServo.setPosition(0.37);
             moveStraightLine(-2);
@@ -1005,7 +937,7 @@ public class AutoLeftSamplePark extends LinearOpMode {
     }
 
     public void drive(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs,
-            double rightBackRevs) {
+                      double rightBackRevs) {
 
         int LFdrivetarget = (int) (leftFrontRevs * MOTOR_TICK_COUNTS) + leftFrontDrive.getCurrentPosition();
         int LBdrivetarget = (int) (leftBackRevs * MOTOR_TICK_COUNTS) + leftBackDrive.getCurrentPosition();
