@@ -108,7 +108,7 @@ public class AutoRightScoring extends LinearOpMode {
         strafeDiagonalLeft(25);
         moveStraightLine(19, SPEED);
         moveLinearSlide(680, 0.4);
-        pivotServo.setPosition(0.36);
+        pivotServo.setPosition(0.39);
         sleep(500);
         moveLinearSlide(10, 1);
         sleep(100);
@@ -119,34 +119,31 @@ public class AutoRightScoring extends LinearOpMode {
         // moveStraightLine(35, SPEED);
         // strafe(15, SPEED);
         // moveStraightLine(-40, SPEED);
-        moveStraightLine(5, SPEED);
+//        moveStraightLine(5, SPEED);
+//        rotate(180);
+//        moveStraightLine(5, SPEED);
         rotate(180);
-        moveStraightLine(5, SPEED);
-        gripperServo1.setPosition(0.1);
+        moveStraightLine(2.5, SPEED);
+        gripperServo1.setPosition(0.4);
         sleep(100);
-        pivotServo.setPosition(0.08);
-        sleep(3000);
+        pivotServo.setPosition(0.31);
+        sleep(2000);
         gripperServo1.setPosition(0);
         sleep(1000);
         pivotServo.setPosition(0.59);
         sleep(1000);
-
         rotate(180);
         strafe(-32.3, SPEED);
         strafeDiagonalLeft(25);
-        moveStraightLine(3, SPEED);
-        moveLinearSlide(600, 0.4);
+        moveStraightLine(1, SPEED);
+        moveLinearSlide(650, 0.4);
         pivotServo.setPosition(0.36);
         sleep(500);
-        moveLinearSlide(650, 1);
+        moveLinearSlide(300, 0.6);
         sleep(100);
         gripperServo1.setPosition(0.3);
-
-        moveStraightLine(-28, SPEED);
-
-        strafe(50, SPEED);
-
-        sleep(1000);
+        moveStraightLine(-26, 1.0);
+        strafe(55, 1.0);
 
     }
 
