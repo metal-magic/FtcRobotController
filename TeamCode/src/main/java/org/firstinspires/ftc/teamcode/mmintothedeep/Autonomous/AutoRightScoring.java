@@ -127,7 +127,7 @@ public class AutoRightScoring extends LinearOpMode {
         gripperServo1.setPosition(0.4);
         sleep(100);
         pivotServo.setPosition(0.31);
-        sleep(2000);
+        sleep(600);
         gripperServo1.setPosition(0);
         sleep(1000);
         pivotServo.setPosition(0.59);
@@ -142,8 +142,7 @@ public class AutoRightScoring extends LinearOpMode {
         moveLinearSlide(300, 0.6);
         sleep(100);
         gripperServo1.setPosition(0.3);
-        moveStraightLine(-26, 1.0);
-        strafe(55, 1.0);
+        strafeDiagonalLeft(-30);
 
     }
 
