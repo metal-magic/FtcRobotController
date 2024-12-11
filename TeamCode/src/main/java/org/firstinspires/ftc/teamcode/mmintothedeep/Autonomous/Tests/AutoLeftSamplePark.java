@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
@@ -81,6 +82,16 @@ public class AutoLeftSamplePark extends LinearOpMode {
         myGain = 240;
         setManualExposure(myExposure, myGain);
 
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        int step = 0;
+
+        telemetry.addLine("Ready for start");
+
         waitForStart();
 
         /*
@@ -97,89 +108,88 @@ public class AutoLeftSamplePark extends LinearOpMode {
          */
         // sleep lines are to avoid two lines of codes running at the same time
 
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        while (opModeIsActive() && step == 0) {
 
-        double moveCoefficient; // for apriltags
+            double moveCoefficient; // for apriltags
 
-        //score preloaded sample
-        if (!tagProcessor2.getDetections().isEmpty()) {
-            moveCoefficient = tagProcessor2.getDetections().get(0).ftcPose.x - 7;
-        } else {
-            moveCoefficient = 5;
-        }
-        strafe(moveCoefficient, SPEED);
-        if (!tagProcessor2.getDetections().isEmpty()) {
-            moveCoefficient = tagProcessor2.getDetections().get(0).ftcPose.y-27;
-        } else {
-            moveCoefficient = 0;
-        }
-        moveStraightLine(moveCoefficient);
-        if (!tagProcessor2.getDetections().isEmpty()) {
-            moveCoefficient = -55 - tagProcessor2.getDetections().get(0).ftcPose.yaw;
-        } else {
-            moveCoefficient = -55;
-        }
-        moveAndSlide(20, 4050);
-        rotate(moveCoefficient);
-        //moveLinearSlide(4000, 0.7);
-        moveStraightLine(2);
-        pivotServo.setPosition(0.36);
-        linearSlideMotor.setPower(0);
-        sleep(200);
-        gripperServo1.setPosition(0.3);
-        pivotServo.setPosition(0.59);
-        sleep(200);
-        rotateAndSlide(145, 10);
-        // go to sample
-        strafe(7, SPEED);
-        gripperServo1.setPosition(0.38);
-        sleep(2000);
-        moveStraightLine(14);
-        //alignToSample();
-        sleep(200);
-        pivotServo.setPosition(0.18);
-        sleep(300);
-        pivotServo.setPosition(0.115);
-        sleep(1000);
-        gripperServo1.setPosition(0);
-        sleep(1000);
-        pivotServo.setPosition(0.59);
-        strafe(3, SPEED);
-        moveStraightLine(-6);
-        rotateAndSlide(-145, 4000);
-        moveStraightLine(10);
-        pivotServo.setPosition(0.36);
-        moveAndSlide(1.5, 4050);
-        linearSlideMotor.setPower(0);
-        sleep(500);
-        gripperServo1.setPosition(0.3);
-        pivotServo.setPosition(0.59);
-        sleep(200);
-        moveStraightLine(-4);
-        sleep(200);
-        rotateAndSlide(-125, 10);
-        sleep(200);
-        moveStraightLine(15);
-        // move back if its gonna hit the submersible
-        if (!tagProcessor2.getDetections().isEmpty()) {
-            if (tagProcessor2.getDetections().get(0).ftcPose.y > 100) {
-                moveStraightLine(tagProcessor2.getDetections().get(0).ftcPose.y-100);
+            //score preloaded sample
+            if (!tagProcessor2.getDetections().isEmpty()) {
+                moveCoefficient = tagProcessor2.getDetections().get(0).ftcPose.x - 7;
+            } else {
+                moveCoefficient = 5;
             }
-        }
-        strafe(-54, 1);
-        moveStraightLine(20, 0.4);
-        pivotServo.setPosition(0.37);
-        moveStraightLine(-2);
+            strafe(moveCoefficient, SPEED);
+            if (!tagProcessor2.getDetections().isEmpty()) {
+                moveCoefficient = tagProcessor2.getDetections().get(0).ftcPose.y - 27;
+            } else {
+                moveCoefficient = 0;
+            }
+            moveStraightLine(moveCoefficient);
+            if (!tagProcessor2.getDetections().isEmpty()) {
+                moveCoefficient = -55 - tagProcessor2.getDetections().get(0).ftcPose.yaw;
+            } else {
+                moveCoefficient = -55;
+            }
+            moveAndSlide(20, 4050);
+            rotate(moveCoefficient);
+            //moveLinearSlide(4000, 0.7);
+            moveStraightLine(2);
+            pivotServo.setPosition(0.36);
+            linearSlideMotor.setPower(0);
+            sleep(200);
+            gripperServo1.setPosition(0.3);
+            pivotServo.setPosition(0.59);
+            sleep(200);
+            rotateAndSlide(145, 10);
+            // go to sample
+            strafe(7, SPEED);
+            gripperServo1.setPosition(0.38);
+            sleep(2000);
+            moveStraightLine(14);
+            //alignToSample();
+            sleep(200);
+            pivotServo.setPosition(0.18);
+            sleep(300);
+            pivotServo.setPosition(0.115);
+            sleep(1000);
+            gripperServo1.setPosition(0);
+            sleep(1000);
+            pivotServo.setPosition(0.59);
+            strafe(3, SPEED);
+            moveStraightLine(-6);
+            rotateAndSlide(-145, 4000);
+            moveStraightLine(10);
+            pivotServo.setPosition(0.36);
+            moveAndSlide(1.5, 4050);
+            linearSlideMotor.setPower(0);
+            sleep(500);
+            gripperServo1.setPosition(0.3);
+            pivotServo.setPosition(0.59);
+            sleep(200);
+            moveStraightLine(-4);
+            sleep(200);
+            rotateAndSlide(-125, 10);
+            sleep(200);
+            moveStraightLine(15);
+            // move back if its gonna hit the submersible
+            if (!tagProcessor2.getDetections().isEmpty()) {
+                if (tagProcessor2.getDetections().get(0).ftcPose.y > 100) {
+                    moveStraightLine(tagProcessor2.getDetections().get(0).ftcPose.y - 100);
+                }
+            }
+            strafe(-54, 1);
+            moveStraightLine(20, 0.4);
+            pivotServo.setPosition(0.37);
+            moveStraightLine(-2);
 
-        // Termination
-        leftBackDrive.setPower(0);
-        leftFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
+            // Termination
+            leftBackDrive.setPower(0);
+            leftFrontDrive.setPower(0);
+            rightBackDrive.setPower(0);
+            rightFrontDrive.setPower(0);
+
+            step++;
+        }
     }
 
 
