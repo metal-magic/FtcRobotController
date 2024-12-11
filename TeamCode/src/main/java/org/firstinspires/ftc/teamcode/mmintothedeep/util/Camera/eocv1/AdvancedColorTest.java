@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -58,6 +59,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
 
 // @Disabled
 @Autonomous(name = "Concept: AdvancedColorTest")
+@Disabled
 public class AdvancedColorTest extends LinearOpMode
 {
     @Override

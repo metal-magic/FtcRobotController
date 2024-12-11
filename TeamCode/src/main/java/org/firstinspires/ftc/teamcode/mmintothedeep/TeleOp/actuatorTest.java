@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -55,6 +56,7 @@ import java.util.Date;
  */
 
 @TeleOp(name = "New TeleOp1 Into The Deep")
+@Disabled
 public class actuatorTest extends OpMode {
 
     public DcMotor motorFrontLeft = null;

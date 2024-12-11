@@ -68,7 +68,7 @@ import java.util.List;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
 @Autonomous(name = "Concept: AprilTag1", group = "Concept")
-//@Disabled
+@Disabled
 public class ConceptSelfAlignTag extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera

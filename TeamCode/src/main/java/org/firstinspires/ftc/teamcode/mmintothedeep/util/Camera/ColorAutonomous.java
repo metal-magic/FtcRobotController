@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -53,6 +54,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous//(name="Align camera to colored sample", group = "Concept")
 // @Disabled
+@Disabled
 public class ColorAutonomous extends LinearOpMode
 {
     private VisionPortal visionPortal = null;        // Used to manage the video source.

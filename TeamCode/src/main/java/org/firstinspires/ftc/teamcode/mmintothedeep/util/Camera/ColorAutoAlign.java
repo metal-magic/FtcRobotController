@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -49,6 +50,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp//(name="Align camera to colored sample", group = "Concept")
 // @Disabled
+@Disabled
 public class ColorAutoAlign extends LinearOpMode
 {
     private VisionPortal visionPortal = null;        // Used to manage the video source.
