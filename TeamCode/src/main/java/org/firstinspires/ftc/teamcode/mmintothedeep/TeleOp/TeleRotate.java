@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp;
 
 import android.util.Size;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -64,6 +65,7 @@ import java.util.Timer;
  */
 
 @TeleOp(name = "TeleRotate")
+@Disabled
 public class TeleRotate extends OpMode {
 
     public DcMotor motorFrontLeft = null;

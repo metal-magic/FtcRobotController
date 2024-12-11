@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera.eocv1;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.Range;
@@ -48,6 +49,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @Autonomous//(name="Align camera to colored sample", group = "Concept")
+@Disabled
 // @Disabled
 public class ColorAutonomous1 extends LinearOpMode
 {

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp
+@Disabled
 public class slideTest extends OpMode {
     public DcMotor hangSlideMotor = null;
     public DcMotor hangSlideMotor2 = null;

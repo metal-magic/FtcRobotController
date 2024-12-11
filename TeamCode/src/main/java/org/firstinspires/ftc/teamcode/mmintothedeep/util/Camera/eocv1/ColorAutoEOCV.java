@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera.eocv1;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -57,6 +58,7 @@ import android.graphics.Paint;
  */
 
 @Autonomous//(name="Align camera to colored sample", group = "Concept")
+@Disabled
 // @Disabled
 public class ColorAutoEOCV extends LinearOpMode{
     private VisionPortal visionPortal = null;        // Used to manage the video source.

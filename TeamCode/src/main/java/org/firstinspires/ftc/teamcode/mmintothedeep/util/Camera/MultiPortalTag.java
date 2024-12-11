@@ -24,7 +24,6 @@ import java.util.Objects;
 
 @TeleOp//(name="Tag Self Align TeleOp", group="AprilTag")
 //@Disabled.
-
 public class MultiPortalTag extends LinearOpMode{
     /* Declare all motors as null */
     Date currentTime = new Date();
