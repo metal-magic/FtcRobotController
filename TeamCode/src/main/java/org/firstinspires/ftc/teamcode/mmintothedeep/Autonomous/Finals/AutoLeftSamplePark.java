@@ -177,7 +177,7 @@ public class AutoLeftSamplePark extends LinearOpMode {
                 }
             }
             strafe(-54, 1);
-            moveStraightLine(20, 0.4);
+            moveStraightLine(20, 0.8);
             pivotServo.setPosition(0.37);
             moveStraightLine(-2);
 
