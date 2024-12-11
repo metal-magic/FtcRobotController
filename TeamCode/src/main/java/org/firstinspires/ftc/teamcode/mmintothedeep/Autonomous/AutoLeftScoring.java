@@ -44,7 +44,7 @@ public class AutoLeftScoring extends LinearOpMode {
     // The wheel's Diameter is 96mm. To convert mm to inches, divide by 25.4
     static final double WHEEL_DIAMETER_INCHES = UtilityValues.wheelDiameter / 25.4; // in Inches
     static final double CIRCUMFERENCE_INCHES = Math.PI * WHEEL_DIAMETER_INCHES; // pi * the diameter of the wheels in
-                                                                                // inches
+    // inches
 
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 56.1;
 
@@ -555,6 +555,66 @@ public class AutoLeftScoring extends LinearOpMode {
 
         moveStraightLine(2);
     }
+
+    private void alignToSample2() {
+        // Horizontal Alignment
+        int maxRepetitions = 5;
+        org.opencv.core.Size myBoxFitSize;
+        int i = 0;
+        while (i < maxRepetitions) {
+
+            blobs = colorLocator.getBlobs();
+
+            ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 3, blobs);
+
+            ColorBlobLocatorProcessor.Util.filterByArea(500, 30000, blobs);
+
+            if (!blobs.isEmpty()) {
+                // Assigned boxFit to the largest detected blob
+                RotatedRect boxFit = blobs.get(0).getBoxFit();
+
+                double errorX = boxFit.center.x - 320;
+
+                telemetry.addLine(String.valueOf(errorX));
+
+                strafe(Math.signum(errorX) * 3 * Math.pow(2, -1 * i), 0.5);
+
+                if (Math.abs(errorX) <= 30) {
+                    break;
+                }
+
+            } else {
+                sleep(10);
+                strafe(-1, SPEED);
+            }
+            i++;
+        }
+        // Distance based movement
+
+        List<ColorBlobLocatorProcessor.Blob> blobsY = colorLocator.getBlobs();
+
+        ColorBlobLocatorProcessor.Util.filterByAspectRatio(1, 3, blobsY);
+
+        ColorBlobLocatorProcessor.Util.filterByArea(500, 10000, blobsY);
+
+        if (!blobsY.isEmpty()) {
+
+            RotatedRect boxFit = blobsY.get(0).getBoxFit();
+            myBoxFitSize = boxFit.size;
+            double boxWidth = myBoxFitSize.width;
+            double boxHeight = myBoxFitSize.height;
+
+            double distanceZ_INCHES = 734.01575 / Math.min(boxHeight, boxWidth);
+            double errorY = distanceZ_INCHES - MAX_PIVOT_DISTANCE_INCHES;
+
+            moveStraightLine(errorY);
+
+            alignedY = Math.abs(errorY) <= 0.1;
+        }
+
+        moveStraightLine(2);
+    }
+
 
     public void pickUpSample() {
         gripperServo1.setPosition(0.3);
