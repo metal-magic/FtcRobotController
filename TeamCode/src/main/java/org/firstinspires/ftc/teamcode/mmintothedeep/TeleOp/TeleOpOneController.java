@@ -200,6 +200,9 @@ public class TeleOpOneController extends OpMode {
         if (gamepad2.dpad_right) {
             moveSlideDown = true;
         }
+        if (gamepad2.dpad_left) {
+            moveSlideDown = true;
+        }
         if (moveSlideDown) {
             moveSlideUp = false;
         }
@@ -298,6 +301,8 @@ public class TeleOpOneController extends OpMode {
                 pivotServo.setPosition(0.108);
             } else if (gamepad2.dpad_right) {
                 pivotServo.setPosition(0.175);
+            } else if (gamepad2.dpad_left) {
+                pivotServo.setPosition(0.31);
             }
         }
 
