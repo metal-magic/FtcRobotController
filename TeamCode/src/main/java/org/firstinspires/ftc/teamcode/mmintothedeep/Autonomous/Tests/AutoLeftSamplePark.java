@@ -26,7 +26,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Autonomous(name = "LEFT 0 + 3", group = "Autonomous")
-public class AutoLeftSample extends LinearOpMode {
+public class AutoLeftSamplePark extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
