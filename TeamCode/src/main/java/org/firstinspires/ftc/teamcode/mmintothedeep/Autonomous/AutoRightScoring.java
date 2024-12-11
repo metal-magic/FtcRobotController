@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "YES SCORING RIGHT of Gate", group = "Autonomous")
+@Autonomous(name = "RIGHT 2 + 0 + park", group = "Autonomous")
 public class AutoRightScoring extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;

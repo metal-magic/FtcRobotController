@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,6 +22,7 @@ import java.util.Objects;
 
 
 @Autonomous(name = "hkjhkj")
+@Disabled
 public class AutoRotate extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
