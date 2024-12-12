@@ -294,13 +294,17 @@ public class NewOneController extends OpMode {
             if (gamepad2.y) {
                 pivotServo.setPosition(pivotServo.getPosition() + 0.009);
             } else if (gamepad2.a) {
-                pivotServo.setPosition(pivotServo.getPosition() - 0.009);
+                if (pivotServo.getPosition() < 0.09) {
+                    pivotServo.setPosition(0.10);
+                } else {
+                    pivotServo.setPosition(pivotServo.getPosition() - 0.009);
+                }
             } else if (gamepad2.dpad_up) {
                 pivotServo.setPosition(0.4661);
             } else if (gamepad2.dpad_down) {
-                pivotServo.setPosition(0.108);
+                pivotServo.setPosition(0.115);
             } else if (gamepad2.dpad_right) {
-                pivotServo.setPosition(0.175);
+                pivotServo.setPosition(0.225);
             } else if (gamepad2.dpad_left) {
                 pivotServo.setPosition(0.31);
             }
@@ -340,10 +344,12 @@ public class NewOneController extends OpMode {
         }
 
         if (gamepad1.dpad_right) {
-            hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            hangSlideMotor.setPower(-0.85);
-            hangSlideMotor2.setPower(0.85);
+            if (!isPressedEndOHYE) {
+                hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                hangSlideMotor.setPower(-0.85);
+                hangSlideMotor2.setPower(0.85);
+            }
         }
 
         if (gamepad1.right_bumper) {
