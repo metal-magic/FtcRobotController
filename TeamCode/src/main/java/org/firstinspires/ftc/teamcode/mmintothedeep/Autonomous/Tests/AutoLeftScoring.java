@@ -668,7 +668,7 @@ public class AutoLeftScoring extends LinearOpMode {
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.59);
+        pivotServo.setPosition(0.673);
     }
 
     private void moveLinearSlide(int height, double power) {

@@ -102,16 +102,16 @@ public class AutoRightScoring extends LinearOpMode {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        strafeDiagonalLeft(25);
-        moveStraightLine(19, SPEED);
+        strafeDiagonalLeft(25, SPEED);
+        moveStraightLine(18, SPEED);
         moveLinearSlide(680, 0.4);
-        pivotServo.setPosition(0.39);
+        pivotServo.setPosition(0.37);
         sleep(500);
         moveLinearSlide(10, 1);
         sleep(100);
         gripperServo1.setPosition(0.3);
         moveStraightLine(-5, 1);
-        strafeDiagonalLeft(-20);
+        strafeDiagonalLeft(-20, SPEED);
         strafe(41, SPEED);
         // moveStraightLine(35, SPEED);
         // strafe(15, SPEED);
@@ -120,26 +120,27 @@ public class AutoRightScoring extends LinearOpMode {
 //        rotate(180);
 //        moveStraightLine(5, SPEED);
         rotate(180);
-        moveStraightLine(2.5, SPEED);
+        moveStraightLine(2.45, 0.8);
         gripperServo1.setPosition(0.4);
         sleep(100);
         pivotServo.setPosition(0.31);
         sleep(600);
         gripperServo1.setPosition(0);
-        sleep(1000);
+        sleep(800);
         pivotServo.setPosition(0.59);
-        sleep(1000);
+        sleep(600);
         rotate(180);
         strafe(-32.3, SPEED);
-        strafeDiagonalLeft(25);
-        moveStraightLine(1, SPEED);
+        strafeDiagonalLeft(25, 0.8);
+        moveStraightLine(2.6, SPEED);
         moveLinearSlide(650, 0.4);
         pivotServo.setPosition(0.36);
         sleep(500);
         moveLinearSlide(300, 0.6);
         sleep(100);
         gripperServo1.setPosition(0.3);
-        strafeDiagonalLeft(-30);
+        pivotServo.setPosition(0.59);
+        strafeDiagonalLeft(-40, 1);
 
     }
 
@@ -176,7 +177,7 @@ public class AutoRightScoring extends LinearOpMode {
             if (Objects.equals(s, "chamber")) {
                 if (tagProcessor2.getDetections().get(0).id == 12) {
                     alignY(24, vision);
-                    strafeDiagonalLeft(15);
+                    strafeDiagonalLeft(15, SPEED);
                     // moveStraightLine(-1);
                 }
             }
@@ -592,7 +593,7 @@ public class AutoRightScoring extends LinearOpMode {
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.59);
+        pivotServo.setPosition(0.673);
     }
 
     private void moveLinearSlide(int height, double power) {
@@ -967,8 +968,8 @@ public class AutoRightScoring extends LinearOpMode {
         return Math.abs(motor.getCurrentPosition() - motor.getTargetPosition()) > 10;
     }
 
-    public void strafeDiagonalLeft(double strafeLeftInches) {
-        double robotSpeed = SPEED;
+    public void strafeDiagonalLeft(double strafeLeftInches, double speed) {
+        double robotSpeed = speed;
 
         double strafeLeftRevs = Math.abs(strafeLeftInches / CIRCUMFERENCE_INCHES);
 
@@ -987,9 +988,9 @@ public class AutoRightScoring extends LinearOpMode {
         }
     }
 
-    public void strafeDiagonalRight(double strafeLeftInches) {
+    public void strafeDiagonalRight(double strafeLeftInches, double speed) {
 
-        double robotSpeed = SPEED;
+        double robotSpeed = speed;
         double strafeLeftRevs = Math.abs(strafeLeftInches / CIRCUMFERENCE_INCHES);
 
         if (strafeLeftInches >= 0) {

@@ -147,7 +147,7 @@ public class AutoLeftSamplePark extends LinearOpMode {
             moveStraightLine(14);
             //alignToSample();
             sleep(200);
-            pivotServo.setPosition(0.18);
+            pivotServo.setPosition(0.19);
             sleep(300);
             pivotServo.setPosition(0.115);
             sleep(1000);
@@ -666,7 +666,7 @@ public class AutoLeftSamplePark extends LinearOpMode {
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.59);
+        pivotServo.setPosition(0.673);
     }
 
     private void moveLinearSlide(int height, double power) {
