@@ -329,7 +329,7 @@ public class NewOneController extends OpMode {
             if (linearSlideMotor.getCurrentPosition() > 10) {
                 linearSlideMotor.setPower(-0.7);
             } else {
-                pivotServo.setPosition(0.175);
+                pivotServo.setPosition(0.225);
                 linearSlideMotor.setPower(0);
                 moveSlideDown = false;
             }

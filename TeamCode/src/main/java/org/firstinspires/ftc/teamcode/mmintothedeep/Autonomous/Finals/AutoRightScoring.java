@@ -110,6 +110,7 @@ public class AutoRightScoring extends LinearOpMode {
         moveLinearSlide(10, 1);
         sleep(100);
         gripperServo1.setPosition(0.3);
+        pivotServo.setPosition(0.45); // move back for safety
         moveStraightLine(-5, 1);
         strafeDiagonalLeft(-20, SPEED);
         strafe(41, SPEED);
@@ -120,7 +121,7 @@ public class AutoRightScoring extends LinearOpMode {
 //        rotate(180);
 //        moveStraightLine(5, SPEED);
         rotate(180);
-        moveStraightLine(2.45, 0.8);
+        moveStraightLine(2.51, 0.8);
         gripperServo1.setPosition(0.4);
         sleep(100);
         pivotServo.setPosition(0.31);
@@ -132,7 +133,8 @@ public class AutoRightScoring extends LinearOpMode {
         rotate(180);
         strafe(-35, SPEED);
         strafeDiagonalLeft(25, 0.8);
-        moveStraightLine(2.6, SPEED);
+        //moveAndSlide(4, 650, 0.4);
+        moveStraightLine(4, SPEED);
         moveLinearSlide(650, 0.4);
         pivotServo.setPosition(0.36);
         sleep(500);
@@ -140,10 +142,116 @@ public class AutoRightScoring extends LinearOpMode {
         sleep(100);
         gripperServo1.setPosition(0.3);
         pivotServo.setPosition(0.59);
-        strafe(10, 1);
-        strafeDiagonalLeft(-40, 1);
+        strafe(11, 1);
+        strafeDiagonalLeft(-45, 1);
 
     }
+
+
+    public void moveAndSlide(double movementInInches, int slide, double slideSpeed) {
+
+        double moveInRevs = movementInInches / CIRCUMFERENCE_INCHES;
+        telemetry.addData("Moving ", "%.3f inches", movementInInches);
+        telemetry.update();
+        driveWithSlide(SPEED, moveInRevs, moveInRevs, moveInRevs, moveInRevs, slide, slideSpeed);
+
+    }
+
+    public void rotateAndSlide(double degrees, int slide, double slideSpeed) {
+
+        double robotSpeed = SPEED;
+        // Assume positive degrees means moving towards the right
+        double movementOfWheelsInRevs = Math.abs(degrees / DEGREES_MOTOR_MOVES_IN_1_REV);
+
+        if (degrees >= 0) {
+            driveWithSlide(robotSpeed,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,slide, slideSpeed);
+        } else {
+            // Moving negative means rotating left
+            driveWithSlide(robotSpeed,
+                    -1 * movementOfWheelsInRevs,
+                    -1 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs,
+                    1.0 * movementOfWheelsInRevs, slide, slideSpeed);
+        }
+
+    }
+
+    public void driveWithSlide(double speed, double leftFrontRevs, double leftBackRevs, double rightFrontRevs, double rightBackRevs, int slide, double slideSpeed) {
+
+        int LFdrivetarget = (int) (leftFrontRevs * MOTOR_TICK_COUNTS) + leftFrontDrive.getCurrentPosition();
+        int LBdrivetarget = (int) (leftBackRevs * MOTOR_TICK_COUNTS) + leftBackDrive.getCurrentPosition();
+        int RFdrivetarget = (int) (rightFrontRevs * MOTOR_TICK_COUNTS) + rightFrontDrive.getCurrentPosition();
+        int RBdrivetarget = (int) (rightBackRevs * MOTOR_TICK_COUNTS) +  rightBackDrive.getCurrentPosition();
+
+        leftFrontDrive.setTargetPosition(LFdrivetarget);
+        leftBackDrive.setTargetPosition(LBdrivetarget);
+        rightFrontDrive.setTargetPosition(RFdrivetarget);
+        rightBackDrive.setTargetPosition(RBdrivetarget);
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        leftFrontDrive.setPower(speed);
+        leftBackDrive.setPower(speed);
+        rightFrontDrive.setPower(speed);
+        rightBackDrive.setPower(speed);
+//
+//        while (leftFrontDrive.isBusy() || leftBackDrive.isBusy() || rightFrontDrive.isBusy() || rightBackDrive.isBusy()) {
+//
+//        }
+        boolean isReached = false;
+        while (opModeIsActive() && (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive) || tolerance(rightBackDrive))) {
+            // Checks if current position is within bounds
+            if (!isReached) {
+                if (linearSlideMotor.getCurrentPosition() < 4050 && (double) slide > linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setPower(slideSpeed);
+                } else if (linearSlideMotor.getCurrentPosition() > 50 && (double) slide < linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setPower(-1 * slideSpeed);
+                } else {
+                    linearSlideMotor.setPower(0);
+                    isReached = true;
+                }
+            }
+        }
+
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        if (!isReached) {
+            if (linearSlideMotor.getCurrentPosition() < 4000 && (double) slide > linearSlideMotor.getCurrentPosition()) {
+                while ((double) slide > linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(slideSpeed);
+                }
+            } else if (linearSlideMotor.getCurrentPosition() > 50 && (double) slide < linearSlideMotor.getCurrentPosition()) {
+                while ((double) slide < linearSlideMotor.getCurrentPosition()) {
+                    linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                    linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    linearSlideMotor.setPower(-1 * slideSpeed);
+                }
+            } else {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(0);
+            }
+        }
+
+        linearSlideMotor.setPower(0);
+
+
+        sleep(20);
+    }
+
+
 
     public void alignToOffset(double x, double y, double dir, int vision) {
 
@@ -952,8 +1060,8 @@ public class AutoRightScoring extends LinearOpMode {
         //
         // }
 
-        while (tolerance(leftFrontDrive, speed) || tolerance(leftBackDrive, speed) || tolerance(rightFrontDrive, speed)
-                || tolerance(rightBackDrive, speed)) {
+        while (tolerance(leftFrontDrive) || tolerance(leftBackDrive) || tolerance(rightFrontDrive)
+                || tolerance(rightBackDrive)) {
 
         }
 
@@ -965,7 +1073,7 @@ public class AutoRightScoring extends LinearOpMode {
         sleep(20);
     }
 
-    public boolean tolerance(DcMotor motor, double speed) {
+    public boolean tolerance(DcMotor motor) {
         return Math.abs(motor.getCurrentPosition() - motor.getTargetPosition()) > 10;
     }
 
