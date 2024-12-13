@@ -103,9 +103,9 @@ public class AutoRightScoring extends LinearOpMode {
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         strafeDiagonalLeft(25, SPEED);
-        moveStraightLine(17, SPEED);
+        moveStraightLine(16, SPEED);
         moveLinearSlide(680, 0.4);
-        pivotServo.setPosition(0.37);
+        pivotServo.setPosition(0.39);
         sleep(500);
         moveLinearSlide(10, 1);
         sleep(100);
@@ -134,9 +134,9 @@ public class AutoRightScoring extends LinearOpMode {
         strafe(-35, SPEED);
         strafeDiagonalLeft(25, 0.8);
         //moveAndSlide(4, 650, 0.4);
-        moveStraightLine(3, 0.5);
+        moveStraightLine(2.5, 0.5);
         moveLinearSlide(650, 0.4);
-        pivotServo.setPosition(0.36);
+        pivotServo.setPosition(0.375);
         sleep(500);
         moveLinearSlide(300, 0.6);
         sleep(100);
