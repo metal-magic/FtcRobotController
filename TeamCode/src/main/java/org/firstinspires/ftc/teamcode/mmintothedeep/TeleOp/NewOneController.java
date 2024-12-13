@@ -343,50 +343,36 @@ public class NewOneController extends OpMode {
             isPressed = false;
         }
 
-        if (gamepad1.dpad_right) {
-            if (!isPressedEndOHYE) {
-                hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                hangSlideMotor.setPower(-0.85);
-                hangSlideMotor2.setPower(0.85);
-            }
-        }
-
         if (gamepad1.right_bumper) {
-            if (hangSlideMotor.getCurrentPosition() < 0) {
-                hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+            hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-                hangSlideMotor.setPower(0.55);
-            }
+            hangSlideMotor.setPower(0.7);
         } else if (gamepad1.left_bumper) {
-            if (hangSlideMotor.getCurrentPosition() > -5000) {
+            if (hangSlideMotor.getCurrentPosition() > -4338) {
                 hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                hangSlideMotor.setPower(-0.55);
+                hangSlideMotor.setPower(-0.7);
             }
         } else {
-            if (!isPressedEndOHYE || gamepad1.dpad_right) {
+            if (!isPressedEndOHYE) {
                 hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 hangSlideMotor.setPower(0);
             }
         }
-        telemetry.addData("Slide position, ", hangSlideMotor.getCurrentPosition());
 
         if (gamepad1.right_trigger >= 0.3F) {
-            if (hangSlideMotor.getCurrentPosition() < 0) {
-                hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
-                hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                hangSlideMotor2.setPower(-0.85);
-            }
+            hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
+            hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hangSlideMotor2.setPower(-0.7 * 0.41);
         } else if (gamepad1.left_trigger >= 0.3F) {
-            if (hangSlideMotor.getCurrentPosition() > -5000) {
+            if (hangSlideMotor.getCurrentPosition() > -4338) {
                 hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
                 hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                hangSlideMotor2.setPower(0.85);
+                hangSlideMotor2.setPower(0.7 * 0.41);
             }
         } else {
-            if (!isPressedEndOHYE || gamepad1.dpad_right) {
+            if (!isPressedEndOHYE) {
                 hangSlideMotor2.setPower(0);
             }
         }
@@ -398,32 +384,13 @@ public class NewOneController extends OpMode {
             if (isPressedEndOHYE) {
                 hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                if (hangSlideMotor.getCurrentPosition() < -10) {
-                    hangSlideMotor.setPower(0.65);
-                    hangSlideMotor2.setPower(-0.65);
-                } else {
-                    hangSlideMotor.setPower(0);
-                    hangSlideMotor2.setPower(0);
-                }
+                hangSlideMotor.setPower(-0.7);
+                hangSlideMotor2.setPower(0.7 * 0.41);
             }
         }
 
-        if (gamepad1.dpad_left) {
-            isPressed2 = true;
-        } else if (isPressed2 == true) {
-            while (hangSlideMotor2.getCurrentPosition() >= 50) {
-                hangSlideMotor2.setPower(-0.41 * 0.7);
-                telemetry.addData("pojijon2", hangSlideMotor2.getCurrentPosition());
-                telemetry.update();
-                if (hangSlideMotor2.getCurrentPosition() < 65) {
-                    telemetry.addData("pojijonwithrizz2", hangSlideMotor2.getCurrentPosition());
-                    telemetry.update();
-                    isPressed = false;
-                    break;
-                }
-            }
-            hangSlideMotor2.setPower(0);
-        }
+        telemetry.addData("hang Slide position, ", hangSlideMotor.getCurrentPosition());
+        telemetry.addData("hang Slide2 position", hangSlideMotor2.getCurrentPosition());
 
         telemetry.addData("Claw Position,", gripperServo1.getPosition());
         // telemetry.addData("Linear Slide Position",
