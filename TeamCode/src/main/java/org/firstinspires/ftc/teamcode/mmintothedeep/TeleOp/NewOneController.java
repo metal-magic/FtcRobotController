@@ -178,7 +178,7 @@ public class NewOneController extends OpMode {
 
         hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        
+
     }
 
     @Override
@@ -336,12 +336,12 @@ public class NewOneController extends OpMode {
             hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            hangSlideMotor.setPower(0.7);
+            hangSlideMotor.setPower(-0.7);
         } else if (gamepad1.left_bumper) {
             if (hangSlideMotor.getCurrentPosition() > -4338) {
                 hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                hangSlideMotor.setPower(-0.7);
+                hangSlideMotor.setPower(0.7);
             }
         } else {
             if (!isPressedEndOHYE) {
@@ -353,12 +353,12 @@ public class NewOneController extends OpMode {
         if (gamepad1.right_trigger >= 0.3F) {
             hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
             hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            hangSlideMotor2.setPower(-0.7 * 0.41);
+            hangSlideMotor2.setPower(0.7 * 0.41);
         } else if (gamepad1.left_trigger >= 0.3F) {
             if (hangSlideMotor.getCurrentPosition() > -4338) {
                 hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
                 hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                hangSlideMotor2.setPower(0.7 * 0.41);
+                hangSlideMotor2.setPower(-0.7 * 0.41);
             }
         } else {
             if (!isPressedEndOHYE) {
