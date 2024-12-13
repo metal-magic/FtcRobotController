@@ -185,9 +185,11 @@ public class NewOneController extends OpMode {
     public void loop() {
         if (gamepad2.dpad_up) {
             moveSlideUp = true;
+            moveSlideDown = false;
         }
         if (gamepad2.dpad_right) {
             moveSlideDown = true;
+            moveSlideUp = false;
         }
         if (gamepad2.dpad_left) {
             moveSlideDown = true;
