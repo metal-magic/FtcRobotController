@@ -100,7 +100,7 @@ public class NewOneController extends OpMode {
     boolean isPressedEndOHYE = false;
     // public DcMotor linearActuatorMotor = null;
 
-    public Date previousTime = new Date();
+    //public Date previousTime = new Date();
 
     public float armSpeedCounter = 0;
     // TouchSensor touchSensor = null;
@@ -120,15 +120,6 @@ public class NewOneController extends OpMode {
     static final double DEGREES_MOTOR_MOVES_IN_1_REV = 45.0;
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
-
-    VisionPortal visionPortal;
-    VisionPortal visionPortal2;
-    AprilTagProcessor tagProcessor;
-    AprilTagProcessor tagProcessor2;
-
-    // private static ElapsedTime stopWatch = new ElapsedTime();
-
-    long start = System.currentTimeMillis();
 
     boolean moveSlideUp = false;
     boolean moveSlideDown = false;
@@ -187,9 +178,7 @@ public class NewOneController extends OpMode {
 
         hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
-        initPortal();
-
+        
     }
 
     @Override
@@ -406,259 +395,6 @@ public class NewOneController extends OpMode {
 
         telemetry.update();
 
-    }
-
-    public void alignToDefault(String s, int vision) {
-        if (vision == 1) {
-            if (Objects.equals(s, "basket")) {
-                if (tagProcessor.getDetections().get(0).id == 11) {
-                    align(0, 70, 180, vision);
-                    align(0, 16, -45, vision); // now with tag 13
-                } else if (tagProcessor.getDetections().get(0).id == 12) {
-                    align(-50, 16, 90, vision);
-                    align(0, 16, -45, vision); // now with tag 13
-                } else if (tagProcessor.getDetections().get(0).id == 13) {
-                    align(0, 16, -45, vision);
-                }
-            }
-
-            if (Objects.equals(s, "chamber")) {
-            }
-        } else if (vision == 2) {
-            if (Objects.equals(s, "chamber")) {
-                if (tagProcessor2.getDetections().get(0).id == 12) {
-                    align(0, 16, 0, 2);
-                    moveStraightLine(5);
-                }
-            }
-        }
-    }
-
-    public void alignTo(String s, int tagID, int vision) {
-
-        if (Objects.equals(s, "basket")) {
-            if (tagID == 12) {
-                align(55, 16, 45, vision);
-            }
-
-        }
-
-        if (Objects.equals(s, "chamber")) {
-            if (tagID == 12) {
-                align(0, 26, 180, vision);
-            }
-        }
-
-        if (tagID == 13) {
-            if (Objects.equals(s, "basket")) {
-                alignRotate(0, vision);
-                alignY(16, vision);
-                alignX(-16, vision);
-                alignRotate(-45, vision);
-
-            }
-        }
-
-    }
-
-    public void initPortal() {
-
-        // Because we want to show two camera feeds simultaneously, we need to inform
-        // the SDK that we want it to split the camera monitor area into two smaller
-        // areas for us. It will then give us View IDs which we can pass to the
-        // individual
-        // vision portals to allow them to properly hook into the UI in tandem.
-        int[] viewIds = VisionPortal.makeMultiPortalView(2, VisionPortal.MultiPortalLayout.VERTICAL);
-
-        // We extract the two view IDs from the array to make our lives a little easier
-        // later.
-        // NB: the array is 2 long because we asked for 2 portals up above.
-        int portal1ViewId = viewIds[0];
-        int portal2ViewId = viewIds[1];
-
-        // drawing information on the driver station camera screen
-        tagProcessor = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setLensIntrinsics(484.149, 484.149, 309.846, 272.681)
-                .build();
-
-        tagProcessor2 = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
-                .build();
-
-        // stating the webcam
-        visionPortal = new VisionPortal.Builder()
-                .setLiveViewContainerId(portal1ViewId)
-                .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
-
-        visionPortal2 = new VisionPortal.Builder()
-                .setLiveViewContainerId(portal2ViewId)
-                .addProcessor(tagProcessor2)
-                .setCamera(hardwareMap.get(WebcamName.class, "diddyCam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
-
-    }
-
-    public void tagTelemetry(int vision) {
-        telemetry.addData("Vision portal: ", vision);
-        if (vision == 1) {
-            if (tagProcessor.getDetections().size() > 0) {
-                AprilTagDetection tag = tagProcessor.getDetections().get(0);
-                // sending telemetry values to the driver station
-                telemetry.addData("x", tag.ftcPose.x);
-                telemetry.addData("y", tag.ftcPose.y);
-                telemetry.addData("z", tag.ftcPose.z);
-                telemetry.addData("roll", tag.ftcPose.roll);
-                telemetry.addData("pitch", tag.ftcPose.pitch);
-                telemetry.addData("yaw", tag.ftcPose.yaw);
-                telemetry.addData("id", tag.id);
-            }
-        } else if (vision == 2) {
-            if (tagProcessor2.getDetections().size() > 0) {
-                AprilTagDetection tag = tagProcessor2.getDetections().get(0);
-                // sending telemetry values to the driver station
-                telemetry.addData("x", tag.ftcPose.x);
-                telemetry.addData("y", tag.ftcPose.y);
-                telemetry.addData("z", tag.ftcPose.z);
-                telemetry.addData("roll", tag.ftcPose.roll);
-                telemetry.addData("pitch", tag.ftcPose.pitch);
-                telemetry.addData("yaw", tag.ftcPose.yaw);
-                telemetry.addData("id", tag.id);
-            }
-        }
-    }
-
-    public void align(int x, int y, int dir, int vision) {
-        alignRotate(0, vision);
-        alignY(y, vision);
-        alignX(x, vision);
-        rotate(dir);
-    }
-
-    public void alignRotate(int dir, int vision) {
-
-        double rotateNew;
-        double originalY;
-        double rotateRadians;
-        double correctX;
-
-        if (vision == 1) {
-            if (tagProcessor.getDetections().size() > 0) {
-                rotateNew = tagProcessor.getDetections().get(0).ftcPose.yaw - dir;
-                originalY = tagProcessor.getDetections().get(0).ftcPose.y;
-
-                if (tagProcessor.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { // 0.5 is buffer
-                    // strafe(1);
-                    rotate(-rotateNew);
-                } else if (tagProcessor.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { // 0.5 is buffer
-                    // strafe(-1);
-                    rotate(-rotateNew);
-                }
-
-                rotateRadians = Math.toRadians(rotateNew);
-                correctX = Math.tan(rotateRadians) * originalY;
-                strafe(1 * correctX);
-
-            }
-        } else if (vision == 2) {
-            if (tagProcessor2.getDetections().size() > 0) {
-                rotateNew = tagProcessor2.getDetections().get(0).ftcPose.yaw - dir;
-                originalY = tagProcessor2.getDetections().get(0).ftcPose.y;
-
-                if (tagProcessor2.getDetections().get(0).ftcPose.yaw < (-0.5 + dir)) { // 0.5 is buffer
-                    // strafe(1);
-                    rotate(-rotateNew);
-                }
-                if (tagProcessor2.getDetections().get(0).ftcPose.yaw > (0.5 + dir)) { // 0.5 is buffer
-                    // strafe(-1);
-                    rotate(-rotateNew);
-                }
-
-                rotateRadians = Math.toRadians(rotateNew);
-                correctX = Math.tan(rotateRadians) * originalY;
-                strafe(correctX);
-            }
-        }
-
-    }
-
-    public void alignX(double x, int vision) {
-
-        double xPosNew;
-        // alignX(-1, 1, 12);
-        if (vision == 1) {
-            if (tagProcessor.getDetections().size() > 0) {
-                xPosNew = tagProcessor.getDetections().get(0).ftcPose.x - x;
-
-                if (tagProcessor.getDetections().get(0).ftcPose.x < (-0.5 + x)) { // 0.5 is buffer
-                    // strafe(1);
-                    strafe(1 * xPosNew);
-                }
-                if (tagProcessor.getDetections().get(0).ftcPose.x > (0.5 + x)) { // 0.5 is buffer
-                    // strafe(-1);
-                    strafe(1 * xPosNew);
-                }
-            }
-        } else if (vision == 2) {
-            if (tagProcessor2.getDetections().size() > 0) {
-                xPosNew = tagProcessor2.getDetections().get(0).ftcPose.x - x;
-
-                if (tagProcessor2.getDetections().get(0).ftcPose.x < (-0.5 + x)) { // 0.5 is buffer
-                    // strafe(1);
-                    strafe(-1 * xPosNew);
-                }
-                if (tagProcessor2.getDetections().get(0).ftcPose.x > (0.5 + x)) { // 0.5 is buffer
-                    // strafe(-1);
-                    strafe(-1 * xPosNew);
-                }
-            }
-        }
-    }
-
-    public void alignY(double y, int vision) {
-        double yPosNew;
-        // double moveInRevs;
-        // alignX(-1, 1, 12);
-        if (vision == 1) {
-            if (tagProcessor.getDetections().size() > 0) {
-                yPosNew = tagProcessor.getDetections().get(0).ftcPose.y - y;
-                // moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
-
-                if (tagProcessor.getDetections().get(0).ftcPose.y < (-0.5 + y)) { // 0.5 is buffer
-                    // strafe(1);
-                    moveStraightLine(1 * yPosNew);
-                }
-                if (tagProcessor.getDetections().get(0).ftcPose.y > (0.5 + y)) { // 0.5 is buffer
-                    // strafe(-1);
-                    moveStraightLine(1 * yPosNew);
-                }
-            }
-        } else if (vision == 2) {
-            if (tagProcessor2.getDetections().size() > 0) {
-                yPosNew = tagProcessor2.getDetections().get(0).ftcPose.y - y;
-                // moveInRevs = yPosNew / CIRCUMFERENCE_INCHES;
-
-                if (tagProcessor2.getDetections().get(0).ftcPose.y < (-0.5 + y)) { // 0.5 is buffer
-                    // strafe(1);
-                    moveStraightLine(-1 * yPosNew);
-                }
-                if (tagProcessor2.getDetections().get(0).ftcPose.y > (0.5 + y)) { // 0.5 is buffer
-                    // strafe(-1);
-                    moveStraightLine(-1 * yPosNew);
-                }
-            }
-        }
     }
 
     public void rotate(double degrees) {
