@@ -207,7 +207,7 @@ public class NewOneController extends OpMode {
          * GAMEPAD 2 IS MAIN AND GAMEPAD 1 IS HANGING
          * 
          */
-        double y = -gamepad2.left_stick_y + gamepad1.left_stick_y; // REVERSED -gamepad1.left_stick_y.gamestick so
+        double y = -gamepad2.left_stick_y + gamepad1.left_stick_y/2; // REVERSED -gamepad1.left_stick_y.gamestick so
         // gamepad1 can also do movement for hanging
         // making sure it doesnt go over 1 or -1
         if (y < -1) {
@@ -215,14 +215,14 @@ public class NewOneController extends OpMode {
         } else if (y > 1) {
             y = 1;
         }
-        double x = gamepad2.left_stick_x - gamepad1.left_stick_x; // gamepad1 can also do movement for hanging
+        double x = gamepad2.left_stick_x - gamepad1.left_stick_x/2; // gamepad1 can also do movement for hanging
         // making sure it doesnt go over 1 or -1
         if (x > 1) {
             x = 1;
         } else if (x < -1) {
             x = -1;
         }
-        double rx = gamepad2.right_stick_x + gamepad1.right_stick_x; // gamepad1 can also do movement for hanging
+        double rx = gamepad2.right_stick_x + gamepad1.right_stick_x/2; // gamepad1 can also do movement for hanging
         // making sure it doesnt go over 1 or -1
         if (rx > 1) {
             rx = 1;

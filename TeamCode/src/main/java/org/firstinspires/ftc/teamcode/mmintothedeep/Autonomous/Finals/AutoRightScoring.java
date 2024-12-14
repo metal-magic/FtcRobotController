@@ -71,7 +71,7 @@ public class AutoRightScoring extends LinearOpMode {
     int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
 
         initPortal(ColorRange.YELLOW);
         initMotor();
@@ -80,6 +80,13 @@ public class AutoRightScoring extends LinearOpMode {
         myExposure = 30;
         myGain = 240;
         setManualExposure(myExposure, myGain);
+
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        double step = 1;
 
         waitForStart();
 
@@ -97,53 +104,55 @@ public class AutoRightScoring extends LinearOpMode {
          */
         // sleep lines are to avoid two lines of codes running at the same time
 
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        while (opModeIsActive() && step == 1) {
 
-        strafeDiagonalLeft(25, SPEED);
-        moveStraightLine(16, SPEED);
-        moveLinearSlide(680, 0.4);
-        pivotServo.setPosition(0.39);
-        sleep(500);
-        moveLinearSlide(10, 1);
-        sleep(100);
-        gripperServo1.setPosition(0.3);
-        pivotServo.setPosition(0.46); // move back for safety
-        moveStraightLine(-5, 1);
-        strafeDiagonalLeft(-20, SPEED);
-        strafe(41, SPEED);
-        // moveStraightLine(35, SPEED);
-        // strafe(15, SPEED);
-        // moveStraightLine(-40, SPEED);
+            strafeDiagonalLeft(25, SPEED);
+            moveStraightLine(16, SPEED);
+            moveLinearSlide(680, 0.4);
+            pivotServo.setPosition(0.39);
+            sleep(500);
+            moveLinearSlide(10, 1);
+            sleep(100);
+            gripperServo1.setPosition(0.3);
+            pivotServo.setPosition(0.46); // move back for safety
+            moveStraightLine(-5, 1);
+            strafeDiagonalLeft(-20, SPEED);
+            strafe(41, SPEED);
+            // moveStraightLine(35, SPEED);
+            // strafe(15, SPEED);
+            // moveStraightLine(-40, SPEED);
 //        moveStraightLine(5, SPEED);
 //        rotate(180);
 //        moveStraightLine(5, SPEED);
-        rotate(180);
-        moveStraightLine(2.51, 0.8);
-        gripperServo1.setPosition(0.4);
-        sleep(100);
-        pivotServo.setPosition(0.3206);
-        sleep(600);
-        gripperServo1.setPosition(0);
-        sleep(800);
-        pivotServo.setPosition(0.59);
-        sleep(600);
-        rotate(180);
-        strafe(-35, SPEED);
-        strafeDiagonalLeft(25, 0.8);
-        //moveAndSlide(4, 650, 0.4);
-        moveStraightLine(2.5, 0.5);
-        moveLinearSlide(650, 0.4);
-        pivotServo.setPosition(0.375);
-        sleep(500);
-        moveLinearSlide(300, 0.6);
-        sleep(100);
-        gripperServo1.setPosition(0.3);
-        pivotServo.setPosition(0.59);
-        strafe(11, 1);
-        strafeDiagonalLeft(-45, 1);
+            rotate(180);
+            moveStraightLine(2.51, 0.8);
+            gripperServo1.setPosition(0.4);
+            pivotServo.setPosition(0.331);
+            sleep(100);
+            pivotServo.setPosition(0.326);
+            sleep(600);
+            gripperServo1.setPosition(0);
+            sleep(800);
+            pivotServo.setPosition(0.59);
+            sleep(600);
+            rotate(180);
+            strafe(-35, SPEED);
+            strafeDiagonalLeft(25, 0.8);
+            //moveAndSlide(4, 650, 0.4);
+            moveStraightLine(1.5, 0.5);
+            moveLinearSlide(635, 0.4); // Change height to 650 if no work
+            pivotServo.setPosition(0.375);
+            sleep(500);
+            moveLinearSlide(300, 0.6);
+            sleep(100);
+            gripperServo1.setPosition(0.3);
+            pivotServo.setPosition(0.59);
+            strafe(11, 1);
+            strafeDiagonalLeft(-45, 1);
+
+            step++;
+
+        }
 
     }
 
