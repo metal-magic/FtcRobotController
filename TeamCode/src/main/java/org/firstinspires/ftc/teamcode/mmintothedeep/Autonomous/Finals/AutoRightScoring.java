@@ -104,7 +104,7 @@ public class AutoRightScoring extends LinearOpMode {
          */
         // sleep lines are to avoid two lines of codes running at the same time
 
-        while (opModeIsActive() && step == 1) {
+        while (opModeIsActive()) {
 
             strafeDiagonalLeft(25, SPEED);
             moveStraightLine(16, SPEED);
@@ -149,9 +149,11 @@ public class AutoRightScoring extends LinearOpMode {
             pivotServo.setPosition(0.59);
             strafe(11, 1);
             strafeDiagonalLeft(-45, 1);
-
-            step++;
-
+//            strafeDiagonalRight(2, SPEED);
+//            strafe(5, SPEED);
+//            telemetry.addData("Path", "Complete");
+//            telemetry.update();
+//            sleep(1000);
         }
 
     }
