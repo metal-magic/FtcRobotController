@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "RIGHT 2 + 0 + park", group = "Autonomous")
+@Autonomous(name = "RIGHT 2 + 0 + park test", group = "Autonomous")
 public class FinalsRightAutoTest extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;
@@ -70,11 +70,13 @@ public class FinalsRightAutoTest extends LinearOpMode {
 
 //    int[] viewIds = VisionPortal.makeMultiPortalView(3, VisionPortal.MultiPortalLayout.VERTICAL);
 
+    int step = 0;
+
     @Override
     public void runOpMode() {
 
 //        initPortal(ColorRange.YELLOW);
-//        initMotor();
+        initMotor();
 //
 //        // getCameraSetting();
 //        myExposure = 30;
@@ -102,7 +104,7 @@ public class FinalsRightAutoTest extends LinearOpMode {
          */
         // sleep lines are to avoid two lines of codes running at the same time
 
-        while (opModeIsActive() && !isStopRequested()) {
+        while (opModeIsActive() && !isStopRequested() && step == 0) {
 
             strafeDiagonalLeft(25, SPEED);
             moveStraightLine(16, SPEED);
@@ -123,7 +125,7 @@ public class FinalsRightAutoTest extends LinearOpMode {
 //        rotate(180);
 //        moveStraightLine(5, SPEED);
             rotate(180);
-            moveStraightLine(2.51, 0.8);
+            moveStraightLine(1.7, 0.8);
             gripperServo1.setPosition(0.4);
             pivotServo.setPosition(0.331);
             sleep(100);
@@ -137,7 +139,7 @@ public class FinalsRightAutoTest extends LinearOpMode {
             strafe(-35, SPEED);
             strafeDiagonalLeft(25, 0.8);
             //moveAndSlide(4, 650, 0.4);
-            moveStraightLine(1.5, 0.5);
+            moveStraightLine(1.6, 0.5);
             moveLinearSlide(635, 0.4); // Change height to 650 if no work
             pivotServo.setPosition(0.375);
             sleep(500);
@@ -146,12 +148,19 @@ public class FinalsRightAutoTest extends LinearOpMode {
             gripperServo1.setPosition(0.3);
             pivotServo.setPosition(0.59);
             strafe(11, 1);
-            strafeDiagonalLeft(-45, 1);
+            sleep(200);
+            leftFrontDrive.setPower(0);
+            leftBackDrive.setPower(1);
+            rightFrontDrive.setPower(1);
+            rightBackDrive.setPower(0);
+            moveLinearSlide(10, 0.4);
+            sleep(800);
 //            strafeDiagonalRight(2, SPEED);
 //            strafe(5, SPEED);
 //            telemetry.addData("Path", "Complete");
 //            telemetry.update();
 //            sleep(1000);
+            step++;
         }
 
     }

@@ -104,7 +104,7 @@ public class AutoRightScoring extends LinearOpMode {
          */
         // sleep lines are to avoid two lines of codes running at the same time
 
-        while (opModeIsActive()) {
+        while (opModeIsActive() && !isStopRequested() && step==1) {
 
             strafeDiagonalLeft(25, SPEED);
             moveStraightLine(16, SPEED);
@@ -154,6 +154,7 @@ public class AutoRightScoring extends LinearOpMode {
 //            telemetry.addData("Path", "Complete");
 //            telemetry.update();
 //            sleep(1000);
+            step++;
         }
 
     }
