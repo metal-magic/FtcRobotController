@@ -125,12 +125,13 @@ public class FinalsRightAutoTest extends LinearOpMode {
 //        rotate(180);
 //        moveStraightLine(5, SPEED);
             rotate(180);
-            moveStraightLine(1.7, 0.8);
+//            moveStraightLine(1.7, 0.8);
+            moveStraightLine(1.398,SPEED);
             gripperServo1.setPosition(0.4);
-            pivotServo.setPosition(0.331);
-            sleep(100);
-            pivotServo.setPosition(0.326);
-            sleep(600);
+            pivotServo.setPosition(0.335);
+            sleep(800);
+            pivotServo.setPosition(0.309);
+            sleep(1000);
             gripperServo1.setPosition(0);
             sleep(800);
             pivotServo.setPosition(0.59);

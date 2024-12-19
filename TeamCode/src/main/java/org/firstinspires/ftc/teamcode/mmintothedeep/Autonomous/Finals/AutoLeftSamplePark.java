@@ -107,7 +107,7 @@ public class AutoLeftSamplePark extends LinearOpMode {
          */
         // sleep lines are to avoid two lines of codes running at the same time
 
-        while (opModeIsActive() && step == 0) {
+        while (opModeIsActive() && step == 0 && !isStopRequested()) {
 
             double moveCoefficient; // for apriltags
 
@@ -133,18 +133,20 @@ public class AutoLeftSamplePark extends LinearOpMode {
             rotate(moveCoefficient);
             //moveLinearSlide(4000, 0.7);
             moveStraightLine(2);
-            pivotServo.setPosition(0.36);
+            pivotServo.setPosition(0.356);
             linearSlideMotor.setPower(0);
             sleep(200);
             gripperServo1.setPosition(0.3);
+            sleep(500);
             pivotServo.setPosition(0.59);
-            sleep(200);
+            sleep(1000);
+            moveStraightLine(-1);
             rotateAndSlide(145, 10);
             // go to sample
-            strafe(7, SPEED);
+            strafe(7.5, SPEED);
             gripperServo1.setPosition(0.38);
             sleep(2000);
-            moveStraightLine(14);
+            moveStraightLine(13.4);
             //alignToSample();
             sleep(200);
             pivotServo.setPosition(0.19);

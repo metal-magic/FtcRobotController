@@ -167,8 +167,8 @@ public class NewOneController extends OpMode {
         motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        gripperServo1.setPosition(0);
-        pivotServo.setPosition(0.673);
+//        gripperServo1.setPosition(0);
+//        pivotServo.setPosition(0.673);
 
         hangSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
