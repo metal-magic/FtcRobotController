@@ -81,6 +81,7 @@ public class NewOneController extends OpMode {
     public Servo gripperServo1 = null;
     // public Servo gripperServo2 = null;
     public Servo pivotServo = null;
+    public Servo turnServo = null;
     // public Servo fakeServo = null;
     // public Servo fakeServo2 = null;
 
@@ -123,7 +124,8 @@ public class NewOneController extends OpMode {
 
     boolean moveSlideUp = false;
     boolean moveSlideDown = false;
-
+    boolean intake = false;
+    long setTime;
     @Override
     public void init() {
 
@@ -243,16 +245,7 @@ public class NewOneController extends OpMode {
         // fakeServo.setPosition(1);
         // fakeServo2.setPosition(1);
 
-        telemetry.addData("Cutpower", CutPower);
-        if (gamepad1.back && !CutPower) {
-            // Button cuts all power except linear slides/actuators
-            CutPower = true;
-        }
-        if (gamepad1.back && CutPower) {
-            CutPower = false;
-        }
 
-        if (!CutPower) {
             telemetry.addData("slide", linearSlideMotor.getCurrentPosition());
 
             if (gamepad1.right_trigger >= 0.3F) {
@@ -299,7 +292,6 @@ public class NewOneController extends OpMode {
             } else if (gamepad2.dpad_left) {
                 pivotServo.setPosition(0.31);
             }
-        }
 
         if (linearSlideMotor.getCurrentPosition() < 4000 && gamepad2.right_trigger >= 0.1F) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -378,6 +370,29 @@ public class NewOneController extends OpMode {
                 hangSlideMotor.setPower(-0.7);
                 hangSlideMotor2.setPower(0.7 * 0.41);
             }
+        }
+
+        if (gamepad2.back) {
+            intake = true;
+        } else if (intake) {
+            gripperServo1.setPosition(0);
+            setTime = System.currentTimeMillis();
+            if (System.currentTimeMillis() - setTime > 500) {
+                pivotServo.setPosition(0.52);
+                setTime = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis()-setTime > 300) {
+                turnServo.setPosition(1);
+                setTime = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - setTime > 200) {
+                gripperServo1.setPosition(0.15);
+                setTime = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - setTime > 100) {
+                turnServo.setPosition(0);
+            }
+            intake = false;
         }
 
         telemetry.addData("hang Slide position, ", hangSlideMotor.getCurrentPosition());
