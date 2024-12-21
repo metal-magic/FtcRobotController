@@ -56,7 +56,6 @@ import java.util.Date;
  */
 
 @TeleOp(name = "Outreach Event")
-@Disabled
 public class outreachTeleOp extends OpMode {
 
     public DcMotor motorFrontLeft = null;
@@ -79,7 +78,7 @@ public class outreachTeleOp extends OpMode {
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
