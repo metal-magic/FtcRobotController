@@ -24,6 +24,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -62,13 +63,33 @@ For support, contact tech@gobilda.com
 
 public class SensorGoBildaPinpointExample extends LinearOpMode {
 
+    DcMotor leftFrontDrive;
+    DcMotor rightFrontDrive;
+    DcMotor leftBackDrive;
+    DcMotor rightBackDrive;
+
     GoBildaPinpointDriver odo; // Declare OpMode member for the Odometry Computer
 
     double oldTime = 0;
 
+    DriveToPoint nav = new DriveToPoint(this);
+
+    static final Pose2D basketTarget = new Pose2D(DistanceUnit.MM,260,1700, AngleUnit.DEGREES,132);
+
+    boolean atTarget = false;
 
     @Override
     public void runOpMode() {
+
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
+        leftBackDrive   = hardwareMap.get(DcMotor.class, "motorBackLeft");
+        rightBackDrive  = hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
@@ -121,6 +142,9 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
         telemetry.addData("Device Scalar", odo.getYawScalar());
         telemetry.update();
 
+        nav.setDriveType(DriveToPoint.DriveType.MECANUM);
+
+
         // Wait for the game to start (driver presses START)
         waitForStart();
         resetRuntime();
@@ -150,6 +174,12 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
                 odo.recalibrateIMU(); //recalibrates the IMU without resetting position
             }
 
+            if (gamepad1.y) {
+                if (nav.driveTo(odo.getPosition(), basketTarget, 0.4, 2)){
+                    telemetry.addLine("at position #2!");
+                }
+            }
+
 
             /*
             This code prints the loop frequency of the REV Control Hub. This frequency is effected
@@ -162,7 +192,12 @@ public class SensorGoBildaPinpointExample extends LinearOpMode {
             double frequency = 1/loopTime;
             oldTime = newTime;
 
-
+            if (!atTarget) {
+                leftFrontDrive.setPower(nav.getMotorPower(DriveToPoint.DriveMotor.LEFT_FRONT));
+                rightFrontDrive.setPower(nav.getMotorPower(DriveToPoint.DriveMotor.RIGHT_FRONT));
+                leftBackDrive.setPower(nav.getMotorPower(DriveToPoint.DriveMotor.LEFT_BACK));
+                rightBackDrive.setPower(nav.getMotorPower(DriveToPoint.DriveMotor.RIGHT_BACK));
+            }
             /*
             gets the current Position (x & y in mm, and heading in degrees) of the robot, and prints it.
              */

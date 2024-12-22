@@ -13,10 +13,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 import java.util.Locale;
 
-@Autonomous(name="PinpointPathing", group="Pinpoint")
+@TeleOp(name="randomTest", group="Pinpoint")
 //@Disabled
 
-public class PinpointPathing extends LinearOpMode {
+public class randomTest extends LinearOpMode {
 
     DcMotor leftFrontDrive;
     DcMotor rightFrontDrive;
@@ -93,63 +93,11 @@ public class PinpointPathing extends LinearOpMode {
         while (opModeIsActive()) {
             odo.update();
 
-            switch (stateMachine){
-                case WAITING_FOR_START:
-                    //the first step in the autonomous
-                    stateMachine = StateMachine.DRIVE_TO_TARGET_1;
-                    break;
-                case DRIVE_TO_TARGET_1:
-                    /*
-                    drive the robot to the first target, the nav.driveTo function will return true once
-                    the robot has reached the target, and has been there for (holdTime) seconds.
-                    Once driveTo returns true, it prints a telemetry line and moves the state machine forward.
-                     */
-                    if (nav.driveTo(odo.getPosition(), TARGET_1, 0.4, 0)){
-                        telemetry.addLine("at position #1!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_2;
-                    }
-                    break;
-                case DRIVE_TO_TARGET_2:
-                    //drive to the second target
-                    if (nav.driveTo(odo.getPosition(), TARGET_2, 0.4, 2)){
-                        telemetry.addLine("at position #2!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_3;
-                    }
-                    break;
 
-                case DRIVE_TO_TARGET_3:
-                    if(nav.driveTo(odo.getPosition(), TARGET_3, 0.7, 2)){
-                        telemetry.addLine("at position #3");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_4;
-                        long t= System.currentTimeMillis();
-                        long endTimer = t+800;
-                        while(System.currentTimeMillis() < endTimer) {
-                            leftFrontDrive.setPower(1);
-                            leftBackDrive.setPower(1);
-                            rightBackDrive.setPower(-1);
-                            rightFrontDrive.setPower(-1);
-                        }
-                    }
-                    break;
-                case DRIVE_TO_TARGET_4:
-                    if(nav.driveTo(odo.getPosition(),TARGET_4,0.7,0.1)){
-                        telemetry.addLine("at position #4");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_5;
-                    }
-                    break;
-                case DRIVE_TO_TARGET_5:
-                    if(nav.driveTo(odo.getPosition(),TARGET_5,0.7,0)){
-                        telemetry.addLine("There!");
-                        stateMachine = StateMachine.AT_TARGET;
-                    }
-                    break;
-                case AT_TARGET:
-                    attarget = true;
-                    leftFrontDrive.setPower(0);
-                    rightBackDrive.setPower(0);
-                    leftBackDrive.setPower(0);
-                    rightBackDrive.setPower(0);
-                    break;
+            if (gamepad1.y) {
+                if (nav.driveTo(odo.getPosition(), TARGET_5, 0.4, 0)){
+                    telemetry.addLine("at position #1!");
+                }
             }
 
 
