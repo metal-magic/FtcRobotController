@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -35,11 +36,11 @@ public class TeleOpToBasket extends LinearOpMode {
         DRIVE_TO_TARGET_5
     }
 
-    static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM,0,0,AngleUnit.DEGREES,0);
-    static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, 2600, -20, AngleUnit.DEGREES, -90);
-    static final Pose2D TARGET_3 = new Pose2D(DistanceUnit.MM,2600,-2600, AngleUnit.DEGREES,-90);
-    static final Pose2D TARGET_4 = new Pose2D(DistanceUnit.MM, 100, -2600, AngleUnit.DEGREES, 90);
-    static final Pose2D TARGET_5 = new Pose2D(DistanceUnit.MM, 100, 0, AngleUnit.DEGREES, 0);
+    static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM,707,195,AngleUnit.DEGREES,0);
+    static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, 200, -658, AngleUnit.DEGREES, -138.13);
+    static final Pose2D TARGET_3 = new Pose2D(DistanceUnit.MM,353,428, AngleUnit.DEGREES,90);
+    static final Pose2D TARGET_4 = new Pose2D(DistanceUnit.MM,304, 1210, AngleUnit.DEGREES,90);
+    static final Pose2D TARGET_5 = new Pose2D(DistanceUnit.MM,260,1700, AngleUnit.DEGREES,132);
 
 
     @Override
@@ -53,10 +54,10 @@ public class TeleOpToBasket extends LinearOpMode {
         leftBackDrive   = hardwareMap.get(DcMotor.class, "motorBackLeft");
         rightBackDrive  = hardwareMap.get(DcMotor.class, "motorBackRight");
 
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -72,8 +73,8 @@ public class TeleOpToBasket extends LinearOpMode {
         //nav.setYawCoefficients(1,0,0.0, AngleUnit.DEGREES,2);
         nav.setDriveType(DriveToPoint.DriveType.MECANUM);
 
-        StateMachine stateMachine;
-        stateMachine = StateMachine.WAITING_FOR_START;
+        TeleOpToBasket.StateMachine stateMachine;
+        stateMachine = TeleOpToBasket.StateMachine.WAITING_FOR_START;
 
         telemetry.addData("Status", "Initialized");
         telemetry.addData("X offset", odo.getXOffset());
