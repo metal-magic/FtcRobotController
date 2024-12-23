@@ -161,10 +161,12 @@ public class PinpointAutoRight extends LinearOpMode {
                     //drive to the second target
                     if (nav.driveTo(odo.getPosition(), TARGET_2, 0.4, 2)) {
                         telemetry.addLine("at position #2!");
+                        // once ar pos 2 then tag
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_3;
                         if (!tagProcessor.getDetections().isEmpty()) {
                             odo.setPosition(returnAprilTagPose(odo.getPosition()));
                         }
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_3;
+                        odo.update();
                     }
                     break;
 
