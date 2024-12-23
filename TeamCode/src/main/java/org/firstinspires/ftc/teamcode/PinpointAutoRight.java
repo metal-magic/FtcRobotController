@@ -62,12 +62,12 @@ public class PinpointAutoRight extends LinearOpMode {
     }
 
     // THE POSITIONS THE ROBOT WILL DRIVE TO IN AUTO
-    static Pose2D startingPos = null;
-    static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM, 707, 195, AngleUnit.DEGREES, 0);
-    static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, 200, -658, AngleUnit.DEGREES, -138.13);
-    static final Pose2D TARGET_3 = new Pose2D(DistanceUnit.MM, 353, 428, AngleUnit.DEGREES, 90);
-    static final Pose2D TARGET_4 = new Pose2D(DistanceUnit.MM, 304, 1210, AngleUnit.DEGREES, 90);
-    static final Pose2D TARGET_5 = new Pose2D(DistanceUnit.MM, 260, 1700, AngleUnit.DEGREES, 132);
+    static Pose2D startingPos = new Pose2D(DistanceUnit.MM, 1600, 460, AngleUnit.DEGREES, 175); // Starting position
+    static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM, 900, 260, AngleUnit.DEGREES, 175); // High Chamber
+    static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, 1130, 1077, AngleUnit.DEGREES, 90); // AprilTag
+    static final Pose2D TARGET_3 = new Pose2D(DistanceUnit.MM, 327, 1400, AngleUnit.DEGREES, 90); // Ready to push
+    static final Pose2D TARGET_4 = new Pose2D(DistanceUnit.MM, 1400, 1270, AngleUnit.DEGREES, 0); // HP Area
+    static final Pose2D TARGET_5 = new Pose2D(DistanceUnit.MM, 1534, 1330, AngleUnit.DEGREES, 0);
 
     @Override
     public void runOpMode() {
@@ -78,8 +78,20 @@ public class PinpointAutoRight extends LinearOpMode {
 
         initPortal(); // initialize the apriltag portal
         initMotor(); // initialize the drive wheel motors
-        initOdo(); // initialize odometry
+        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+        odo.setOffsets(0, -180.0); //these are tuned for 3110-0002-0001 Product Insight #1
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
+        odo.resetPosAndIMU();
+
+
+        odo.setPosition(startingPos);
+        odo.update();
+
+        //nav.setXYCoefficients(0.02,0.002,0.0,DistanceUnit.MM,12);
+        //nav.setYawCoefficients(1,0,0.0, AngleUnit.DEGREES,2);
+        nav.setDriveType(DriveToPoint.DriveType.MECANUM);
         StateMachine stateMachine;
         stateMachine = StateMachine.WAITING_FOR_START;
 
@@ -92,8 +104,7 @@ public class PinpointAutoRight extends LinearOpMode {
         resetRuntime();
 
         while (opModeIsActive()) {
-            telemetryAprilTag();
-            odo.setPosition(returnAprilTagPose(odo.getPosition()));
+
             odo.update();
 
             // localizing with aprilTags whenever it sees an apriltag
@@ -132,7 +143,8 @@ public class PinpointAutoRight extends LinearOpMode {
             switch (stateMachine) {
                 case WAITING_FOR_START:
                     //the first step in the autonomous
-                    stateMachine = StateMachine.AT_TARGET;
+                    odo.setPosition(startingPos);
+                    stateMachine = StateMachine.DRIVE_TO_TARGET_1;
                     break;
                 case DRIVE_TO_TARGET_1:
                     /*
@@ -140,21 +152,24 @@ public class PinpointAutoRight extends LinearOpMode {
                     the robot has reached the target, and has been there for (holdTime) seconds.
                     Once driveTo returns true, it prints a telemetry line and moves the state machine forward.
                      */
-                    if (nav.driveTo(odo.getPosition(), TARGET_1, 0.4, 0)) {
+                    if (nav.driveTo(odo.getPosition(), TARGET_1, 0.4, 0.2)) {
                         telemetry.addLine("at position #1!");
-                        stateMachine = StateMachine.AT_TARGET;
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_2;
                     }
                     break;
                 case DRIVE_TO_TARGET_2:
                     //drive to the second target
                     if (nav.driveTo(odo.getPosition(), TARGET_2, 0.4, 2)) {
                         telemetry.addLine("at position #2!");
+                        if (!tagProcessor.getDetections().isEmpty()) {
+                            odo.setPosition(returnAprilTagPose(odo.getPosition()));
+                        }
                         stateMachine = StateMachine.DRIVE_TO_TARGET_3;
                     }
                     break;
 
                 case DRIVE_TO_TARGET_3:
-                    if (nav.driveTo(odo.getPosition(), TARGET_3, 0.7, 2)) {
+                    if (nav.driveTo(odo.getPosition(), TARGET_3, 0.4, 0.2)) {
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_4;
                         long t = System.currentTimeMillis();
@@ -168,13 +183,13 @@ public class PinpointAutoRight extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_4:
-                    if (nav.driveTo(odo.getPosition(), TARGET_4, 0.7, 0.1)) {
+                    if (nav.driveTo(odo.getPosition(), TARGET_4, 0.4, 0.1)) {
                         telemetry.addLine("at position #4");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_5;
                     }
                     break;
                 case DRIVE_TO_TARGET_5:
-                    if (nav.driveTo(odo.getPosition(), TARGET_5, 0.7, 0)) {
+                    if (nav.driveTo(odo.getPosition(), TARGET_5, 0.4, 0.2)) {
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.AT_TARGET;
                     }
@@ -201,6 +216,9 @@ public class PinpointAutoRight extends LinearOpMode {
             Pose2D pos = odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
             telemetry.addData("Position", data);
+
+            telemetryAprilTag();
+
 
             telemetry.update();
 
@@ -257,22 +275,6 @@ public class PinpointAutoRight extends LinearOpMode {
 
     }
 
-    public void initOdo() {
-        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
-        odo.setOffsets(0, -180.0); //these are tuned for 3110-0002-0001 Product Insight #1
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
-
-        odo.resetPosAndIMU();
-
-        Pose2D newPose = new Pose2D(DistanceUnit.INCH, 60, 10, AngleUnit.DEGREES, 180);
-        odo.setPosition(newPose);
-        odo.update();
-
-        //nav.setXYCoefficients(0.02,0.002,0.0,DistanceUnit.MM,12);
-        //nav.setYawCoefficients(1,0,0.0, AngleUnit.DEGREES,2);
-        nav.setDriveType(DriveToPoint.DriveType.MECANUM);
-    }
 
     public void odoTelemetry() {
 
@@ -327,7 +329,7 @@ public class PinpointAutoRight extends LinearOpMode {
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
                 Pose2D newPose = new Pose2D(DistanceUnit.INCH,
-                        detection.robotPose.getPosition().x, detection.robotPose.getPosition().y, AngleUnit.DEGREES, detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES));
+                        detection.robotPose.getPosition().y, -detection.robotPose.getPosition().x, AngleUnit.DEGREES, detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES));
                 return newPose;
             }
         }
