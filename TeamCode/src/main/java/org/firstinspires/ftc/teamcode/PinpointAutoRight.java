@@ -13,12 +13,16 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 
+import java.util.List;
 import java.util.Locale;
 
 @Autonomous(name="localizeWithTag", group="Pinpoint")
@@ -33,6 +37,11 @@ public class PinpointAutoRight extends LinearOpMode {
 
     VisionPortal visionPortal;
     AprilTagProcessor tagProcessor;
+
+    private Position cameraPosition = new Position(DistanceUnit.INCH,
+            0, 0, 0, 0);
+    private YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
+            0, -90, 0, 0);
 
     static final double cameraOffsetY = -127.0;
     static final double cameraOffsetX = -203.2;
@@ -83,40 +92,42 @@ public class PinpointAutoRight extends LinearOpMode {
         resetRuntime();
 
         while (opModeIsActive()) {
+            telemetryAprilTag();
+            odo.setPosition(returnAprilTagPose(odo.getPosition()));
             odo.update();
 
-
             // localizing with aprilTags whenever it sees an apriltag
-            if (!tagProcessor.getDetections().isEmpty()) {
-
-                // tag next to observation zone for specimen
-                if (tagProcessor.getDetections().get(0).id == 11 || tagProcessor.getDetections().get(0).id == 14) {
-
-                    if (!tagProcessor.getDetections().isEmpty()) { // checking once again just to be safe ... else it throws an error
-                        // saving the x, y, and heading into variables for ease of access
-                        double X = tagProcessor.getDetections().get(0).ftcPose.x;
-                        double Y = tagProcessor.getDetections().get(0).ftcPose.y;
-                        double H = tagProcessor.getDetections().get(0).ftcPose.yaw;
-                        // printing pose onto the driver station
-                        telemetry.addData("aprilX", X);
-                        telemetry.addData("aprilY", Y);
-                        telemetry.addData("aprilY", H);
-
-                        // localized x, y, and heading = pose from the april tag with 0, 0 in the right corner of field (next to submersible
-                        double lX = (Math.cos(Math.toRadians(H)) * X) + 24; // aprilTag is 24 inches from the size of the game field
-                        lX -= 5; // 5 for offset from camera to middle
-                        double lY = (Math.cos(Math.toRadians(H)) * Y);
-                        double lH = -90 + H; // heading offset by 90 degrees vs odometry
-
-                        // swap y and x because of how it is on pinpoint
-                        startingPos = new Pose2D(DistanceUnit.INCH, lY + 0, lX - 5, AngleUnit.DEGREES, lH);
-
-                        // set this position as the odometry position
-                        odo.setPosition(startingPos);
-                    }
-                }
-            }
-
+//            if (!tagProcessor.getDetections().isEmpty()) {
+//
+//                // tag next to observation zone for specimen
+//                if (tagProcessor.getDetections().get(0).id == 11 || tagProcessor.getDetections().get(0).id == 14) {
+//
+//                    if (!tagProcessor.getDetections().isEmpty()) { // checking once again just to be safe ... else it throws an error
+//                        // saving the x, y, and heading into variables for ease of access
+//                        double X = tagProcessor.getDetections().get(0).ftcPose.x;
+//                        double Y = tagProcessor.getDetections().get(0).ftcPose.y;
+//                        double H = tagProcessor.getDetections().get(0).ftcPose.yaw;
+//                        // printing pose onto the driver station
+//
+//
+//                        // localized x, y, and heading = pose from the april tag with 0, 0 in the right corner of field (next to submersible
+//                        double lX = (Math.cos(Math.toRadians(H)) * X) + 24; // aprilTag is 24 inches from the size of the game field
+//                        lX -= 5; // 5 for offset from camera to middle
+//                        double lY = (Math.cos(Math.toRadians(H)) * Y);
+//                        double lH = -90 + H; // heading offset by 90 degrees vs odometry
+//
+//                        telemetry.addData("aprilX", lX);
+//                        telemetry.addData("aprilY", lY);
+//                        telemetry.addData("aprilY", lH);
+//
+//                        // swap y and x because of how it is on pinpoint
+//                        startingPos = new Pose2D(DistanceUnit.INCH, lX, lY, AngleUnit.DEGREES, lH);
+//
+//                        // set this position as the odometry position
+//                        odo.setPosition(startingPos);
+//                    }
+//                }
+//            }
 
             switch (stateMachine) {
                 case WAITING_FOR_START:
@@ -215,6 +226,7 @@ public class PinpointAutoRight extends LinearOpMode {
                 .setDrawCubeProjection(true)
                 .setDrawTagID(true)
                 .setDrawTagOutline(true)
+                .setCameraPose(cameraPosition, cameraOrientation)
                 .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
                 .build();
 
@@ -253,6 +265,9 @@ public class PinpointAutoRight extends LinearOpMode {
 
         odo.resetPosAndIMU();
 
+        Pose2D newPose = new Pose2D(DistanceUnit.INCH, 60, 10, AngleUnit.DEGREES, 180);
+        odo.setPosition(newPose);
+        odo.update();
 
         //nav.setXYCoefficients(0.02,0.002,0.0,DistanceUnit.MM,12);
         //nav.setYawCoefficients(1,0,0.0, AngleUnit.DEGREES,2);
@@ -273,4 +288,53 @@ public class PinpointAutoRight extends LinearOpMode {
 
         telemetry.update();
     }
-}
+
+    private void telemetryAprilTag() {
+
+        List<AprilTagDetection> currentDetections = tagProcessor.getDetections();
+        telemetry.addData("# AprilTags Detected", currentDetections.size());
+
+// Step through the list of detections and display info for each one.
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
+                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
+                        detection.robotPose.getPosition().x,
+                        detection.robotPose.getPosition().y,
+                        detection.robotPose.getPosition().z));
+                telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
+                        detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES),
+                        detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES),
+                        detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES)));
+            } else {
+                telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
+                telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
+            }
+        }   // end for() loop
+
+// Add "key" information to telemetry
+        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
+        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
+
+    }
+
+    private Pose2D returnAprilTagPose(Pose2D current) {
+
+        List<AprilTagDetection> currentDetections = tagProcessor.getDetections();
+        telemetry.addData("# AprilTags Detected", currentDetections.size());
+
+// Step through the list of detections and change our current position if we see one
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.metadata != null) {
+                Pose2D newPose = new Pose2D(DistanceUnit.INCH,
+                        detection.robotPose.getPosition().x, detection.robotPose.getPosition().y, AngleUnit.DEGREES, detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES));
+                return newPose;
+            }
+        }
+        return current;
+    }
+
+    }
+
+
+
