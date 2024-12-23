@@ -40,7 +40,7 @@ public class PinpointAutoRight extends LinearOpMode {
     GoBildaPinpointDriver odo; // Declare OpMode member for the Odometry Computer
     DriveToPoint nav = new DriveToPoint(this); //OpMode member for the point-to-point navigation class
 
-    //int[] viewIds = VisionPortal.makeMultiPortalView(1, VisionPortal.MultiPortalLayout.VERTICAL);
+    //int[] viewIds = VisionPortal.makeMultiPortalView(1, VisionPortal.MultiPortalLayout.VERTICAL); // used for multiple vision portals, but we have only 1 for now
 
     enum StateMachine {
         WAITING_FOR_START,
@@ -52,6 +52,7 @@ public class PinpointAutoRight extends LinearOpMode {
         DRIVE_TO_TARGET_5
     }
 
+    // THE POSITIONS THE ROBOT WILL DRIVE TO IN AUTO
     static Pose2D startingPos = null;
     static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM, 707, 195, AngleUnit.DEGREES, 0);
     static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, 200, -658, AngleUnit.DEGREES, -138.13);
@@ -61,54 +62,21 @@ public class PinpointAutoRight extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
+        // SPLIT UP INTO INIT METHODS TO CLEAN UP MAIN METHOD
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
-        initPortal();
-
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
-
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
-        odo.setOffsets(0, -180.0); //these are tuned for 3110-0002-0001 Product Insight #1
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
-
-        odo.resetPosAndIMU();
-
-
-
-        //nav.setXYCoefficients(0.02,0.002,0.0,DistanceUnit.MM,12);
-        //nav.setYawCoefficients(1,0,0.0, AngleUnit.DEGREES,2);
-        nav.setDriveType(DriveToPoint.DriveType.MECANUM);
+        initPortal(); // initialize the apriltag portal
+        initMotor(); // initialize the drive wheel motors
+        initOdo(); // initialize odometry
 
         StateMachine stateMachine;
         stateMachine = StateMachine.WAITING_FOR_START;
 
-        telemetry.addData("Status", "Initialized");
-        telemetry.addData("X offset", odo.getXOffset());
-        telemetry.addData("Y offset", odo.getYOffset());
-        telemetry.addData("Device Version Number:", odo.getDeviceVersion());
-        telemetry.addData("Device Scalar", odo.getYawScalar());
+        odoTelemetry(); // initialized telemetry for the odo + tells us it is initialized
 
-        telemetry.addData("x", odo.getPosX());
-        telemetry.addData("y", odo.getPosY());
-
-        telemetry.update();
-
-        boolean attarget = false;
+        boolean atTarget = false; // boolean to determine whether the robot is at stationary position or not. if so, then all the wheels will have 0 power
 
         // Wait for the game to start (driver presses START)
         waitForStart();
@@ -117,30 +85,37 @@ public class PinpointAutoRight extends LinearOpMode {
         while (opModeIsActive()) {
             odo.update();
 
+
+            // localizing with aprilTags whenever it sees an apriltag
             if (!tagProcessor.getDetections().isEmpty()) {
-                double R = tagProcessor.getDetections().get(0).ftcPose.range;
-                double H = tagProcessor.getDetections().get(0).ftcPose.yaw;
 
-                double Y = Math.cos(Math.toRadians(H)) * R;
-                double X = tagProcessor.getDetections().get(0).ftcPose.x;
+                // tag next to observation zone for specimen
+                if (tagProcessor.getDetections().get(0).id == 11 || tagProcessor.getDetections().get(0).id == 14) {
 
+                    if (!tagProcessor.getDetections().isEmpty()) { // checking once again just to be safe ... else it throws an error
+                        // saving the x, y, and heading into variables for ease of access
+                        double X = tagProcessor.getDetections().get(0).ftcPose.x;
+                        double Y = tagProcessor.getDetections().get(0).ftcPose.y;
+                        double H = tagProcessor.getDetections().get(0).ftcPose.yaw;
+                        // printing pose onto the driver station
+                        telemetry.addData("aprilX", X);
+                        telemetry.addData("aprilY", Y);
+                        telemetry.addData("aprilY", H);
 
-                telemetry.addData("aprilX", X);
-                telemetry.addData("aprilY", Y);
-                telemetry.addData("aprilY", H);
-                //double lX = Y*Math.tan();
+                        // localized x, y, and heading = pose from the april tag with 0, 0 in the right corner of field (next to submersible
+                        double lX = (Math.cos(Math.toRadians(H)) * X) + 24; // aprilTag is 24 inches from the size of the game field
+                        lX -= 5; // 5 for offset from camera to middle
+                        double lY = (Math.cos(Math.toRadians(H)) * Y);
+                        double lH = -90 + H; // heading offset by 90 degrees vs odometry
 
-                double lX = (Math.cos(Math.toRadians(H))*X)+24;
-                double lY = (Math.cos(Math.toRadians(H))*Y);
-                double lH = -90+H;
+                        // swap y and x because of how it is on pinpoint
+                        startingPos = new Pose2D(DistanceUnit.INCH, lY + 0, lX - 5, AngleUnit.DEGREES, lH);
 
-                //lX = 24+tagProcessor.getDetections().get(0).ftcPose.x;
-
-                startingPos = new Pose2D(DistanceUnit.INCH, lY, lX-5, AngleUnit.DEGREES, lH);
-
-                odo.setPosition(startingPos);
+                        // set this position as the odometry position
+                        odo.setPosition(startingPos);
+                    }
+                }
             }
-
 
 
             switch (stateMachine) {
@@ -194,7 +169,7 @@ public class PinpointAutoRight extends LinearOpMode {
                     }
                     break;
                 case AT_TARGET:
-                    attarget = true;
+                    atTarget = true;
                     leftFrontDrive.setPower(0);
                     rightBackDrive.setPower(0);
                     leftBackDrive.setPower(0);
@@ -202,8 +177,7 @@ public class PinpointAutoRight extends LinearOpMode {
                     break;
             }
 
-
-            if (!attarget) {
+            if (!atTarget) {
                 //nav calculates the power to set to each motor in a mecanum or tank drive. Use nav.getMotorPower to find that value.
                 leftFrontDrive.setPower(nav.getMotorPower(DriveToPoint.DriveMotor.LEFT_FRONT));
                 rightFrontDrive.setPower(nav.getMotorPower(DriveToPoint.DriveMotor.RIGHT_FRONT));
@@ -254,5 +228,49 @@ public class PinpointAutoRight extends LinearOpMode {
 
     }
 
+    public void initMotor() {
 
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+    }
+
+    public void initOdo() {
+        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+        odo.setOffsets(0, -180.0); //these are tuned for 3110-0002-0001 Product Insight #1
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+
+        odo.resetPosAndIMU();
+
+
+        //nav.setXYCoefficients(0.02,0.002,0.0,DistanceUnit.MM,12);
+        //nav.setYawCoefficients(1,0,0.0, AngleUnit.DEGREES,2);
+        nav.setDriveType(DriveToPoint.DriveType.MECANUM);
+    }
+
+    public void odoTelemetry() {
+
+        // initialized telemetry for the odo + tells us it is initialized
+        telemetry.addData("Status", "Initialized");
+        telemetry.addData("X offset", odo.getXOffset());
+        telemetry.addData("Y offset", odo.getYOffset());
+        telemetry.addData("Device Version Number:", odo.getDeviceVersion());
+        telemetry.addData("Device Scalar", odo.getYawScalar());
+
+        telemetry.addData("x", odo.getPosX());
+        telemetry.addData("y", odo.getPosY());
+
+        telemetry.update();
+    }
 }
