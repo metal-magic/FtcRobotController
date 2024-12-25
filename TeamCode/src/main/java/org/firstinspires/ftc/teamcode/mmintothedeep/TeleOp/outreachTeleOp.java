@@ -30,20 +30,10 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
-
-import org.firstinspires.ftc.teamcode.mmcenterstage.HardwareTesting.LeftStrafeTest;
-import org.firstinspires.ftc.teamcode.mmcenterstage.other.OldSensorColor2;
-import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
 
 import java.util.Date;
 

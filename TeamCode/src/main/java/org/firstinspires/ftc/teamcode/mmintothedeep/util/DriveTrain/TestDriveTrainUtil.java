@@ -5,9 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.RobotHardware;
-import org.firstinspires.ftc.teamcode.mmintothedeep.util.UtilityValues;
-
 @Autonomous(name="Test: Drive Train Util Class")
 @Disabled
 public class TestDriveTrainUtil extends LinearOpMode {
