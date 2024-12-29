@@ -27,12 +27,12 @@ public class servoTest extends OpMode {
     @Override
     public void init() {
         testServo = hardwareMap.servo.get("testServo");
+//        testServo.setPosition(0);
     }
 
     @Override
     public void loop() {
 
-        telemetry.update();
 
         // servo controls
         if (gamepad1.right_bumper) {
@@ -47,6 +47,6 @@ public class servoTest extends OpMode {
 
         // add to telemetry
         telemetry.addData("Servo position", testServo.getPosition());
-
+        telemetry.update();
     }
 }

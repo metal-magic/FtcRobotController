@@ -272,7 +272,6 @@ public class PinpointAutoRight extends LinearOpMode {
 
     }
 
-
     public void odoTelemetry() {
 
         // initialized telemetry for the odo + tells us it is initialized
@@ -333,7 +332,4 @@ public class PinpointAutoRight extends LinearOpMode {
         return current;
     }
 
-    }
-
-
-
+}
