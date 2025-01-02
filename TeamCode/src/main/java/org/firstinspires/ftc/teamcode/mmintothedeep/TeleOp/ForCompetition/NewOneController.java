@@ -250,9 +250,9 @@ public class NewOneController extends OpMode {
             wasPresetPressed = gamepad1.b;
 
             if (gamepad2.left_bumper) {
-                gripperServo1.setPosition(0.15);
-            } else if (gamepad2.right_bumper) {
                 gripperServo1.setPosition(0);
+            } else if (gamepad2.right_bumper) {
+                gripperServo1.setPosition(0.3);
             }
 
             if (gamepad2.y) {
@@ -267,10 +267,18 @@ public class NewOneController extends OpMode {
                 pivotServo.setPosition(0.4661);
             } else if (gamepad2.dpad_down) {
                 pivotServo.setPosition(0.115);
-            } else if (gamepad2.dpad_right) {
-                pivotServo.setPosition(0.225);
+            }
+            if (gamepad2.dpad_right) {
+                turnServo.setPosition(0.098);
+                pivotServo.setPosition(0.7083);
+                gripperServo1.setPosition(0);
             } else if (gamepad2.dpad_left) {
-                pivotServo.setPosition(0.31);
+                setTime = System.currentTimeMillis();
+                turnServo.setPosition(0.098);
+                gripperServo1.setPosition(0);
+                if (System.currentTimeMillis() - setTime > 300) {
+                    pivotServo.setPosition(0.7583);
+                }
             }
 
         if (linearSlideMotor.getCurrentPosition() < 4000 && gamepad2.right_trigger >= 0.1F) {
@@ -355,22 +363,22 @@ public class NewOneController extends OpMode {
         if (gamepad2.back) {
             intake = true;
         } else if (intake) {
-            gripperServo1.setPosition(0);
+            gripperServo1.setPosition(0.3);
             setTime = System.currentTimeMillis();
             if (System.currentTimeMillis() - setTime > 500) {
-                pivotServo.setPosition(0.52);
+                pivotServo.setPosition(0.4072);
                 setTime = System.currentTimeMillis();
             }
             if (System.currentTimeMillis()-setTime > 300) {
-                turnServo.setPosition(1);
+                turnServo.setPosition(0.76);
                 setTime = System.currentTimeMillis();
             }
             if (System.currentTimeMillis() - setTime > 200) {
-                gripperServo1.setPosition(0.15);
+                gripperServo1.setPosition(0);
                 setTime = System.currentTimeMillis();
             }
             if (System.currentTimeMillis() - setTime > 100) {
-                turnServo.setPosition(0);
+                turnServo.setPosition(0.098);
             }
             intake = false;
         }
