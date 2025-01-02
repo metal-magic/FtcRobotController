@@ -264,9 +264,9 @@ public class NewOneController extends OpMode {
                     pivotServo.setPosition(pivotServo.getPosition() - 0.009);
                 }
             } else if (gamepad2.dpad_up) {
-                pivotServo.setPosition(0.4661);
+                pivotServo.setPosition(0.4072);
             } else if (gamepad2.dpad_down) {
-                pivotServo.setPosition(0.115);
+                pivotServo.setPosition(0.7583);
             }
             if (gamepad2.dpad_right) {
                 turnServo.setPosition(0.098);
