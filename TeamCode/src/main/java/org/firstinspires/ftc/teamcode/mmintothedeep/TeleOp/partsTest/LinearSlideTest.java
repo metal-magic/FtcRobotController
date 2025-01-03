@@ -106,7 +106,7 @@ public class LinearSlideTest extends OpMode {
 
 
 
-            if (linearSlideMotor.getCurrentPosition() < 4000 && gamepad2.right_trigger >= 0.1F) {
+            if (linearSlideMotor.getCurrentPosition() < 10000 && gamepad2.right_trigger >= 0.1F) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 linearSlideMotor.setPower(1);

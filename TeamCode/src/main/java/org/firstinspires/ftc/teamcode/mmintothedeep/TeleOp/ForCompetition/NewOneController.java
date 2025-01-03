@@ -281,7 +281,7 @@ public class NewOneController extends OpMode {
                 }
             }
 
-        if (linearSlideMotor.getCurrentPosition() < 4000 && gamepad2.right_trigger >= 0.1F) {
+        if (linearSlideMotor.getCurrentPosition() < 10000 && gamepad2.right_trigger >= 0.1F) {
             linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             linearSlideMotor.setPower(1);
@@ -300,7 +300,7 @@ public class NewOneController extends OpMode {
             if (linearSlideMotor.getCurrentPosition() > 10) {
                 linearSlideMotor.setPower(-0.7);
             } else {
-                pivotServo.setPosition(0.225);
+                pivotServo.setPosition(0.7583);
                 linearSlideMotor.setPower(0);
                 moveSlideDown = false;
             }
