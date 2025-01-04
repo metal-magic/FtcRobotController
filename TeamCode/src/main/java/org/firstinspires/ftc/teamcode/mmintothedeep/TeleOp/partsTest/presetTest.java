@@ -34,10 +34,13 @@ import android.util.Size;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.mmintothedeep.UtilityValues;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /*
   =========================================
@@ -45,10 +48,13 @@ import java.util.Objects;
   =========================================
  */
 
-@TeleOp(name = "linearSlideTest")
-public class LinearSlideTest extends OpMode {
+@TeleOp(name = "presetTest")
+public class presetTest extends OpMode {
 
-    public DcMotor linearSlideMotor = null;
+    public Servo gripperServo1 = null;
+    // public Servo gripperServo2 = null;
+    public Servo pivotServo = null;
+    public Servo turnServo = null;
 
     public Date previousTime = new Date();
 
@@ -71,15 +77,18 @@ public class LinearSlideTest extends OpMode {
 
     static final double SPEED = UtilityValues.SPEED; // Motor Power setting
 
+    boolean intake = false;
+    long setTime = 0;
     @Override
     public void init() {
 
-        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+        gripperServo1 = hardwareMap.servo.get("gripperServo1");
+        // gripperServo2 = hardwareMap.servo.get("gripperServo2");
+        pivotServo = hardwareMap.servo.get("pivotServo");
 
-        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turnServo = hardwareMap.servo.get("turnServo");
 
-        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
+        pivotServo.setPosition(0.7083);
 
     }
 
@@ -90,38 +99,60 @@ public class LinearSlideTest extends OpMode {
         double motorSpeed;
 //        fakeServo.setPosition(1);
 //        fakeServo2.setPosition(1);
-
-        telemetry.addData("Cutpower", CutPower);
-        if (gamepad1.back && !CutPower) {
-            // Button cuts all power except linear slides/actuators
-            CutPower = true;
+        if (gamepad2.dpad_right) {
+            turnServo.setPosition(0.098);
+            pivotServo.setPosition(0.7083);
+            gripperServo1.setPosition(0);
+        } else if (gamepad2.dpad_left) {
+            turnServo.setPosition(0.098);
+            gripperServo1.setPosition(0);
+//            try {
+//                Thread.sleep(300);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+            pivotServo.setPosition(0.77);
         }
-        if (gamepad1.back && CutPower) {
-            CutPower = false;
-        }
-
-        if (!CutPower) {
-            telemetry.addData("slide", linearSlideMotor.getCurrentPosition());
-
-
-
-                //limit 3887
-            if (linearSlideMotor.getCurrentPosition() < 10000 && gamepad2.right_trigger >= 0.1F) {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(1);
-            } else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad2.left_trigger >= 0.1F) {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(-1);
-            } else {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(0);
+        if (gamepad2.back) {
+            intake = true;
+        } else if (intake) {
+            gripperServo1.setPosition(0.3);
+            setTime = System.currentTimeMillis();
+            while (System.currentTimeMillis() - setTime <= 500) {
+                setTime = System.currentTimeMillis();
             }
-
+            if (System.currentTimeMillis() - setTime >= 500) {
+                pivotServo.setPosition(0.4072);
+                setTime = System.currentTimeMillis();
+            }
+            while (System.currentTimeMillis() - setTime <= 300) {
+                setTime = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis()-setTime >= 300) {
+                turnServo.setPosition(0.76);
+                setTime = System.currentTimeMillis();
+            }
+            while (System.currentTimeMillis() - setTime <= 200) {
+                setTime = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - setTime >= 200) {
+                gripperServo1.setPosition(0);
+                setTime = System.currentTimeMillis();
+            }
+            while (System.currentTimeMillis() - setTime <= 200) {
+                setTime = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - setTime >= 200) {
+                pivotServo.setPosition(0.5);
+            }
+            while (System.currentTimeMillis() - setTime <= 100) {
+                setTime = System.currentTimeMillis();
+            }
+            if (System.currentTimeMillis() - setTime >= 100) {
+                turnServo.setPosition(0.098);
+            }
+            intake = false;
         }
-
 
         telemetry.update();
 
