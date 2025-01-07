@@ -298,6 +298,7 @@ public class TeleOpComp2 extends LinearOpMode {
                 slideMidDown = false;
                 slideDown = false;
                 slideUp = false;
+                clipServo.setPosition(0);
             }
 
             if (slideMidUp) {
@@ -305,6 +306,7 @@ public class TeleOpComp2 extends LinearOpMode {
                     linearSlideMotor.setPower(0.8);
                 } else {
                     linearSlideMotor.setPower(0);
+                    slideMidUp = false;
                 }
             }
 
@@ -320,6 +322,8 @@ public class TeleOpComp2 extends LinearOpMode {
                     linearSlideMotor.setPower(-0.8);
                 } else {
                     linearSlideMotor.setPower(0);
+                    slideDown = false;
+                    clipServo.setPosition(0.3);
                 }
             }
 
