@@ -189,7 +189,7 @@ public class TeleOpComp2 extends LinearOpMode {
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 linearSlideMotor.setPower(-0.8);
             } else {
-                if (!slideUp && !slideDown) {
+                if (!slideUp && !slideDown && !slideMidUp && !slideMidDown) {
                     linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                     linearSlideMotor.setPower(0);
                 }
@@ -210,6 +210,8 @@ public class TeleOpComp2 extends LinearOpMode {
 
                 slideUp = true;
                 slideDown = false;
+                slideMidUp = false;
+                slideMidDown = false;
             }
             // align position
             if (gamepad2.dpad_right) {
@@ -222,6 +224,8 @@ public class TeleOpComp2 extends LinearOpMode {
 
                 slideDown = true;
                 slideUp = false;
+                slideMidUp = false;
+                slideMidDown = false;
 
             }
             // picking up for specimen into human player
@@ -291,15 +295,31 @@ public class TeleOpComp2 extends LinearOpMode {
 
             if (gamepad2.left_trigger > 0.3) {
                 slideMidUp = true;
+                slideMidDown = false;
+                slideDown = false;
+                slideUp = false;
             }
 
-            while (linearSlideMotor.getCurrentPosition() < 3400) {
-                linearSlideMotor.setPower(0.8);
+            if (slideMidUp) {
+                if (linearSlideMotor.getCurrentPosition() < 3400) {
+                    linearSlideMotor.setPower(0.8);
+                } else {
+                    linearSlideMotor.setPower(0);
+                }
             }
 
             if (gamepad2.right_trigger > 0.3) {
-                while (linearSlideMotor.getCurrentPosition() > 2400) {
+                slideMidDown = true;
+                slideDown = false;
+                slideUp = false;
+                slideMidUp = false;
+            }
+
+            if (slideMidDown) {
+                if (linearSlideMotor.getCurrentPosition() > 2400) {
                     linearSlideMotor.setPower(-0.8);
+                } else {
+                    linearSlideMotor.setPower(0);
                 }
             }
 
