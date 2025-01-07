@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp;
+package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.other;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
