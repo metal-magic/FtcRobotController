@@ -83,23 +83,24 @@ public class TeleOpComp2 extends LinearOpMode {
     boolean slideUp = false;
     boolean slideDown = false;
 
-    static final double slidePosDown = 10;
-    static final double slidePosSpec = 2400;
-    static final double slidePosSamp = 4600;
+    static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
+    static final double slidePosSpecDown = UtilityValues.SLIDE_POS_SPEC_DOWN;
+    static final double slidePosSpecUp = UtilityValues.SLIDE_POS_SPEC_UP;
+    static final double slidePosSamp = UtilityValues.SLIDE_POS_SAMP;
 
-    static final double pivotPosDown = 0.76;
-    static final double pivotPosHover = 0.7;
-    static final double pivotPosFloat = 0.5;
-    static final double pivotPosTransfer = 0.39;
+    static final double pivotPosDown = UtilityValues.PIVOT_POS_DOWN;
+    static final double pivotPosHover = UtilityValues.PIVOT_POS_HOVER;
+    static final double pivotPosFloat = UtilityValues.PIVOT_POS_FLOAT;
+    static final double pivotPosTransfer = UtilityValues.PIVOT_POS_TRANSFER;
 
-    static final double turnPosDown = 0.1;
-    static final double turnPosTransfer = 0.77;
+    static final double turnPosDown = UtilityValues.TURN_POS_DOWN;
+    static final double turnPosTransfer = UtilityValues.TURN_POS_TRANSFER;
 
-    static final double flipPosDown = 0;
-    static final double flipPosScore = 0.76;
+    static final double flipPosDown = UtilityValues.FLIP_POS_DOWN;
+    static final double flipPosScore = UtilityValues.FLIP_POS_SCORE;
 
-    static final double gripperPosClose = 0.3;
-    static final double gripperPosOpen = 0;
+    static final double gripperPosClose = UtilityValues.GRIPPER_POS_CLOSE;
+    static final double gripperPosOpen = UtilityValues.GRIPPER_POS_OPEN;
 
     boolean slideMidUp = false;
     boolean slideMidDown = false;
@@ -162,6 +163,8 @@ public class TeleOpComp2 extends LinearOpMode {
 //            if (gamepad1.left_trigger >= 0.3F) {
 //                gripperServo1.setPosition(gripperServo1.getPosition()-0.005);
 //            }
+
+            // Manual control
             if (gamepad1.right_bumper) {
                 turnServo.setPosition(turnServo.getPosition()+0.005);
             }
@@ -210,7 +213,7 @@ public class TeleOpComp2 extends LinearOpMode {
 
                 slideUp = true;
                 slideDown = false;
-                slideMidUp = false;
+                slideMidUp = true;
                 slideMidDown = false;
             }
             // align position
@@ -240,18 +243,18 @@ public class TeleOpComp2 extends LinearOpMode {
             }
             // pick up
             if (gamepad2.dpad_down) {
+                gripperServo1.setPosition(gripperPosOpen);
                 turnServo.setPosition(turnPosDown);
-
                 flipServo.setPosition(flipPosDown);
-
+                sleep(100);
 //                pivotServo.setPosition(pivotPosDown);
                 sleep(200);
                 gripperServo1.setPosition(gripperPosClose);
 
             }
 
-            // slide up and score
-            if (slideUp) {
+            // slide up to basket height
+            if (slideUp && !slideMidUp) {
                 linearSlideMotor.setPower(1);
                 if (linearSlideMotor.getCurrentPosition() > slidePosSamp) {
                     slideUp = false;
@@ -259,7 +262,7 @@ public class TeleOpComp2 extends LinearOpMode {
                 }
             }
             // slide down
-            if (slideDown) {
+            if (slideDown && !slideMidDown) {
                 if (linearSlideMotor.getCurrentPosition() < slidePosDown) {
                     slideDown = false;
                     linearSlideMotor.setPower(slidePosDown);
@@ -272,7 +275,7 @@ public class TeleOpComp2 extends LinearOpMode {
             if (gamepad2.left_bumper) {
                 gripperServo1.setPosition(gripperPosClose);
             }
-            if (gamepad2.left_bumper) {
+            if (gamepad2.right_bumper) {
                 gripperServo1.setPosition(gripperPosOpen);
             }
 
@@ -288,12 +291,12 @@ public class TeleOpComp2 extends LinearOpMode {
                 clipServo.setPosition(0);
             }
 
-            // Opens specimen clawd
+            // Opens specimen claw
             if (gamepad2.b) {
                 clipServo.setPosition(0.3);
             }
 
-            if (gamepad2.left_trigger > 0.3) {
+            if (gamepad2.right_trigger > 0.3) {
                 slideMidUp = true;
                 slideMidDown = false;
                 slideDown = false;
@@ -302,15 +305,18 @@ public class TeleOpComp2 extends LinearOpMode {
             }
 
             if (slideMidUp) {
-                if (linearSlideMotor.getCurrentPosition() < 3400) {
+                if (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
                     linearSlideMotor.setPower(0.8);
                 } else {
                     linearSlideMotor.setPower(0);
                     slideMidUp = false;
+                    if (slideUp) {
+                        sleep(1500);
+                    }
                 }
             }
 
-            if (gamepad2.right_trigger > 0.3) {
+            if (gamepad2.left_trigger > 0.3) {
                 slideMidDown = true;
                 slideDown = false;
                 slideUp = false;
@@ -318,7 +324,7 @@ public class TeleOpComp2 extends LinearOpMode {
             }
 
             if (slideMidDown) {
-                if (linearSlideMotor.getCurrentPosition() > 2400) {
+                if (linearSlideMotor.getCurrentPosition() > slidePosSpecDown) {
                     linearSlideMotor.setPower(-0.8);
                 } else {
                     linearSlideMotor.setPower(0);
