@@ -4,10 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.mmintothedeep.UtilityValues;
 import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.DriveToPoint;
 import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.GoBildaPinpointDriver;
 
@@ -36,12 +38,31 @@ public class CompetitionAutoRight extends LinearOpMode {
         DRIVE_TO_TARGET_5
     }
 
-    static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM,0,0,AngleUnit.DEGREES,0);
-    static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, 2600, -20, AngleUnit.DEGREES, -90);
+    static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
+    static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM,-650,-290,AngleUnit.DEGREES,0);
+    static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, -600, -290, AngleUnit.DEGREES, 0);
     static final Pose2D TARGET_3 = new Pose2D(DistanceUnit.MM,2600,-2600, AngleUnit.DEGREES,-90);
     static final Pose2D TARGET_4 = new Pose2D(DistanceUnit.MM, 100, -2600, AngleUnit.DEGREES, 90);
     static final Pose2D TARGET_5 = new Pose2D(DistanceUnit.MM, 100, 0, AngleUnit.DEGREES, 0);
 
+    static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
+    static final double slidePosSpecDown = UtilityValues.SLIDE_POS_SPEC_DOWN;
+    static final double slidePosSpecUp = UtilityValues.SLIDE_POS_SPEC_UP;
+    static final double slidePosUp = UtilityValues.SLIDE_POS_SAMP;
+
+    static final double flipPosDown = UtilityValues.FLIP_POS_DOWN;
+    static final double flipPosScore = UtilityValues.FLIP_POS_SCORE;
+
+    static final double clipPosClose = UtilityValues.CLIP_POS_CLOSE;
+    static final double clipPosOpen = UtilityValues.CLIP_POS_OPEN;
+
+    boolean slideUp = false;
+    boolean slideDown = false;
+
+    // public Servo gripperServo2 = null;
+    public Servo clipServo = null;
+    public Servo flipServo = null;
+    public DcMotor linearSlideMotor = null;
 
     @Override
     public void runOpMode() {
@@ -49,18 +70,28 @@ public class CompetitionAutoRight extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
+        clipServo = hardwareMap.servo.get("clipServo");
+
+        flipServo = hardwareMap.servo.get("flipServo");
+
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFrontDrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         leftBackDrive   = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightBackDrive  = hardwareMap.get(DcMotor.class, "rightBackDrive");
 
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        linearSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
         odo.setOffsets(0, 130); //these are tuned for 3110-0002-0001 Product Insight #1
@@ -68,6 +99,7 @@ public class CompetitionAutoRight extends LinearOpMode {
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         odo.resetPosAndIMU();
+
 
         //nav.setXYCoefficients(0.02,0.002,0.0,DistanceUnit.MM,12);
         //nav.setYawCoefficients(1,0,0.0, AngleUnit.DEGREES,2);
@@ -81,8 +113,11 @@ public class CompetitionAutoRight extends LinearOpMode {
         telemetry.addData("Y offset", odo.getYOffset());
         telemetry.addData("Device Version Number:", odo.getDeviceVersion());
         telemetry.addData("Device Scalar", odo.getYawScalar());
+        telemetry.addData("Xpos", odo.getEncoderX());
+        telemetry.addData("Ypos", odo.getEncoderY());
         telemetry.update();
 
+        clipServo.setPosition(clipPosClose);
         // Wait for the game to start (driver presses START)
         waitForStart();
         resetRuntime();
@@ -93,6 +128,7 @@ public class CompetitionAutoRight extends LinearOpMode {
             switch (stateMachine){
                 case WAITING_FOR_START:
                     //the first step in the autonomous
+                    odo.setPosition(startingPos);
                     stateMachine = StateMachine.DRIVE_TO_TARGET_1;
                     break;
                 case DRIVE_TO_TARGET_1:
@@ -103,14 +139,30 @@ public class CompetitionAutoRight extends LinearOpMode {
                      */
                     if (nav.driveTo(odo.getPosition(), TARGET_1, 0.4, 0)){
                         telemetry.addLine("at position #1!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_1;
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_2;
+                        while (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
+                            linearSlideMotor.setPower(1);
+                        }
+                        linearSlideMotor.setPower(0);
+                    }
+                    if (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
+                        linearSlideMotor.setPower(0.8);
+                    } else if (linearSlideMotor.getCurrentPosition() > slidePosSpecDown) {
+                        linearSlideMotor.setPower(-0.8);
+                    } else {
+                        linearSlideMotor.setPower(0);
                     }
                     break;
                 case DRIVE_TO_TARGET_2:
                     //drive to the second target
                     if (nav.driveTo(odo.getPosition(), TARGET_2, 0.7, 0)){
                         telemetry.addLine("at position #2!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_3;
+                        stateMachine = StateMachine.AT_TARGET;
+                        while (linearSlideMotor.getCurrentPosition() > slidePosSpecDown) {
+                            linearSlideMotor.setPower(-1);
+                        }
+                        linearSlideMotor.setPower(0);
+                        clipServo.setPosition(clipPosOpen);
                     }
                     break;
                 case DRIVE_TO_TARGET_3:

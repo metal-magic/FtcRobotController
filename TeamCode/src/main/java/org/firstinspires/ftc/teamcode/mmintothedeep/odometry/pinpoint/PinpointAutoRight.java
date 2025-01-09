@@ -257,18 +257,17 @@ public class PinpointAutoRight extends LinearOpMode {
 
     public void initMotor() {
 
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFrontDrive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
+        leftBackDrive   = hardwareMap.get(DcMotor.class, "leftBackDrive");
+        rightBackDrive  = hardwareMap.get(DcMotor.class, "rightBackDrive");
 
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 

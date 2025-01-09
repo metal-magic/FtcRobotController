@@ -57,7 +57,7 @@ public class SensorPinpointDriveToPoint extends LinearOpMode {
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        //leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");

@@ -59,15 +59,15 @@ public class motorDirections extends OpMode {
     @Override
     public void init() {
 
-        motorFrontLeft = hardwareMap.dcMotor.get("leftFrontDrive");
-        motorBackLeft = hardwareMap.dcMotor.get("leftBackDrive");
-        motorFrontRight = hardwareMap.dcMotor.get("rightFrontDrive");
-        motorBackRight = hardwareMap.dcMotor.get("rightBackDrive");
+        motorFrontLeft  = hardwareMap.get(DcMotor.class, "leftFrontDrive");
+        motorFrontRight = hardwareMap.get(DcMotor.class, "rightFrontDrive");
+        motorBackLeft   = hardwareMap.get(DcMotor.class, "leftBackDrive");
+        motorBackRight  = hardwareMap.get(DcMotor.class, "rightBackDrive");
 
         motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
 //        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 //        motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);

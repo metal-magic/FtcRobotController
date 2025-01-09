@@ -84,7 +84,8 @@ public class ToggleTest extends LinearOpMode {
     boolean slideDown = false;
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
-    static final double slidePosSpec = UtilityValues.SLIDE_POS_SPEC;
+    static final double slidePosSpecDown = UtilityValues.SLIDE_POS_SPEC_DOWN;
+    static final double slidePosSpecUp = UtilityValues.SLIDE_POS_SPEC_UP;
     static final double slidePosSamp = UtilityValues.SLIDE_POS_SAMP;
 
     static final double pivotPosDown = UtilityValues.PIVOT_POS_DOWN;
