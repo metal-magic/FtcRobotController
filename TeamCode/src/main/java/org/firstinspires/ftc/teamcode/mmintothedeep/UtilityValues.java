@@ -60,16 +60,16 @@ public class UtilityValues {
     public static final double SLIDE_POS_SPEC_UP = 2850;
     public static final double SLIDE_POS_SAMP = 4600;
 
-    public static final double PIVOT_POS_DOWN = 0.76;
-    public static final double PIVOT_POS_HOVER = 0.7;
-    public static final double PIVOT_POS_FLOAT = 0.5;
-    public static final double PIVOT_POS_TRANSFER = 0.39;
+    public static final double PIVOT_POS_DOWN = 0.68; //0.76-0.05;
+    public static final double PIVOT_POS_HOVER = 0.57333333; //0.7-0.05;
+    public static final double PIVOT_POS_FLOAT = 0.30;
+    public static final double PIVOT_POS_TRANSFER = 0.229; //0.39-0.05;
 
     public static final double TURN_POS_DOWN = 0.1;
     public static final double TURN_POS_TRANSFER = 0.77;
 
-    public static final double FLIP_POS_DOWN = 0;
-    public static final double FLIP_POS_SCORE = 0.76;
+    public static final double FLIP_POS_DOWN = 0.1;
+    public static final double FLIP_POS_SCORE = 0.55;
 
     public static final double GRIPPER_POS_CLOSE = 0.3;
     public static final double GRIPPER_POS_OPEN = 0;
