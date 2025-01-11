@@ -145,9 +145,10 @@ public class TeleOpComp2 extends LinearOpMode {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+
 
         linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
