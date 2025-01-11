@@ -175,14 +175,14 @@ public class TeleOpComp2 extends LinearOpMode {
             } else if (y > 1) {
                 y = 1;
             }
-            double x = gamepad2.right_stick_x - gamepad1.right_stick_x/2; // gamepad1 can also do movement for hanging
+            double x = gamepad2.left_stick_x - gamepad1.left_stick_x/2; // gamepad1 can also do movement for hanging
             // making sure it doesnt go over 1 or -1
             if (x > 1) {
                 x = 1;
             } else if (x < -1) {
                 x = -1;
             }
-            double rx = -gamepad2.left_stick_x + gamepad1.left_stick_x/2; // gamepad1 can also do movement for hanging
+            double rx = gamepad2.right_stick_x + gamepad1.right_stick_x/2; // gamepad1 can also do movement for hanging
             // making sure it doesnt go over 1 or -1
             if (rx > 1) {
                 rx = 1;
@@ -198,7 +198,7 @@ public class TeleOpComp2 extends LinearOpMode {
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
-            motorSpeed = 0.5;
+            motorSpeed = 1;
 
             leftFrontDrive.setPower(frontLeftPower * motorSpeed);
             leftBackDrive.setPower(backLeftPower * motorSpeed);
