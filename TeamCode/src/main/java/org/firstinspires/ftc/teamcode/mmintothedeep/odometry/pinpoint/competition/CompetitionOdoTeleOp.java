@@ -76,7 +76,7 @@ public class CompetitionOdoTeleOp extends LinearOpMode {
 
     DriveToPoint nav = new DriveToPoint(this);
 
-    static final Pose2D basketTarget = new Pose2D(DistanceUnit.MM,260,1700, AngleUnit.DEGREES,132);
+    static Pose2D startingPos = new Pose2D(DistanceUnit.MM, 1600, 460, AngleUnit.DEGREES, 175); // Starting position
 
     boolean atTarget = false;
 
@@ -88,10 +88,10 @@ public class CompetitionOdoTeleOp extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
 
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
@@ -137,6 +137,9 @@ public class CompetitionOdoTeleOp extends LinearOpMode {
         odo.recalibrateIMU();
         odo.resetPosAndIMU();
 
+        odo.setPosition(startingPos);
+        odo.update();
+
         telemetry.addData("Status", "Initialized");
         telemetry.addData("X offset", odo.getXOffset());
         telemetry.addData("Y offset", odo.getYOffset());
@@ -176,11 +179,6 @@ public class CompetitionOdoTeleOp extends LinearOpMode {
                 odo.recalibrateIMU(); //recalibrates the IMU without resetting position
             }
 
-            if (gamepad1.y) {
-                if (nav.driveTo(odo.getPosition(), basketTarget, 0.4, 2)){
-                    telemetry.addLine("at position #2!");
-                }
-            }
 
 
             /*

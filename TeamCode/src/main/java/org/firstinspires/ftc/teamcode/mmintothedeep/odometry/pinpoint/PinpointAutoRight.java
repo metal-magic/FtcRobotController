@@ -34,7 +34,7 @@ public class PinpointAutoRight extends LinearOpMode {
     AprilTagProcessor tagProcessor;
 
     private Position cameraPosition = new Position(DistanceUnit.INCH,
-            0, 0, 0, 0);
+            6, -3.5, 0, 0);
     private YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
             0, -90, 0, 0);
 
@@ -74,9 +74,9 @@ public class PinpointAutoRight extends LinearOpMode {
         initPortal(); // initialize the apriltag portal
         initMotor(); // initialize the drive wheel motors
         odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
-        odo.setOffsets(0, -180.0); //these are tuned for 3110-0002-0001 Product Insight #1
+        odo.setOffsets(0, 130); //these are tuned for 3110-0002-0001 Product Insight #1
         odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_SWINGARM_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.REVERSED);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.REVERSED, GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
         odo.resetPosAndIMU();
 
@@ -139,7 +139,7 @@ public class PinpointAutoRight extends LinearOpMode {
                 case WAITING_FOR_START:
                     //the first step in the autonomous
                     odo.setPosition(startingPos);
-                    stateMachine = StateMachine.DRIVE_TO_TARGET_1;
+                    stateMachine = StateMachine.AT_TARGET;
                     break;
                 case DRIVE_TO_TARGET_1:
                     /*
@@ -257,18 +257,17 @@ public class PinpointAutoRight extends LinearOpMode {
 
     public void initMotor() {
 
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontLeft");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "motorFrontRight");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "motorBackLeft");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "motorBackRight");
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFrontDrive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
+        leftBackDrive   = hardwareMap.get(DcMotor.class, "leftBackDrive");
+        rightBackDrive  = hardwareMap.get(DcMotor.class, "rightBackDrive");
 
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
