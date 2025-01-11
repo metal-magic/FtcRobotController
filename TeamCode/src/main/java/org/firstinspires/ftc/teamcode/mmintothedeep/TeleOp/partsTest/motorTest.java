@@ -45,7 +45,7 @@ import java.util.Objects;
   =========================================
  */
 
-@TeleOp(name = "linearSlideTest")
+@TeleOp(name = "motorTest")
 public class motorTest extends OpMode {
 
     public DcMotor testMotor = null;
@@ -99,11 +99,11 @@ public class motorTest extends OpMode {
                 }
             }
             //limit 3887
-            if (testMotor.getCurrentPosition() < 10000 && gamepad2.right_trigger >= 0.1F) {
+            if ( gamepad2.right_trigger >= 0.1F) {
                 testMotor.setDirection(DcMotor.Direction.FORWARD);
                 testMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 testMotor.setPower(1);
-            } else if (testMotor.getCurrentPosition() > 50 && gamepad2.left_trigger >= 0.1F) {
+            } else if ( gamepad2.left_trigger >= 0.1F) {
                 testMotor.setDirection(DcMotor.Direction.FORWARD);
                 testMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 testMotor.setPower(-1);

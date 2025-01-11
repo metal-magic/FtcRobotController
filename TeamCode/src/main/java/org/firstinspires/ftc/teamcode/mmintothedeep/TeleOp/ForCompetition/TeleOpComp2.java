@@ -282,9 +282,9 @@ public class TeleOpComp2 extends LinearOpMode {
                 pivotServo.setPosition(pivotPosFloat);
                 sleep(500);
 
-                slideUp = true;
+                slideUp = false;
                 slideDown = false;
-                slideMidUp = false;
+                slideMidUp = true;
                 slideMidDown = false;
             }
             // align position
@@ -338,6 +338,19 @@ public class TeleOpComp2 extends LinearOpMode {
                     linearSlideMotor.setPower(0);
                 }
             }
+
+            //slide up and flip
+            if (gamepad1.back) {
+                slideUp=true;
+                slideMidDown = false;
+                slideDown = false;
+                slideMidUp = false;
+                sleep(1500);
+                flipServo.setPosition(flipPosScore);
+                sleep(1000);
+                flipServo.setPosition(flipPosDown);
+            }
+
             // slide down
             if (slideDown && !slideMidDown) {
                 if (linearSlideMotor.getCurrentPosition() < slidePosDown) {
