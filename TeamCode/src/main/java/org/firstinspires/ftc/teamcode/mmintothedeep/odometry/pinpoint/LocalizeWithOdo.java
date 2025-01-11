@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.competition;
+package org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint;
 
 import android.util.Size;
 
@@ -24,10 +24,10 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.Locale;
 
-@Autonomous(name="Pinpoint Navigation Example2134", group="Pinpoint")
+@Autonomous(name="localize w odo and tag", group="Pinpoint")
 //@Disabled
 
-public class CompetitionAutoRight extends LinearOpMode {
+public class LocalizeWithOdo extends LinearOpMode {
 
     DcMotor leftFrontDrive;
     DcMotor rightFrontDrive;
@@ -55,37 +55,18 @@ public class CompetitionAutoRight extends LinearOpMode {
         DRIVE_TO_TARGET_2,
         DRIVE_TO_TARGET_3,
         DRIVE_TO_TARGET_4,
-        DRIVE_TO_TARGET_5,
-        DRIVE_TO_TARGET_6,
-        DRIVE_TO_TARGET_7,
-        DRIVE_TO_TARGET_8,
-        DRIVE_TO_TARGET_9,
-        DRIVE_TO_TARGET_10,
-        DRIVE_TO_TARGET_11,
-        DRIVE_TO_TARGET_12,
-        DRIVE_TO_TARGET_13,
-        DRIVE_TO_TARGET_14,
-        DRIVE_TO_TARGET_15
+        DRIVE_TO_TARGET_5
     }
 
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
     static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM,-770,-290,AngleUnit.DEGREES,0); // Specimen Chamber 1
     static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, -800, -290, AngleUnit.DEGREES, 0); // Specimen Chamber 2
-    static final Pose2D TARGET_3 = new Pose2D(DistanceUnit.MM,-400,582, AngleUnit.DEGREES,90); // April Tag scanning
-    static final Pose2D TARGET_4 = new Pose2D(DistanceUnit.MM, -1442.795, 635, AngleUnit.DEGREES, 90); // April Tag Position
-    static final Pose2D TARGET_5 = new Pose2D(DistanceUnit.MM, -1210, 950, AngleUnit.DEGREES, 90);
-    static final Pose2D TARGET_6 = new Pose2D(DistanceUnit.MM, -299, 950, AngleUnit.DEGREES, 90);
-    static final Pose2D TARGET_7 = new Pose2D(DistanceUnit.MM, -1442, 950, AngleUnit.DEGREES, 90);
-    static final Pose2D TARGET_8 = new Pose2D(DistanceUnit.MM, -1210, 1168.920, AngleUnit.DEGREES, 90);
-    static final Pose2D TARGET_9 = new Pose2D(DistanceUnit.MM, -299, 1168.920, AngleUnit.DEGREES, 90);
-    static final Pose2D TARGET_10 = new Pose2D(DistanceUnit.MM, -199.690, 922, AngleUnit.DEGREES, 170);
-    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -80, 922, AngleUnit.DEGREES, 175);
-    static final Pose2D WAYPOINT_BASKET = new Pose2D(DistanceUnit.MM, -184, -74.614, AngleUnit.DEGREES, 0);
-    static final Pose2D BASKET_NEW = new Pose2D(DistanceUnit.MM,-770,-74,AngleUnit.DEGREES,0);
-    static final Pose2D BASKET_WAYPOINT2 = new Pose2D(DistanceUnit.MM, -670, -74.614, AngleUnit.DEGREES, 0);
+    static final Pose2D TARGET_3 = new Pose2D(DistanceUnit.MM,-475,72, AngleUnit.DEGREES,90); // April Tag scanning
+    static final Pose2D TARGET_4 = new Pose2D(DistanceUnit.INCH, -42.6, 47.2, AngleUnit.DEGREES, 130); // April Tag Position
+    static final Pose2D TARGET_5 = new Pose2D(DistanceUnit.MM, 815, 440, AngleUnit.DEGREES, -90);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
-    static final double slidePosSpecDown = 2100; //UtilityValues.SLIDE_POS_SPEC_DOWN;
+    static final double slidePosSpecDown = 2025; //UtilityValues.SLIDE_POS_SPEC_DOWN;
     static final double slidePosSpecUp = UtilityValues.SLIDE_POS_SPEC_UP;
     static final double slidePosUp = UtilityValues.SLIDE_POS_SAMP;
 
@@ -111,8 +92,6 @@ public class CompetitionAutoRight extends LinearOpMode {
     public Servo gripperServo1 = null;
 
     boolean atTarget = false;
-    public Servo turnServo = null;
-
 
     @Override
     public void runOpMode() {
@@ -131,17 +110,16 @@ public class CompetitionAutoRight extends LinearOpMode {
         pivotServo = hardwareMap.servo.get("pivotServo");
         pivotServo.setDirection(Servo.Direction.REVERSE);
         pivotServo.setPosition(pivotPosFloat);
-        turnServo = hardwareMap.servo.get("turnServo");
 
         leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFrontDrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         leftBackDrive   = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightBackDrive  = hardwareMap.get(DcMotor.class, "rightBackDrive");
 
-        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -175,8 +153,6 @@ public class CompetitionAutoRight extends LinearOpMode {
         telemetry.update();
 
         clipServo.setPosition(clipPosClose);
-        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-
         // Wait for the game to start (driver presses START)
         waitForStart();
         resetRuntime();
@@ -188,7 +164,7 @@ public class CompetitionAutoRight extends LinearOpMode {
                 case WAITING_FOR_START:
                     //the first step in the autonomous
                     odo.setPosition(startingPos);
-                    stateMachine = StateMachine.DRIVE_TO_TARGET_1;
+                    stateMachine = StateMachine.AT_TARGET;
                     break;
                 case DRIVE_TO_TARGET_1:
                     /*
@@ -228,9 +204,9 @@ public class CompetitionAutoRight extends LinearOpMode {
                     if(nav.driveTo(odo.getPosition(), TARGET_3, 0.7, 0)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_4;
-//                        if (!tagProcessor.getDetections().isEmpty()) {
-//                            odo.setPosition(returnAprilTagPose(odo.getPosition()));
-//                        }
+                        if (!tagProcessor.getDetections().isEmpty()) {
+                            odo.setPosition(returnAprilTagPose(odo.getPosition()));
+                        }
                         odo.update();
                     } else {
                         if (linearSlideMotor.getCurrentPosition() > 50) {
@@ -243,113 +219,20 @@ public class CompetitionAutoRight extends LinearOpMode {
                 case DRIVE_TO_TARGET_4:
                     if(nav.driveTo(odo.getPosition(),TARGET_4,0.7,0)){
                         telemetry.addLine("at position #4");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_5;
-//                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
-//                        pivotServo.setPosition(pivotPosDown);
-//                        sleep(1000);
-//                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-//                        sleep(200);
-//                        pivotServo.setPosition(UtilityValues.PIVOT_POS_HOVER);
+                        stateMachine = StateMachine.AT_TARGET;
+                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
+                        pivotServo.setPosition(pivotPosDown);
+                        sleep(1000);
+                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
+                        sleep(200);
+                        pivotServo.setPosition(UtilityValues.PIVOT_POS_HOVER);
                     }
                     break;
                 case DRIVE_TO_TARGET_5:
                     if(nav.driveTo(odo.getPosition(),TARGET_5,0.7,0)){
                         telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_6;
-                    }
-                    break;
-                case DRIVE_TO_TARGET_6:
-                    if(nav.driveTo(odo.getPosition(),TARGET_6,0.7,0)){
-                        telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_7;
-                    }
-                    break;
-                case DRIVE_TO_TARGET_7:
-                    if(nav.driveTo(odo.getPosition(),TARGET_7,0.7,0)){
-                        telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_8;
-                    }
-                    break;
-                case DRIVE_TO_TARGET_8:
-                    if(nav.driveTo(odo.getPosition(),TARGET_8,0.7,0)){
-                        telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_9;
-                    }
-                    break;
-                case DRIVE_TO_TARGET_9:
-                    if(nav.driveTo(odo.getPosition(),TARGET_9,0.7,0)){
-                        telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_10;
-                    }
-                    break;
-                case DRIVE_TO_TARGET_10:
-                    if(nav.driveTo(odo.getPosition(),TARGET_10,0.5,0)){
-                        telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_11;
-                        leftFrontDrive.setPower(0);
-                        rightBackDrive.setPower(0);
-                        leftBackDrive.setPower(0);
-                        rightBackDrive.setPower(0);
-                        sleep(1000);
-                    }
-                    break;
-                case DRIVE_TO_TARGET_11:
-                    if(nav.driveTo(odo.getPosition(),TARGET_11,0.5,0)){
-                        telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_12;
-                        leftFrontDrive.setPower(0);
-                        rightBackDrive.setPower(0);
-                        leftBackDrive.setPower(0);
-                        rightBackDrive.setPower(0);
-                        clipServo.setPosition(clipPosClose);
-                        sleep(500);
-                    }
-                    break;
-                case DRIVE_TO_TARGET_12:
-                    if(nav.driveTo(odo.getPosition(),WAYPOINT_BASKET,0.7,0)){
-                        telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_13;
-                    } else {
-                        if (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
-                            linearSlideMotor.setPower(1);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
-                    }
-                    break;
-                case DRIVE_TO_TARGET_13:
-                    if(nav.driveTo(odo.getPosition(), BASKET_WAYPOINT2,0.5,0)){
-                        telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_14;
-                    } else {
-                        if (linearSlideMotor.getCurrentPosition() < slidePosSpecDown) {
-                            linearSlideMotor.setPower(1);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
-                    }
-                    break;
-                case DRIVE_TO_TARGET_14:
-                    if(nav.driveTo(odo.getPosition(),BASKET_NEW,0.7,0)){
-                        telemetry.addLine("There!");
                         stateMachine = StateMachine.AT_TARGET;
-                        while (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
-                            linearSlideMotor.setPower(1);
-                        }
-                        linearSlideMotor.setPower(0);
-                        while (linearSlideMotor.getCurrentPosition() > slidePosSpecDown) {
-                            linearSlideMotor.setPower(-1);
-                        }
-                        linearSlideMotor.setPower(0);
-                        sleep(500);
-                        clipServo.setPosition(clipPosOpen);
                         atTarget = true;
-                    } else {
-                        if (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
-                            linearSlideMotor.setPower(1);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
                     }
                     break;
                 case AT_TARGET:
@@ -361,7 +244,10 @@ public class CompetitionAutoRight extends LinearOpMode {
                     break;
             }
 
-
+            if (!tagProcessor.getDetections().isEmpty()) {
+                odo.setPosition(returnAprilTagPose(odo.getPosition()));
+            }
+            odo.update();
             //nav calculates the power to set to each motor in a mecanum or tank drive. Use nav.getMotorPower to find that value.
             if (!atTarget) {
                 leftFrontDrive.setPower(nav.getMotorPower(DriveToPoint.DriveMotor.LEFT_FRONT));
