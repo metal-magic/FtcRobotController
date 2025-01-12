@@ -122,6 +122,10 @@ public class TeleOpComp2 extends LinearOpMode {
     boolean rightBumper_wasPressed = false;
     int currSpecPos = 0;
 
+    boolean isTransferring = false;
+
+    long startTime = 0;
+
     public void runOpMode() {
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
@@ -282,23 +286,41 @@ public class TeleOpComp2 extends LinearOpMode {
                 while (linearSlideMotor.getCurrentPosition() > slidePosDown) {
                     linearSlideMotor.setPower(-1);
                 }
+                isTransferring = true;
                 flipServo.setPosition(flipPosDown);
                 gripperServo1.setPosition(gripperPosClose);
                 pivotServo.setPosition(pivotPosTransfer);
-                //sleep(500);
+                // nah dontsleep(500);
                 turnServo.setPosition(turnPosTransfer);
-                sleep(800);
-                gripperServo1.setPosition(gripperPosOpen);
-                sleep(500);
-                pivotServo.setPosition(pivotPosFloat);
-                sleep(500);
-
-                slideUp = false;
-                slideDown = false;
-                slideMidUp = false;
-                slideMidDown = false;
-                slideStable = true;
+                startTime = System.currentTimeMillis();
+//                sleep(800);
+//                gripperServo1.setPosition(gripperPosOpen);
+//                sleep(500);
+//                pivotServo.setPosition(pivotPosFloat);
+//                sleep(500);
+//                slideUp = false;
+//                slideDown = false;
+//                slideMidUp = false;
+//                slideMidDown = false;
+//                slideStable = true;
             }
+
+            if (isTransferring) {
+                if (System.currentTimeMillis() > startTime+1800.0) {
+                    slideUp = false;
+                    slideDown = false;
+                    slideMidUp = false;
+                    slideMidDown = false;
+                    slideStable = true;
+                    
+                    isTransferring = false;
+                } else if (System.currentTimeMillis() > startTime+1300.0) {
+                    pivotServo.setPosition(pivotPosFloat);
+                } else if (System.currentTimeMillis() > startTime+800.0) {
+                    gripperServo1.setPosition(gripperPosOpen);
+                }
+            }
+
             // align position
             if (gamepad2.dpad_right) {
                 turnServo.setPosition(turnPosDown);
