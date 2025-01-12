@@ -91,6 +91,7 @@ public class TeleOpComp2 extends LinearOpMode {
     static final double slidePosSpecDown = UtilityValues.SLIDE_POS_SPEC_DOWN;
     static final double slidePosSpecUp = UtilityValues.SLIDE_POS_SPEC_UP;
     static final double slidePosUp = UtilityValues.SLIDE_POS_SAMP;
+    static final double slidePosStable = UtilityValues.SLIDE_POS_STABLE;
 
     static final double pivotPosDown = UtilityValues.PIVOT_POS_DOWN;
     static final double pivotPosHover = UtilityValues.PIVOT_POS_HOVER;
@@ -111,6 +112,7 @@ public class TeleOpComp2 extends LinearOpMode {
 
     boolean slideMidUp = false;
     boolean slideMidDown = false;
+    boolean slideStable = false;
 
     boolean leftBumper_isPressed = false;
     boolean leftBumper_wasPressed = false;
@@ -144,9 +146,9 @@ public class TeleOpComp2 extends LinearOpMode {
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         leftFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
@@ -156,13 +158,11 @@ public class TeleOpComp2 extends LinearOpMode {
         linearSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        pivotServo.setPosition(0.7083-0.05);
-        turnServo.setPosition(0.098);
-        pivotServo.setPosition(0.7083);
-        gripperServo1.setPosition(0);
-
         waitForStart();
 
+        pivotServo.setPosition(UtilityValues.PIVOT_POS_HOVER);
+        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+        gripperServo1.setPosition(gripperPosOpen);
 
         boolean CutPower = false;
         double motorSpeed;
@@ -236,6 +236,10 @@ public class TeleOpComp2 extends LinearOpMode {
 //                gripperServo1.setPosition(gripperServo1.getPosition()-0.005);
 //            }
 
+            if (gamepad2.right_trigger >= 0.3F) {
+                motorSpeed = 0.3;
+            }
+
             // Manual control
             if (gamepad1.right_bumper) {
                 turnServo.setPosition(turnServo.getPosition()+0.005);
@@ -264,14 +268,20 @@ public class TeleOpComp2 extends LinearOpMode {
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 linearSlideMotor.setPower(-0.8);
             } else {
-                if (!slideUp && !slideDown && !slideMidUp && !slideMidDown) {
+                if (!slideUp && !slideDown && !slideMidUp && !slideMidDown && !slideStable) {
                     linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    while (linearSlideMotor.getCurrentPosition() > 5350) {
+                        linearSlideMotor.setPower(-0.3);
+                    }
                     linearSlideMotor.setPower(0);
                 }
             }
 
             // Transfer and slide up
             if (gamepad2.dpad_up) {
+                while (linearSlideMotor.getCurrentPosition() > slidePosDown) {
+                    linearSlideMotor.setPower(-1);
+                }
                 flipServo.setPosition(flipPosDown);
                 gripperServo1.setPosition(gripperPosClose);
                 pivotServo.setPosition(pivotPosTransfer);
@@ -285,8 +295,9 @@ public class TeleOpComp2 extends LinearOpMode {
 
                 slideUp = false;
                 slideDown = false;
-                slideMidUp = true;
+                slideMidUp = false;
                 slideMidDown = false;
+                slideStable = true;
             }
             // align position
             if (gamepad2.dpad_right) {
@@ -305,6 +316,7 @@ public class TeleOpComp2 extends LinearOpMode {
                 slideUp = false;
                 slideMidUp = false;
                 slideMidDown = false;
+                slideStable = false;
 
             }
             // picking up for specimen into human player
@@ -315,7 +327,6 @@ public class TeleOpComp2 extends LinearOpMode {
                 pivotServo.setPosition(pivotPosHover);
                 pivotServo.setPosition(pivotPosHover);
                 gripperServo1.setPosition(gripperPosClose);
-
             }
             // pick up
             if (gamepad2.dpad_down) {
@@ -325,8 +336,16 @@ public class TeleOpComp2 extends LinearOpMode {
                 sleep(100);
                 pivotServo.setPosition(pivotPosDown);
                 sleep(200);
-                gripperServo1.setPosition(gripperPosClose);
-
+//                gripperServo1.setPosition(gripperPosClose);
+                if (linearSlideMotor.getCurrentPosition() > 100) {
+                    slideDown = true;
+                } else {
+                    slideDown = false;
+                }
+                slideUp = false;
+                slideMidUp = false;
+                slideMidDown = false;
+                slideStable = false;
             }
 
             // slide up to basket height
@@ -340,12 +359,23 @@ public class TeleOpComp2 extends LinearOpMode {
                 }
             }
 
+            if (slideStable) {
+                if (linearSlideMotor.getCurrentPosition() < slidePosStable) {
+                    linearSlideMotor.setPower(1);
+                }
+                if (linearSlideMotor.getCurrentPosition() > slidePosStable) {
+                    slideStable = false;
+                    linearSlideMotor.setPower(0);
+                }
+            }
+
             //slide up and flip
             if (gamepad1.back) {
-                slideUp=true;
+                slideUp = true;
                 slideMidDown = false;
                 slideDown = false;
                 slideMidUp = false;
+                slideStable = false;
                 sleep(1500);
                 flipServo.setPosition(flipPosScore);
                 sleep(1000);
@@ -375,13 +405,6 @@ public class TeleOpComp2 extends LinearOpMode {
             }
 
 
-            if (gamepad2.left_bumper) {
-                gripperServo1.setPosition(gripperPosClose);
-            }
-            if (gamepad2.right_bumper) {
-                gripperServo1.setPosition(gripperPosOpen);
-            }
-
             // flip the bucket
             if (gamepad2.x) {
                 flipServo.setPosition(flipPosScore);
@@ -389,14 +412,26 @@ public class TeleOpComp2 extends LinearOpMode {
                 flipServo.setPosition(flipPosDown);
             }
 
-            // Closes specimen claw
+            // Slide all the way up
             if (gamepad2.a) {
-                clipServo.setPosition(0);
+                slideUp = true;
+                slideDown = false;
+                slideMidUp = false;
+                slideMidDown = false;
+                slideStable = false;
             }
 
-            // Opens specimen claw
+            // Slide all the way down
             if (gamepad2.b) {
-                clipServo.setPosition(0.3);
+                if (linearSlideMotor.getCurrentPosition() > 100) {
+                    slideDown = true;
+                } else {
+                    slideDown = false;
+                }
+                slideUp = false;
+                slideMidUp = false;
+                slideMidDown = false;
+                slideStable = false;
             }
 //
 //            leftBumper_isPressed = (gamepad2.left_bumper);
@@ -409,15 +444,26 @@ public class TeleOpComp2 extends LinearOpMode {
 //            }
 //            leftBumper_wasPressed = (gamepad2.left_bumper);
 
-            rightBumper_isPressed = (gamepad2.right_bumper);
-            if (rightBumper_isPressed && !rightBumper_wasPressed) {
-                if (currSpecPos==0) {
-                    clipServo.setPosition(clipPosOpen);
-                } else {
-                    clipServo.setPosition(clipPosClose);
-                }
+//            rightBumper_isPressed = (gamepad2.right_bumper);
+//            if (rightBumper_isPressed && !rightBumper_wasPressed) {
+//                if (currSpecPos==0) {
+//                    clipServo.setPosition(clipPosOpen);
+//                } else {
+//                    clipServo.setPosition(clipPosClose);
+//                }
+//            }
+//            rightBumper_wasPressed = (gamepad2.right_bumper);
+
+
+            if (gamepad2.left_bumper) {
+                clipServo.setPosition(clipPosOpen);
+                gripperServo1.setPosition(gripperPosOpen);
             }
-            rightBumper_wasPressed = (gamepad2.right_bumper);
+
+            if (gamepad2.right_bumper) {
+                clipServo.setPosition(clipPosClose);
+                gripperServo1.setPosition(gripperPosClose);
+            }
 
             if (gamepad2.right_trigger > 0.3) {
                 slideMidUp = true;
