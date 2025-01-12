@@ -45,8 +45,8 @@ import java.util.Date;
   =========================================
  */
 
-@TeleOp(name = "!Comp2 for manual test")
-public class TeleOpComp2 extends LinearOpMode {
+@TeleOp(name = "!! FINAL TeleOp for Harrisonburg competition")
+public class FinalTeleOpHarrisonburg extends LinearOpMode {
 
     public Servo gripperServo1 = null;
     // public Servo gripperServo2 = null;
@@ -59,6 +59,9 @@ public class TeleOpComp2 extends LinearOpMode {
     DcMotor rightFrontDrive = null;
     DcMotor leftBackDrive = null;
     DcMotor rightBackDrive = null;
+
+    public DcMotor hangSlideMotor = null;
+    public DcMotor hangSlideMotor2 = null;
 
     public Date previousTime = new Date();
 
@@ -126,6 +129,8 @@ public class TeleOpComp2 extends LinearOpMode {
 
     long startTime = 0;
 
+    boolean isPressedEndOHYE = false;
+
     public void runOpMode() {
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
@@ -140,10 +145,17 @@ public class TeleOpComp2 extends LinearOpMode {
 
         flipServo = hardwareMap.servo.get("flipServo");
 
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFrontDrive");
+        hangSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor1");
+        hangSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hangSlideMotor2 = hardwareMap.dcMotor.get("hangSlideMotor2");
+        hangSlideMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFrontDrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
-        leftBackDrive   = hardwareMap.get(DcMotor.class, "leftBackDrive");
-        rightBackDrive  = hardwareMap.get(DcMotor.class, "rightBackDrive");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBackDrive");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
 
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -155,12 +167,23 @@ public class TeleOpComp2 extends LinearOpMode {
         rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        hangSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangSlideMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         linearSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        hangSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        hangSlideMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         waitForStart();
 
@@ -172,7 +195,7 @@ public class TeleOpComp2 extends LinearOpMode {
         double motorSpeed;
         while (opModeIsActive()) {
 
-            double y = -gamepad2.left_stick_y + gamepad1.left_stick_y/2; // REVERSED -gamepad1.left_stick_y.gamestick so
+            double y = -gamepad2.left_stick_y - gamepad1.left_stick_y / 2; // REVERSED -gamepad1.left_stick_y.gamestick so
             // gamepad1 can also do movement for hanging
             // making sure it doesnt go over 1 or -1
             if (y < -1) {
@@ -180,14 +203,14 @@ public class TeleOpComp2 extends LinearOpMode {
             } else if (y > 1) {
                 y = 1;
             }
-            double x = gamepad2.left_stick_x - gamepad1.left_stick_x/2; // gamepad1 can also do movement for hanging
+            double x = gamepad2.left_stick_x + gamepad1.left_stick_x / 2; // gamepad1 can also do movement for hanging
             // making sure it doesnt go over 1 or -1
             if (x > 1) {
                 x = 1;
             } else if (x < -1) {
                 x = -1;
             }
-            double rx = gamepad2.right_stick_x + gamepad1.right_stick_x/2; // gamepad1 can also do movement for hanging
+            double rx = gamepad2.right_stick_x + gamepad1.right_stick_x / 2; // gamepad1 can also do movement for hanging
             // making sure it doesnt go over 1 or -1
             if (rx > 1) {
                 rx = 1;
@@ -210,64 +233,16 @@ public class TeleOpComp2 extends LinearOpMode {
             rightFrontDrive.setPower(frontRightPower * motorSpeed);
             rightBackDrive.setPower(backRightPower * motorSpeed);
 
-            // Hovering above sample
-            if (gamepad1.dpad_right) {
-                turnServo.setPosition(0.098);
-                pivotServo.setPosition(0.7083-0.05);
-                gripperServo1.setPosition(gripperPosOpen);
-            } // Ready to pick up sample
-            else if (gamepad1.dpad_left) {
-                turnServo.setPosition(0.098);
-                gripperServo1.setPosition(0);
-                pivotServo.setPosition(0.77-0.05);
-            }
-            if (gamepad1.a) {
-                gripperServo1.setPosition(0.3);
-            }
-            if (gamepad1.b) {
-                gripperServo1.setPosition(0);
-            }
-            if (gamepad1.x) {
-                pivotServo.setPosition(pivotServo.getPosition() + 0.0001);
-            }
-            if (gamepad1.y) {
-                pivotServo.setPosition(pivotServo.getPosition() - 0.0001);
-            }
-//            if (gamepad1.right_trigger >= 0.3F) {
-//                gripperServo1.setPosition(gripperServo1.getPosition()+0.005);
-//            }
-//            if (gamepad1.left_trigger >= 0.3F) {
-//                gripperServo1.setPosition(gripperServo1.getPosition()-0.005);
-//            }
-
             if (gamepad2.right_trigger >= 0.3F) {
                 motorSpeed = 0.3;
             }
 
             // Manual control
-            if (gamepad1.right_bumper) {
-                turnServo.setPosition(turnServo.getPosition()+0.005);
-            }
-            if (gamepad1.left_bumper) {
-                turnServo.setPosition(turnServo.getPosition()-0.005);
-            }
-            if (gamepad1.dpad_up && clipServo.getPosition() > 0) {
-                clipServo.setPosition(clipServo.getPosition()-0.005);
-            }
-            if (gamepad1.dpad_down && clipServo.getPosition() < 0.3) {
-                clipServo.setPosition(clipServo.getPosition()+0.005);
-            }
-            if (gamepad1.left_stick_button) {
-                flipServo.setPosition(flipServo.getPosition()+0.005);
-            }
-            if (gamepad1.right_stick_button) {
-                flipServo.setPosition(flipServo.getPosition()-0.005);
-            }
-            if (linearSlideMotor.getCurrentPosition() < 10000 && gamepad1.right_trigger >= 0.1F) {
+            if (linearSlideMotor.getCurrentPosition() < 5350 && gamepad1.a) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 linearSlideMotor.setPower(0.8);
-            } else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad1.left_trigger >= 0.1F) {
+            } else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad1.b) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 linearSlideMotor.setPower(-0.8);
@@ -306,7 +281,7 @@ public class TeleOpComp2 extends LinearOpMode {
             }
 
             if (isTransferring) {
-                if (System.currentTimeMillis() > startTime+1800.0) {
+                if (System.currentTimeMillis() > startTime + 1800.0) {
                     slideUp = false;
                     slideDown = false;
                     slideMidUp = false;
@@ -314,9 +289,9 @@ public class TeleOpComp2 extends LinearOpMode {
                     slideStable = true;
 
                     isTransferring = false;
-                } else if (System.currentTimeMillis() > startTime+1300.0) {
+                } else if (System.currentTimeMillis() > startTime + 1300.0) {
                     pivotServo.setPosition(pivotPosFloat);
-                } else if (System.currentTimeMillis() > startTime+800.0) {
+                } else if (System.currentTimeMillis() > startTime + 800.0) {
                     gripperServo1.setPosition(gripperPosOpen);
                 }
             }
@@ -330,11 +305,7 @@ public class TeleOpComp2 extends LinearOpMode {
                 pivotServo.setPosition(pivotPosHover);
                 gripperServo1.setPosition(gripperPosOpen);
 
-                if (linearSlideMotor.getCurrentPosition() > 100) {
-                    slideDown = true;
-                } else {
-                    slideDown = false;
-                }
+                slideDown = linearSlideMotor.getCurrentPosition() > 100;
                 slideUp = false;
                 slideMidUp = false;
                 slideMidDown = false;
@@ -359,11 +330,7 @@ public class TeleOpComp2 extends LinearOpMode {
                 pivotServo.setPosition(pivotPosDown);
                 sleep(200);
 //                gripperServo1.setPosition(gripperPosClose);
-                if (linearSlideMotor.getCurrentPosition() > 100) {
-                    slideDown = true;
-                } else {
-                    slideDown = false;
-                }
+                slideDown = linearSlideMotor.getCurrentPosition() > 100;
                 slideUp = false;
                 slideMidUp = false;
                 slideMidDown = false;
@@ -415,12 +382,12 @@ public class TeleOpComp2 extends LinearOpMode {
                 }
             }
 
-            if (Math.abs(gripperServo1.getPosition()-0.05) <= 0.05) {
+            if (Math.abs(gripperServo1.getPosition() - 0.05) <= 0.05) {
                 currGripperPos = 0;
             } else {
                 currGripperPos = 1;
             }
-            if (Math.abs(clipServo.getPosition()-0.05) <= 0.05) {
+            if (Math.abs(clipServo.getPosition() - 0.05) <= 0.05) {
                 currSpecPos = 0;
             } else {
                 currSpecPos = 1;
@@ -445,11 +412,7 @@ public class TeleOpComp2 extends LinearOpMode {
 
             // Slide all the way down
             if (gamepad2.b) {
-                if (linearSlideMotor.getCurrentPosition() > 100) {
-                    slideDown = true;
-                } else {
-                    slideDown = false;
-                }
+                slideDown = linearSlideMotor.getCurrentPosition() > 100;
                 slideUp = false;
                 slideMidUp = false;
                 slideMidDown = false;
@@ -521,6 +484,34 @@ public class TeleOpComp2 extends LinearOpMode {
                     linearSlideMotor.setPower(0);
                     slideMidDown = false;
                     clipServo.setPosition(0.3);
+                }
+            }
+
+            if (gamepad1.right_trigger >= 0.3F) {
+                hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotor2.setPower(0.7 * 0.41);
+            } else if (gamepad1.left_trigger >= 0.3F) {
+                if (hangSlideMotor.getCurrentPosition() > -4338) {
+                    hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
+                    hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    hangSlideMotor2.setPower(-0.7 * 0.41);
+                }
+            } else {
+                if (!isPressedEndOHYE) {
+                    hangSlideMotor2.setPower(0);
+                }
+            }
+
+            if (gamepad1.dpad_up) {
+                isPressedEndOHYE = true;
+                pivotServo.setPosition(pivotPosTransfer);
+            } else {
+                if (isPressedEndOHYE) {
+                    hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    hangSlideMotor.setPower(-0.7);
+                    hangSlideMotor2.setPower(0.7 * 0.41);
                 }
             }
 
