@@ -124,6 +124,9 @@ public class TeleOpComp2 extends LinearOpMode {
 
     boolean isTransferring = false;
 
+    boolean moveSlideDown = false;
+    boolean moveSlideUp = false;
+
     long startTime = 0;
 
     public void runOpMode() {
@@ -210,29 +213,29 @@ public class TeleOpComp2 extends LinearOpMode {
             rightFrontDrive.setPower(frontRightPower * motorSpeed);
             rightBackDrive.setPower(backRightPower * motorSpeed);
 
-            // Hovering above sample
-            if (gamepad1.dpad_right) {
-                turnServo.setPosition(0.098);
-                pivotServo.setPosition(0.7083-0.05);
-                gripperServo1.setPosition(gripperPosOpen);
-            } // Ready to pick up sample
-            else if (gamepad1.dpad_left) {
-                turnServo.setPosition(0.098);
-                gripperServo1.setPosition(0);
-                pivotServo.setPosition(0.77-0.05);
-            }
-            if (gamepad1.a) {
-                gripperServo1.setPosition(0.3);
-            }
-            if (gamepad1.b) {
-                gripperServo1.setPosition(0);
-            }
-            if (gamepad1.x) {
-                pivotServo.setPosition(pivotServo.getPosition() + 0.0001);
-            }
-            if (gamepad1.y) {
-                pivotServo.setPosition(pivotServo.getPosition() - 0.0001);
-            }
+//            // Hovering above sample
+//            if (gamepad1.dpad_right) {
+//                turnServo.setPosition(0.098);
+//                pivotServo.setPosition(0.7083-0.05);
+//                gripperServo1.setPosition(gripperPosOpen);
+//            } // Ready to pick up sample
+//            else if (gamepad1.dpad_left) {
+//                turnServo.setPosition(0.098);
+//                gripperServo1.setPosition(0);
+//                pivotServo.setPosition(0.77-0.05);
+//            }
+//            if (gamepad1.a) {
+//                gripperServo1.setPosition(0.3);
+//            }
+//            if (gamepad1.b) {
+//                gripperServo1.setPosition(0);
+//            }
+//            if (gamepad1.x) {
+//                pivotServo.setPosition(pivotServo.getPosition() + 0.0001);
+//            }
+//            if (gamepad1.y) {
+//                pivotServo.setPosition(pivotServo.getPosition() - 0.0001);
+//            }
 //            if (gamepad1.right_trigger >= 0.3F) {
 //                gripperServo1.setPosition(gripperServo1.getPosition()+0.005);
 //            }
@@ -390,19 +393,19 @@ public class TeleOpComp2 extends LinearOpMode {
                     linearSlideMotor.setPower(0);
                 }
             }
-
-            //slide up and flip
-            if (gamepad1.back) {
-                slideUp = true;
-                slideMidDown = false;
-                slideDown = false;
-                slideMidUp = false;
-                slideStable = false;
-                sleep(1500);
-                flipServo.setPosition(flipPosScore);
-                sleep(1000);
-                flipServo.setPosition(flipPosDown);
-            }
+//
+//            //slide up and flip
+//            if (gamepad1.back) {
+//                slideUp = true;
+//                slideMidDown = false;
+//                slideDown = false;
+//                slideMidUp = false;
+//                slideStable = false;
+//                sleep(1500);
+//                flipServo.setPosition(flipPosScore);
+//                sleep(1000);
+//                flipServo.setPosition(flipPosDown);
+//            }
 
             // slide down
             if (slideDown && !slideMidDown) {
@@ -524,6 +527,94 @@ public class TeleOpComp2 extends LinearOpMode {
                 }
             }
 
+
+            //  =================== Gamepad1 Controls ===================
+
+//            // Close gripper and clip servo
+//            if (gamepad1.left_bumper) {
+//                clipServo.setPosition(clipPosClose);
+//                gripperServo1.setPosition(gripperPosClose);
+//            }
+//
+//            // Open gripper and clip servo
+//            if (gamepad1.right_bumper) {
+//                clipServo.setPosition(clipPosOpen);
+//                gripperServo1.setPosition(gripperPosOpen);
+//            }
+
+            // Toggle for left bumper opening and closing gripperServo
+            leftBumper_isPressed = (gamepad2.left_bumper);
+            if (leftBumper_isPressed && !leftBumper_wasPressed) {
+                if (currGripperPos==0) {
+                    gripperServo1.setPosition(gripperPosClose);
+                } else {
+                    gripperServo1.setPosition(gripperPosOpen);
+                }
+            }
+            leftBumper_wasPressed = (gamepad2.left_bumper);
+
+            // Toggle for right bumper opening and closing clipServo
+            rightBumper_isPressed = (gamepad2.right_bumper);
+            if (rightBumper_isPressed && !rightBumper_wasPressed) {
+                if (currSpecPos==0) {
+                    clipServo.setPosition(clipPosOpen);
+                } else {
+                    clipServo.setPosition(clipPosClose);
+                }
+            }
+            rightBumper_wasPressed = (gamepad2.right_bumper);
+
+            // Move pivot servo up
+            if (gamepad1.dpad_up) {
+                pivotServo.setPosition(pivotServo.getPosition()-0.05);
+            }
+
+            // Move pivot servo down
+            if (gamepad1.dpad_down) {
+                pivotServo.setPosition(pivotServo.getPosition()+0.05);
+            }
+
+            // Rotate turn servo left
+            if (gamepad1.dpad_left) {
+                turnServo.setPosition(turnServo.getPosition()-0.05);
+            }
+
+            // Rotate turn servo right
+            if (gamepad1.dpad_right) {
+                turnServo.setPosition(turnServo.getPosition()+0.05);
+            }
+
+            // Moves slide up when right trigger is pressed
+            if (linearSlideMotor.getCurrentPosition() < 10000 && gamepad1.right_trigger >= 0.1F) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(1);
+            } // Moves slide down when left trigger is pressed
+            else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad1.left_trigger >= 0.1F) {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(-1);
+            } else if (moveSlideUp) {
+                if (linearSlideMotor.getCurrentPosition() < 4000) {
+                    linearSlideMotor.setPower(0.7);
+                } else {
+                    linearSlideMotor.setPower(0);
+                    moveSlideUp = false;
+                }
+            } else if (moveSlideDown) {
+                if (linearSlideMotor.getCurrentPosition() > 10) {
+                    linearSlideMotor.setPower(-0.7);
+                } else {
+                    pivotServo.setPosition(0.7583);
+                    linearSlideMotor.setPower(0);
+                    moveSlideDown = false;
+                }
+            } else {
+                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setPower(0);
+            }
+
             telemetry.addLine("Pivot: " + String.valueOf(pivotServo.getPosition()));
             telemetry.addLine("Turn: " + String.valueOf(turnServo.getPosition()));
             telemetry.addLine("Gripper: " + String.valueOf(gripperServo1.getPosition()));
@@ -535,5 +626,4 @@ public class TeleOpComp2 extends LinearOpMode {
             telemetry.update();
         }
     }
-
 }
