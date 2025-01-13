@@ -566,53 +566,42 @@ public class TeleOpComp2 extends LinearOpMode {
 
             // Move pivot servo up
             if (gamepad1.dpad_up) {
-                pivotServo.setPosition(pivotServo.getPosition()-0.05);
+                pivotServo.setPosition(pivotServo.getPosition()-0.001);
             }
 
             // Move pivot servo down
             if (gamepad1.dpad_down) {
-                pivotServo.setPosition(pivotServo.getPosition()+0.05);
+                pivotServo.setPosition(pivotServo.getPosition()+0.001);
             }
 
             // Rotate turn servo left
             if (gamepad1.dpad_left) {
-                turnServo.setPosition(turnServo.getPosition()-0.05);
+                turnServo.setPosition(turnServo.getPosition()-0.005);
             }
 
             // Rotate turn servo right
             if (gamepad1.dpad_right) {
-                turnServo.setPosition(turnServo.getPosition()+0.05);
+                turnServo.setPosition(turnServo.getPosition()+0.005);
             }
 
-            // Moves slide up when right trigger is pressed
-            if (linearSlideMotor.getCurrentPosition() < 10000 && gamepad1.right_trigger >= 0.1F) {
+            // Slide Up Manual Control
+            if (linearSlideMotor.getCurrentPosition() < 5350 && gamepad1.right_trigger >= 0.3F) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(1);
-            } // Moves slide down when left trigger is pressed
-            else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad1.left_trigger >= 0.1F) {
+                linearSlideMotor.setPower(0.8);
+            } // Slide Down Manual Control
+            else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad1.left_trigger >= 0.3F) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(-1);
-            } else if (moveSlideUp) {
-                if (linearSlideMotor.getCurrentPosition() < 4000) {
-                    linearSlideMotor.setPower(0.7);
-                } else {
-                    linearSlideMotor.setPower(0);
-                    moveSlideUp = false;
-                }
-            } else if (moveSlideDown) {
-                if (linearSlideMotor.getCurrentPosition() > 10) {
-                    linearSlideMotor.setPower(-0.7);
-                } else {
-                    pivotServo.setPosition(0.7583);
-                    linearSlideMotor.setPower(0);
-                    moveSlideDown = false;
-                }
+                linearSlideMotor.setPower(-0.8);
             } else {
-                linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(0);
+                if (!slideUp && !slideDown && !slideMidUp && !slideMidDown && !slideStable) {
+                    linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    while (linearSlideMotor.getCurrentPosition() > 5350) {
+                        linearSlideMotor.setPower(-0.3);
+                    }
+                    linearSlideMotor.setPower(0);
+                }
             }
 
             telemetry.addLine("Pivot: " + String.valueOf(pivotServo.getPosition()));

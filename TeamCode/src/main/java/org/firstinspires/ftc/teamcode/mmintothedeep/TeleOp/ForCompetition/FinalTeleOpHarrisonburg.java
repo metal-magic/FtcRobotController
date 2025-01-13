@@ -515,12 +515,16 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                 }
             }
 
+
+
             telemetry.addLine("Pivot: " + String.valueOf(pivotServo.getPosition()));
             telemetry.addLine("Turn: " + String.valueOf(turnServo.getPosition()));
             telemetry.addLine("Gripper: " + String.valueOf(gripperServo1.getPosition()));
             telemetry.addLine("Clip: " + String.valueOf(clipServo.getPosition()));
             telemetry.addLine("Flip: " + String.valueOf(flipServo.getPosition()));
             telemetry.addLine("Slide: " + String.valueOf(linearSlideMotor.getCurrentPosition()));
+            telemetry.addLine("Hang1: " + String.valueOf(hangSlideMotor.getCurrentPosition()));
+            telemetry.addLine("Hang2: " + String.valueOf(hangSlideMotor2.getCurrentPosition()));
             telemetry.addData("slideUp", slideUp);
 
             telemetry.update();
