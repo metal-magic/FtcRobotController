@@ -147,10 +147,10 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
 
         hangSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor1");
         hangSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         hangSlideMotor2 = hardwareMap.dcMotor.get("hangSlideMotor2");
         hangSlideMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFrontDrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
