@@ -375,7 +375,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
             if (slideDown && !slideMidDown) {
                 if (linearSlideMotor.getCurrentPosition() < slidePosDown) {
                     slideDown = false;
-                    linearSlideMotor.setPower(slidePosDown);
+                    linearSlideMotor.setPower(0);
                     flipServo.setPosition(flipPosDown);
                 } else {
                     linearSlideMotor.setPower(-1);
