@@ -249,7 +249,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
             } else {
                 if (!slideUp && !slideDown && !slideMidUp && !slideMidDown && !slideStable) {
                     linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    while (linearSlideMotor.getCurrentPosition() > 5350) {
+                    while (linearSlideMotor.getCurrentPosition() > 5275) {
                         linearSlideMotor.setPower(-0.3);
                     }
                     linearSlideMotor.setPower(0);
