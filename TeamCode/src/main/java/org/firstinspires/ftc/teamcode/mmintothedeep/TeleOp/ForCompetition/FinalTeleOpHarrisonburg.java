@@ -249,7 +249,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
             } else {
                 if (!slideUp && !slideDown && !slideMidUp && !slideMidDown && !slideStable) {
                     linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    while (linearSlideMotor.getCurrentPosition() > 5275) {
+                    if (linearSlideMotor.getCurrentPosition() > 5275) {
                         linearSlideMotor.setPower(-0.3);
                     }
                     linearSlideMotor.setPower(0);
@@ -258,7 +258,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
 
             // Transfer and slide up
             if (gamepad2.dpad_up) {
-                while (linearSlideMotor.getCurrentPosition() > slidePosDown) {
+                if (linearSlideMotor.getCurrentPosition() > slidePosDown) {
                     linearSlideMotor.setPower(-1);
                 }
                 isTransferring = true;
