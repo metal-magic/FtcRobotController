@@ -340,7 +340,11 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
             // slide up to basket height
             if (slideUp) {
                 if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                    linearSlideMotor.setPower(1);
+                    if (linearSlideMotor.getCurrentPosition() > 3750) {
+                        linearSlideMotor.setPower(0.5);
+                    } else {
+                        linearSlideMotor.setPower(1);
+                    }
                 }
                 if (linearSlideMotor.getCurrentPosition() > slidePosUp) {
                     slideUp = false;
