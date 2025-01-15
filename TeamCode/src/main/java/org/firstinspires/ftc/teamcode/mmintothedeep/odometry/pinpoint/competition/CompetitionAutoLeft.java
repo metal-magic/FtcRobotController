@@ -71,7 +71,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
     static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-453,163,AngleUnit.DEGREES,42);
     static final Pose2D SAMPLE_1 = new Pose2D(DistanceUnit.MM,-302,450,AngleUnit.DEGREES,90);
-    static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-504,450,AngleUnit.DEGREES,90);
+    static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-522,450,AngleUnit.DEGREES,90);
     static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-500,535,AngleUnit.DEGREES,120);
 
 
@@ -195,7 +195,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                         }
                         linearSlideMotor.setPower(0);
                         flipServo.setPosition(flipPosScore);
-                        sleep(500);
+                        sleep(400);
                         flipServo.setPosition(flipPosDown);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -249,7 +249,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                         }
                         linearSlideMotor.setPower(0);
                         flipServo.setPosition(flipPosScore);
-                        sleep(500);
+                        sleep(400);
                         flipServo.setPosition(flipPosDown);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -303,7 +303,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                         }
                         linearSlideMotor.setPower(0);
                         flipServo.setPosition(flipPosScore);
-                        sleep(500);
+                        sleep(400);
                         flipServo.setPosition(flipPosDown);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -357,7 +357,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                         }
                         linearSlideMotor.setPower(0);
                         flipServo.setPosition(flipPosScore);
-                        sleep(500);
+                        sleep(400);
                         flipServo.setPosition(flipPosDown);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -373,6 +373,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                     rightBackDrive.setPower(0);
                     leftBackDrive.setPower(0);
                     rightBackDrive.setPower(0);
+
                     break;
             }
 
@@ -388,6 +389,9 @@ public class CompetitionAutoLeft extends LinearOpMode {
                 rightBackDrive.setPower(0);
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
+                if (linearSlideMotor.getCurrentPosition() > 0) {
+                    linearSlideMotor.setPower(-1);
+                }
             }
 
             telemetry.addData("current state:",stateMachine);
