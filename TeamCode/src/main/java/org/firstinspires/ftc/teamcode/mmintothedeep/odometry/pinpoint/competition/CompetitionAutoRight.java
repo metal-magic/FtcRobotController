@@ -65,33 +65,34 @@ public class CompetitionAutoRight extends LinearOpMode {
         DRIVE_TO_TARGET_12,
         DRIVE_TO_TARGET_13,
         DRIVE_TO_TARGET_14,
-        DRIVE_TO_TARGET_15
+        DRIVE_TO_TARGET_16, DRIVE_TO_TARGET_17, DRIVE_TO_TARGET_15
     }
 
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
     static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM,-742,-290,AngleUnit.DEGREES,0); // Specimen Chamber 1
     static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, -750, -290, AngleUnit.DEGREES, 0); // Specimen Chamber 2
     static final Pose2D TARGET_3 = new Pose2D(DistanceUnit.MM,-400,582, AngleUnit.DEGREES,0); // April Tag scanning
-    static final Pose2D TARGET_4 = new Pose2D(DistanceUnit.MM, -1380, 635, AngleUnit.DEGREES, 0); // April Tag Position
-    static final Pose2D TARGET_5 = new Pose2D(DistanceUnit.MM, -1229, 870, AngleUnit.DEGREES, 0);
-    static final Pose2D TARGET_6 = new Pose2D(DistanceUnit.MM, -299, 950, AngleUnit.DEGREES, 0);
-    static final Pose2D TARGET_7 = new Pose2D(DistanceUnit.MM, -1400, 950, AngleUnit.DEGREES, 0);
-    static final Pose2D TARGET_8 = new Pose2D(DistanceUnit.MM, -1210, 1168.920, AngleUnit.DEGREES, 0);
-    static final Pose2D TARGET_9 = new Pose2D(DistanceUnit.MM, -299, 1168.920, AngleUnit.DEGREES, 0);
-    static final Pose2D TARGET_10 = new Pose2D(DistanceUnit.MM, -195, 960, AngleUnit.DEGREES, 170);
-    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -70,    942 , AngleUnit.DEGREES, 170);
+    static final Pose2D TARGET_4 = new Pose2D(DistanceUnit.MM, -1340, 635, AngleUnit.DEGREES, 0); // April Tag Position
+    static final Pose2D TARGET_5 = new Pose2D(DistanceUnit.MM, -1240, 830, AngleUnit.DEGREES, 0);
+    static final Pose2D TARGET_6 = new Pose2D(DistanceUnit.MM, -260, 830, AngleUnit.DEGREES, 0);
+    static final Pose2D TARGET_7 = new Pose2D(DistanceUnit.MM, -1340, 830, AngleUnit.DEGREES, 0);
+    static final Pose2D TARGET_8 = new Pose2D(DistanceUnit.MM, -1250, 1090, AngleUnit.DEGREES, 0);
+    static final Pose2D TARGET_9 = new Pose2D(DistanceUnit.MM, -500, 1090, AngleUnit.DEGREES, 0);
+    static final Pose2D TARGET_10 = new Pose2D(DistanceUnit.MM, -195, 960, AngleUnit.DEGREES, 0);
+    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -65,    942 , AngleUnit.DEGREES, 170);
     static final Pose2D WAYPOINT_CHAMBER = new Pose2D(DistanceUnit.MM, -184, -74.614, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_NEW = new Pose2D(DistanceUnit.MM,-770,-74,AngleUnit.DEGREES,0);
     static final Pose2D CHAMBER_WAYPOINT2 = new Pose2D(DistanceUnit.MM, -670, -74.614, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_WAYPOINT3 = new Pose2D(DistanceUnit.MM, -400, -320, AngleUnit.DEGREES, 0);
-    static final Pose2D CHAMBER_WAYPOINT4 = new Pose2D(DistanceUnit.MM, -742, -340, AngleUnit.DEGREES, 0);
-    static final Pose2D CHAMBER_WAYPOINT5 = new Pose2D(DistanceUnit.MM, -775, -370, AngleUnit.DEGREES, 0);
-
+    static final Pose2D CHAMBER_WAYPOINT4 = new Pose2D(DistanceUnit.MM, -740, -340, AngleUnit.DEGREES, 0);
+    static final Pose2D CHAMBER_WAYPOINT5 = new Pose2D(DistanceUnit.MM, -748, -340, AngleUnit.DEGREES, 0);
+    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM, -765, -340, AngleUnit.DEGREES, 0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
     static final double slidePosSpecDown = 2200; //UtilityValues.SLIDE_POS_SPEC_DOWN;
     static final double slidePosSpecUp = UtilityValues.SLIDE_POS_SPEC_UP;
     static final double slidePosUp = UtilityValues.SLIDE_POS_SAMP;
+    static final double slidePosStable = UtilityValues.SLIDE_POS_STABLE;
 
     static final double flipPosDown = UtilityValues.FLIP_POS_DOWN;
     static final double flipPosScore = UtilityValues.FLIP_POS_SCORE;
@@ -116,6 +117,10 @@ public class CompetitionAutoRight extends LinearOpMode {
 
     boolean atTarget = false;
     public Servo turnServo = null;
+
+    public boolean condition = false;
+
+    public Pose2D currPose;
 
 
     @Override
@@ -211,7 +216,7 @@ public class CompetitionAutoRight extends LinearOpMode {
                             linearSlideMotor.setPower(-1);
                         }
                         linearSlideMotor.setPower(0);
-                        sleep(1000);
+                        sleep(500);
                         clipServo.setPosition(clipPosOpen);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
@@ -223,13 +228,13 @@ public class CompetitionAutoRight extends LinearOpMode {
                     break;
                 case DRIVE_TO_TARGET_2:
                     //drive to the second target
-                    if (nav.driveTo(odo.getPosition(), TARGET_2, 0.7, 0)){
+                    if (nav.driveTo(odo.getPosition(), TARGET_2, 0.8, 0)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_3;
                     }
                     break;
                 case DRIVE_TO_TARGET_3:
-                    if(nav.driveTo(odo.getPosition(), TARGET_3, 0.7, 0)){
+                    if(nav.driveTo(odo.getPosition(), TARGET_3, 0.8, 0)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_4;
 //                        if (!tagProcessor.getDetections().isEmpty()) {
@@ -245,7 +250,7 @@ public class CompetitionAutoRight extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_4:
-                    if(nav.driveTo(odo.getPosition(),TARGET_4,0.5,0)){
+                    if(nav.driveTo(odo.getPosition(),TARGET_4,0.725,0)){
                         telemetry.addLine("at position #4");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_5;
 //                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
@@ -257,48 +262,47 @@ public class CompetitionAutoRight extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_5:
-                    if(nav.driveTo(odo.getPosition(),TARGET_5,0.5,0)){
+                    if(nav.driveTo(odo.getPosition(),TARGET_5,0.725,0)){
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_6;
                     }
                     break;
                 case DRIVE_TO_TARGET_6:
-                    if(nav.driveTo(odo.getPosition(),TARGET_6,0.65,0)){
+                    if(nav.driveTo(odo.getPosition(),TARGET_6,0.6,0)){
                         telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_7;
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_11;
                     }
                     break;
                 case DRIVE_TO_TARGET_7:
-                    if(nav.driveTo(odo.getPosition(),TARGET_7,0.5,0)){
+                    if(nav.driveTo(odo.getPosition(),TARGET_7,0.725,0)){
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_8;
                     }
                     break;
                 case DRIVE_TO_TARGET_8:
-                    if(nav.driveTo(odo.getPosition(),TARGET_8,0.5,0)){
+                    if(nav.driveTo(odo.getPosition(),TARGET_8,0.725,0)){
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_9;
                     }
                     break;
                 case DRIVE_TO_TARGET_9:
-                    if(nav.driveTo(odo.getPosition(),TARGET_9,0.5,0)){
+                    if(nav.driveTo(odo.getPosition(),TARGET_9,0.725,0)){
                         telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_10;
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_11;
                     }
                     break;
                 case DRIVE_TO_TARGET_10:
-                    if(nav.driveTo(odo.getPosition(),TARGET_10,0.4,1)){
+                    if(nav.driveTo(odo.getPosition(),TARGET_10,0.7,0)){
                         telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_11;
+                        stateMachine = StateMachine.AT_TARGET;
                         leftFrontDrive.setPower(0);
                         rightBackDrive.setPower(0);
                         leftBackDrive.setPower(0);
                         rightBackDrive.setPower(0);
-                        clipServo.setPosition(0.4);
                     }
                     break;
                 case DRIVE_TO_TARGET_11:
-                    if(nav.driveTo(odo.getPosition(),TARGET_11,0.4,1)){
+                    if(nav.driveTo(odo.getPosition(),TARGET_11,0.5,1)){
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_12;
                         leftFrontDrive.setPower(0);
@@ -306,7 +310,7 @@ public class CompetitionAutoRight extends LinearOpMode {
                         leftBackDrive.setPower(0);
                         rightBackDrive.setPower(0);
                         clipServo.setPosition(clipPosClose);
-                        sleep(1000);
+                        sleep(800);
                         while (linearSlideMotor.getCurrentPosition() < 500) {
                             linearSlideMotor.setPower(1);
                         }
@@ -314,10 +318,10 @@ public class CompetitionAutoRight extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_12:
-                    if(nav.driveTo(odo.getPosition(), CHAMBER_WAYPOINT3,0.7,0)){
+                    if(nav.driveTo(odo.getPosition(), CHAMBER_WAYPOINT3,0.8,0)){
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_13;
-                        if (linearSlideMotor.getCurrentPosition() < slidePosSpecDown) {
+                        if (linearSlideMotor.getCurrentPosition() < slidePosStable) {
                             linearSlideMotor.setPower(1);
                         } else {
                             linearSlideMotor.setPower(0);
@@ -325,42 +329,72 @@ public class CompetitionAutoRight extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_13:
-                    if(nav.driveTo(odo.getPosition(), CHAMBER_WAYPOINT4,0.6,1)){
-                        telemetry.addLine("There!");
+                    if (nav.driveTo(odo.getPosition(), CHAMBER_WAYPOINT4, 0.55, 0.1)) {
+                        telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_14;
-                    } else {
-                        if (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
-                            linearSlideMotor.setPower(1);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
                     }
                     break;
                 case DRIVE_TO_TARGET_14:
-                    if(nav.driveTo(odo.getPosition(), CHAMBER_WAYPOINT5,0.6,1.5)){
-                        telemetry.addLine("There!");
-                        stateMachine = StateMachine.AT_TARGET;
-                        while (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
-                            linearSlideMotor.setPower(1);
+                    if (condition) {
+                        currPose = NEW_CHAMBER;
+                    } else {
+                        currPose = CHAMBER_WAYPOINT5;
+                    }
+                    if(nav.driveTo(odo.getPosition(), currPose,0.6,0.5)){
+                        telemetry.addLine("ThereCHECK!");
+                        telemetry.addData("SlidePos", linearSlideMotor.getCurrentPosition());
+                        if (condition) {
+                            stateMachine = StateMachine.DRIVE_TO_TARGET_10;
+                        } else {
+                            stateMachine = StateMachine.DRIVE_TO_TARGET_15;
+                        }
+                        while (true) {
+                            if (linearSlideMotor.getCurrentPosition() < slidePosSpecDown) {
+                                linearSlideMotor.setPower(1);
+                            } else if (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
+                                linearSlideMotor.setPower(0.5);
+                            } else {
+                                break;
+                            }
                         }
                         linearSlideMotor.setPower(0);
-                        sleep(500);
+                        sleep(250);
                         while (linearSlideMotor.getCurrentPosition() > slidePosSpecDown) {
                             linearSlideMotor.setPower(-1);
                         }
                         linearSlideMotor.setPower(0);
-                        sleep(500);
+                        sleep(250);
                         clipServo.setPosition(clipPosOpen);
-                        atTarget = true;
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosSpecUp) {
                             linearSlideMotor.setPower(1);
                         } else {
                             linearSlideMotor.setPower(0);
                         }
+                    break;
+                    }
+                case DRIVE_TO_TARGET_15:
+                    if (nav.driveTo(odo.getPosition(), TARGET_10, 0.625, 0)) {
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_11;
+                        condition = true;
+                    } else {
+                        if (linearSlideMotor.getCurrentPosition() > 50) {
+                            linearSlideMotor.setPower(-1);
+                        } else {
+                            linearSlideMotor.setPower(0);
+                        }
+                    }
+                    break;
+                case DRIVE_TO_TARGET_16:
+                    if (nav.driveTo(odo.getPosition(), TARGET_10, 0.7, 0)) {
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_9;
+
                     }
                     break;
                 case AT_TARGET:
+
                     atTarget = true;
                     leftFrontDrive.setPower(0);
                     rightBackDrive.setPower(0);
@@ -388,6 +422,7 @@ public class CompetitionAutoRight extends LinearOpMode {
             Pose2D pos = odo.getPosition();
             String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
             telemetry.addData("Position", data);
+            telemetry.addData("Slide", linearSlideMotor.getCurrentPosition());
 
             telemetryAprilTag();
 

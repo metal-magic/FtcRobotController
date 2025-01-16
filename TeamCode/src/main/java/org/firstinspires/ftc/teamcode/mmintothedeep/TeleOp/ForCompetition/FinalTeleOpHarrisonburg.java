@@ -254,6 +254,14 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                 motorSpeed = 0.3;
             }
 
+            if (gamepad1.x) {
+                linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+
+            if (gamepad1.y) {
+                pivotServo.setPosition(pivotPosFloat);
+            }
+
             // Manual control
 
             if (linearSlideMotor.getCurrentPosition() < 5350 && gamepad1.a) {
@@ -298,11 +306,11 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
 
             if (isTransferring) {
                 if (System.currentTimeMillis() > startTime + 2000.0) {
-                    slideUp = false;
+                    slideUp = true;
                     slideDown = false;
                     slideMidUp = false;
                     slideMidDown = false;
-                    slideStable = true;
+                    slideStable = false;
                     isTransferring = false;
                 } else if (System.currentTimeMillis() > startTime + 1500.0) {
                     pivotServo.setPosition(pivotPosFloat);
@@ -481,6 +489,9 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                 isTransferring = false;
                 slideStable = false;
                 clipServo.setPosition(0);
+
+                pivotServo.setPosition(pivotPosFloat);
+                pivotServo.setPosition(pivotPosFloat);
             }
 
             if (slideMidUp) {
@@ -501,6 +512,8 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                 slideUp = false;
                 slideMidUp = false;
                 isTransferring = false;
+
+                pivotServo.setPosition(pivotPosFloat);
             }
 
             if (slideMidDown) {
