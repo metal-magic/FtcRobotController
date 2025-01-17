@@ -66,10 +66,12 @@ public class UtilityValues {
     public static final double PIVOT_POS_HOVER = 0.57333333; //0.7-0.05;
     public static final double PIVOT_POS_SUB = 0.57333333; //0.7-0.05;
     public static final double PIVOT_POS_FLOAT = 0.30;
-    public static final double PIVOT_POS_TRANSFER = 0.23; //0.229; //0.39-0.05;
+    public static final double PIVOT_POS_TRANSFER = 0.205; //0.229; //0.39-0.05;
 
-    public static final double TURN_POS_DOWN = 0.1;
-    public static final double TURN_POS_TRANSFER = 0.77;
+    public static final double PIVOT_POS_OUT_OF_SUBMERSIBLE = 0.55;
+
+    public static final double TURN_POS_DOWN = 0.06;
+    public static final double TURN_POS_TRANSFER = 0.795926;
 
     public static final double FLIP_POS_DOWN = 0.06; // 0.1
     public static final double FLIP_POS_SCORE = 0.7;

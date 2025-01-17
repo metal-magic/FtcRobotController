@@ -235,6 +235,10 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                 rx = -1;
             }
 
+            if (gamepad1.x) {
+                linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
+
             // Denominator is the largest motor power (abs value) or 1
             // This makes sure that the ratio stays the same
             // but only when at least one is out of range [-1, 1]
@@ -254,27 +258,22 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                 motorSpeed = 0.3;
             }
 
-            if (gamepad1.x) {
-                linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
-
-            if (gamepad1.y) {
-                pivotServo.setPosition(pivotPosFloat);
-            }
-
             // Manual control
 
             if (linearSlideMotor.getCurrentPosition() < 5350 && gamepad1.a) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 linearSlideMotor.setPower(0.8);
-            } else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad1.b) {
+            } else if (gamepad1.b) { // linearSlideMotor.getCurrentPosition() > 50 &&
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 linearSlideMotor.setPower(-0.8);
             } else {
                 if (!slideUp && !slideDown && !slideMidUp && !slideMidDown && !slideStable) {
                     linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    linearSlideMotor.setPower(0);
+                }
+                if (linearSlideMotor.getCurrentPosition() > 5275) {
                     linearSlideMotor.setPower(0);
                 }
             }
@@ -312,9 +311,9 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                     slideMidDown = false;
                     slideStable = false;
                     isTransferring = false;
-                } else if (System.currentTimeMillis() > startTime + 1500.0) {
+                } else if (System.currentTimeMillis() > startTime + 1600.0) {
                     pivotServo.setPosition(pivotPosFloat);
-                } else if (System.currentTimeMillis() > startTime + 1000.0) {
+                } else if (System.currentTimeMillis() > startTime + 1200.0) {
                     gripperServo1.setPosition(gripperPosOpen);
                 }
             }
@@ -326,7 +325,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
 
                 pivotServo.setPosition(pivotPosHover);
                 pivotServo.setPosition(pivotPosHover);
-                gripperServo1.setPosition(gripperPosOpen);
+                //gripperServo1.setPosition(gripperPosOpen);
 
                 slideDown = linearSlideMotor.getCurrentPosition() > 100;
                 slideUp = false;
@@ -341,8 +340,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                 turnServo.setPosition(turnPosDown);
                 flipServo.setPosition(flipPosDown);
 
-                pivotServo.setPosition(pivotPosHover);
-                pivotServo.setPosition(pivotPosHover);
+                pivotServo.setPosition(UtilityValues.PIVOT_POS_OUT_OF_SUBMERSIBLE);
                 gripperServo1.setPosition(gripperPosClose);
             }
             // pick up
@@ -489,9 +487,6 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                 isTransferring = false;
                 slideStable = false;
                 clipServo.setPosition(0);
-
-                pivotServo.setPosition(pivotPosFloat);
-                pivotServo.setPosition(pivotPosFloat);
             }
 
             if (slideMidUp) {
@@ -512,8 +507,6 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                 slideUp = false;
                 slideMidUp = false;
                 isTransferring = false;
-
-                pivotServo.setPosition(pivotPosFloat);
             }
 
             if (slideMidDown) {
