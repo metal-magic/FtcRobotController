@@ -258,9 +258,13 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                 motorSpeed = 0.3;
             }
 
+            if (gamepad1.y || gamepad2.back) {
+                pivotServo.setPosition(pivotPosFloat);
+            }
+
             // Manual control
 
-            if (linearSlideMotor.getCurrentPosition() < 5350 && gamepad1.a) {
+            if (gamepad1.a) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 linearSlideMotor.setPower(0.8);
@@ -522,7 +526,6 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
             if (gamepad1.right_bumper) {
                 hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
                 hangSlideMotor.setPower(-0.7);
             } else if (gamepad1.left_bumper) {
                 if (hangSlideMotor.getCurrentPosition() > -4338) {

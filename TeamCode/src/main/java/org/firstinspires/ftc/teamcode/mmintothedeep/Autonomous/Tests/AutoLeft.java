@@ -52,7 +52,7 @@ public class AutoLeft extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        initPortal();
+//        initPortal();
         initMotor();
         waitForStart();
 

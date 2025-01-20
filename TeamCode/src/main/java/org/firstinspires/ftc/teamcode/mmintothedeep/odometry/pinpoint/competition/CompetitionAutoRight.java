@@ -34,9 +34,6 @@ public class CompetitionAutoRight extends LinearOpMode {
     DcMotor leftBackDrive;
     DcMotor rightBackDrive;
 
-    VisionPortal visionPortal;
-    AprilTagProcessor tagProcessor;
-
     private Position cameraPosition = new Position(DistanceUnit.INCH,
             6, -3.5, 0, 0);
     private YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
@@ -77,16 +74,16 @@ public class CompetitionAutoRight extends LinearOpMode {
     static final Pose2D TARGET_6 = new Pose2D(DistanceUnit.MM, -260, 830, AngleUnit.DEGREES, 0);
     static final Pose2D TARGET_7 = new Pose2D(DistanceUnit.MM, -1340, 830, AngleUnit.DEGREES, 0);
     static final Pose2D TARGET_8 = new Pose2D(DistanceUnit.MM, -1250, 1090, AngleUnit.DEGREES, 0);
-    static final Pose2D TARGET_9 = new Pose2D(DistanceUnit.MM, -500, 1090, AngleUnit.DEGREES, 0);
-    static final Pose2D TARGET_10 = new Pose2D(DistanceUnit.MM, -195, 960, AngleUnit.DEGREES, 0);
-    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -65,    942 , AngleUnit.DEGREES, 170);
+    static final Pose2D TARGET_9 = new Pose2D(DistanceUnit.MM, -350, 942, AngleUnit.DEGREES, 170);
+    static final Pose2D TARGET_10 = new Pose2D(DistanceUnit.MM, -165, 942, AngleUnit.DEGREES, 170);
+    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -60,    942 , AngleUnit.DEGREES, 170);
     static final Pose2D WAYPOINT_CHAMBER = new Pose2D(DistanceUnit.MM, -184, -74.614, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_NEW = new Pose2D(DistanceUnit.MM,-770,-74,AngleUnit.DEGREES,0);
     static final Pose2D CHAMBER_WAYPOINT2 = new Pose2D(DistanceUnit.MM, -670, -74.614, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_WAYPOINT3 = new Pose2D(DistanceUnit.MM, -400, -320, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_WAYPOINT4 = new Pose2D(DistanceUnit.MM, -740, -340, AngleUnit.DEGREES, 0);
-    static final Pose2D CHAMBER_WAYPOINT5 = new Pose2D(DistanceUnit.MM, -748, -340, AngleUnit.DEGREES, 0);
-    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM, -765, -340, AngleUnit.DEGREES, 0);
+    static final Pose2D CHAMBER_WAYPOINT5 = new Pose2D(DistanceUnit.MM, -750, -340, AngleUnit.DEGREES, 0);
+    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM, -784, -340, AngleUnit.DEGREES, 0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
     static final double slidePosSpecDown = 2200; //UtilityValues.SLIDE_POS_SPEC_DOWN;
@@ -126,7 +123,7 @@ public class CompetitionAutoRight extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        initPortal();
+//        initPortal();
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
@@ -270,7 +267,7 @@ public class CompetitionAutoRight extends LinearOpMode {
                 case DRIVE_TO_TARGET_6:
                     if(nav.driveTo(odo.getPosition(),TARGET_6,0.6,0)){
                         telemetry.addLine("There!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_11;
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_9;
                     }
                     break;
                 case DRIVE_TO_TARGET_7:
@@ -286,7 +283,7 @@ public class CompetitionAutoRight extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_9:
-                    if(nav.driveTo(odo.getPosition(),TARGET_9,0.725,0)){
+                    if(nav.driveTo(odo.getPosition(),TARGET_9,0.55,0)){
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_11;
                     }
@@ -302,7 +299,7 @@ public class CompetitionAutoRight extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_11:
-                    if(nav.driveTo(odo.getPosition(),TARGET_11,0.5,1)){
+                    if(nav.driveTo(odo.getPosition(),TARGET_11,0.4,1)){
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_12;
                         leftFrontDrive.setPower(0);
@@ -424,89 +421,10 @@ public class CompetitionAutoRight extends LinearOpMode {
             telemetry.addData("Position", data);
             telemetry.addData("Slide", linearSlideMotor.getCurrentPosition());
 
-            telemetryAprilTag();
-
             telemetry.update();
 
         }
     }
 
-    public void initPortal() {
-
-        // Because we want to show two camera feeds simultaneously, we need to inform
-        // the SDK that we want it to split the camera monitor area into two smaller
-        // areas for us. It will then give us View IDs which we can pass to the
-        // individual
-        // vision portals to allow them to properly hook into the UI in tandem.
-
-        // We extract the two view IDs from the array to make our lives a little easier
-        // later.
-        // NB: the array is 2 long because we asked for 3 portals up above.
-        //int portal1ViewId = viewIds[0];
-
-        // drawing information on the driver station camera screen
-        tagProcessor = new AprilTagProcessor.Builder()
-                .setDrawAxes(true)
-                .setDrawCubeProjection(true)
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setCameraPose(cameraPosition, cameraOrientation)
-                .setLensIntrinsics(513.474, 513.474, 316.919, 249.760)
-                .build();
-
-        // stating the webcam
-        visionPortal = new VisionPortal.Builder()
-                //.setLiveViewContainerId(portal1ViewId)
-                .addProcessor(tagProcessor)
-                .setCamera(hardwareMap.get(WebcamName.class, "tagCam"))
-                .setCameraResolution(new Size(640, 480))
-                .build();
-
-    }
-
-    private void telemetryAprilTag() {
-
-        List<AprilTagDetection> currentDetections = tagProcessor.getDetections();
-        telemetry.addData("# AprilTags Detected", currentDetections.size());
-
-// Step through the list of detections and display info for each one.
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                telemetry.addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
-                telemetry.addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)",
-                        detection.robotPose.getPosition().x,
-                        detection.robotPose.getPosition().y,
-                        detection.robotPose.getPosition().z));
-                telemetry.addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)",
-                        detection.robotPose.getOrientation().getPitch(AngleUnit.DEGREES),
-                        detection.robotPose.getOrientation().getRoll(AngleUnit.DEGREES),
-                        detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES)));
-            } else {
-                telemetry.addLine(String.format("\n==== (ID %d) Unknown", detection.id));
-                telemetry.addLine(String.format("Center %6.0f %6.0f   (pixels)", detection.center.x, detection.center.y));
-            }
-        }   // end for() loop
-
-// Add "key" information to telemetry
-        telemetry.addLine("\nkey:\nXYZ = X (Right), Y (Forward), Z (Up) dist.");
-        telemetry.addLine("PRY = Pitch, Roll & Yaw (XYZ Rotation)");
-
-    }
-
-    private Pose2D returnAprilTagPose(Pose2D current) {
-
-        List<AprilTagDetection> currentDetections = tagProcessor.getDetections();
-        telemetry.addData("# AprilTags Detected", currentDetections.size());
-
-// Step through the list of detections and change our current position if we see one
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
-                Pose2D newPose = new Pose2D(DistanceUnit.INCH,
-                        detection.robotPose.getPosition().y, -detection.robotPose.getPosition().x, AngleUnit.DEGREES, detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES));
-                return newPose;
-            }
-        }
-        return current;
-    }
 
 }
