@@ -24,7 +24,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.Locale;
 
-@Autonomous(name="Competition Auto Left", group="Pinpoint")
+@Autonomous(name="!!Competition Auto Left", group="Pinpoint")
 //@Disabled
 
 public class CompetitionAutoLeft extends LinearOpMode {

@@ -24,7 +24,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.Locale;
 
-@Autonomous(name="Competition Auto Right", group="Pinpoint")
+@Autonomous(name="!!Competition Auto Right", group="Pinpoint")
 //@Disabled
 
 public class CompetitionAutoRight extends LinearOpMode {
@@ -76,14 +76,16 @@ public class CompetitionAutoRight extends LinearOpMode {
     static final Pose2D TARGET_8 = new Pose2D(DistanceUnit.MM, -1250, 1090, AngleUnit.DEGREES, 0);
     static final Pose2D TARGET_9 = new Pose2D(DistanceUnit.MM, -350, 942, AngleUnit.DEGREES, 170);
     static final Pose2D TARGET_10 = new Pose2D(DistanceUnit.MM, -165, 942, AngleUnit.DEGREES, 170);
-    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -60,    942 , AngleUnit.DEGREES, 170);
+    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -64, 942 , AngleUnit.DEGREES, 170);
     static final Pose2D WAYPOINT_CHAMBER = new Pose2D(DistanceUnit.MM, -184, -74.614, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_NEW = new Pose2D(DistanceUnit.MM,-770,-74,AngleUnit.DEGREES,0);
     static final Pose2D CHAMBER_WAYPOINT2 = new Pose2D(DistanceUnit.MM, -670, -74.614, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_WAYPOINT3 = new Pose2D(DistanceUnit.MM, -400, -320, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_WAYPOINT4 = new Pose2D(DistanceUnit.MM, -740, -340, AngleUnit.DEGREES, 0);
-    static final Pose2D CHAMBER_WAYPOINT5 = new Pose2D(DistanceUnit.MM, -750, -340, AngleUnit.DEGREES, 0);
+    static final Pose2D CHAMBER_WAYPOINT5 = new Pose2D(DistanceUnit.MM, -780, -340, AngleUnit.DEGREES, 0);
     static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM, -784, -340, AngleUnit.DEGREES, 0);
+
+    static final Pose2D PARK = new Pose2D(DistanceUnit.MM, -65, 942 , AngleUnit.DEGREES, 0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
     static final double slidePosSpecDown = 2200; //UtilityValues.SLIDE_POS_SPEC_DOWN;
@@ -290,7 +292,7 @@ public class CompetitionAutoRight extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_10:
-                    if(nav.driveTo(odo.getPosition(),TARGET_10,0.7,0)){
+                    if(nav.driveTo(odo.getPosition(), PARK,0.7,0)){
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.AT_TARGET;
                         leftFrontDrive.setPower(0);

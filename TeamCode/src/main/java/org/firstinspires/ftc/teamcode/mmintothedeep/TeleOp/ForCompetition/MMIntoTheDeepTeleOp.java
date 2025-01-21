@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.ForCompetition;
 
 import android.util.Size;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -55,6 +56,7 @@ import java.util.Objects;
  */
 
 @TeleOp(name = "New TeleOp1 Into The Deep")
+@Disabled
 public class MMIntoTheDeepTeleOp extends OpMode {
 
     public DcMotor motorFrontLeft = null;

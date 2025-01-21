@@ -60,7 +60,7 @@ For support, contact tech@gobilda.com
 -Ethan Doak
  */
 
-@TeleOp(name="CompetitionOdoTeleOp", group="Pinpoint")
+@TeleOp(name="!CompetitionOdoTeleOp", group="Pinpoint")
 //@Disabled
 
 public class CompetitionOdoTeleOp extends LinearOpMode {

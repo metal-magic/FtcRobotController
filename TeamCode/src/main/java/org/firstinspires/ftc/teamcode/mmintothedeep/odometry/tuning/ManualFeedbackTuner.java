@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.odometry.tuning;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.MecanumDrive;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.TankDrive;
 import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.ThreeDeadWheelLocalizer;
 import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.TwoDeadWheelLocalizer;
 
+@Disabled
 public final class ManualFeedbackTuner extends LinearOpMode {
     public static double DISTANCE = 64;
 

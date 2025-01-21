@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Autonomous(name="localize w odo and tag", group="Pinpoint")
-//@Disabled
+@Disabled
 
 public class LocalizeWithOdo extends LinearOpMode {
 

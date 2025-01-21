@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.randomTests;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.GoBildaPin
 import java.util.Locale;
 
 @TeleOp(name="SIGMA SIGMA SIGMA", group="Pinpoint")
-//@Disabled
+@Disabled
 
 public class TeleOpToBasket extends LinearOpMode {
 
