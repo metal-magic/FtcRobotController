@@ -520,6 +520,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                     linearSlideMotor.setPower(0);
                     slideMidDown = false;
                     clipServo.setPosition(0.3);
+                    slideDown = true;
                 }
             }
 
