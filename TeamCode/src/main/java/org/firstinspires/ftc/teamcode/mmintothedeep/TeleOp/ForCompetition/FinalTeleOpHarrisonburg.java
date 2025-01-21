@@ -190,7 +190,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
 
         waitForStart();
 
-        pivotServo.setPosition(UtilityValues.PIVOT_POS_HOVER);
+        pivotServo.setPosition(UtilityValues.PIVOT_POS_FLOAT);
         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
         gripperServo1.setPosition(gripperPosOpen);
 
@@ -520,6 +520,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
                     linearSlideMotor.setPower(0);
                     slideMidDown = false;
                     clipServo.setPosition(0.3);
+                    sleep(200);
                     slideDown = true;
                 }
             }
@@ -559,7 +560,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
 
             if (gamepad1.dpad_up) {
                 isPressedEndOHYE = true;
-                pivotServo.setPosition(pivotPosTransfer);
+                pivotServo.setPosition(pivotPosHover);
             } else {
                 if (isPressedEndOHYE) {
                     hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

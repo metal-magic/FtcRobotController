@@ -182,6 +182,7 @@ public class CompetitionAutoRight extends LinearOpMode {
 
         clipServo.setPosition(clipPosClose);
         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+        gripperServo1.setPosition(0.55);
 
         // Wait for the game to start (driver presses START)
         waitForStart();
