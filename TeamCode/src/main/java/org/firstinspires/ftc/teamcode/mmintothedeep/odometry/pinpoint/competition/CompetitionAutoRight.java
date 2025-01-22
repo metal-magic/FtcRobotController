@@ -82,7 +82,7 @@ public class CompetitionAutoRight extends LinearOpMode {
     static final Pose2D CHAMBER_WAYPOINT2 = new Pose2D(DistanceUnit.MM, -670, -74.614, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_WAYPOINT3 = new Pose2D(DistanceUnit.MM, -400, -320, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_WAYPOINT4 = new Pose2D(DistanceUnit.MM, -740, -340, AngleUnit.DEGREES, 0);
-    static final Pose2D CHAMBER_WAYPOINT5 = new Pose2D(DistanceUnit.MM, -780, -340, AngleUnit.DEGREES, 0);
+    static final Pose2D CHAMBER_WAYPOINT5 = new Pose2D(DistanceUnit.MM, -785, -340, AngleUnit.DEGREES, 0);
     static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM, -784, -340, AngleUnit.DEGREES, 0);
 
     static final Pose2D PARK = new Pose2D(DistanceUnit.MM, -65, 942 , AngleUnit.DEGREES, 0);

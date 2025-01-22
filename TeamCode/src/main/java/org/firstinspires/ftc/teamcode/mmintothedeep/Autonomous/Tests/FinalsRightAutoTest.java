@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.Autonomous.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,6 +20,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Autonomous(name = "RIGHT 2 + 0 + park test", group = "Autonomous")
+@Disabled
 public class FinalsRightAutoTest extends LinearOpMode {
     Date currentTime = new Date();
     private DcMotor leftFrontDrive = null;

@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.GoBildaPin
 
 import java.util.Locale;
 
-@Autonomous(name="!!Competition Auto Left", group="Pinpoint")
+@Autonomous(name="!!Competition Auto RIGHT PARK", group="Pinpoint")
 //@Disabled
 
 public class RightPark extends LinearOpMode {
