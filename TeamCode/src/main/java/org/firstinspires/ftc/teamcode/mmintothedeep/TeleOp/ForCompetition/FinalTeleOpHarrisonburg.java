@@ -102,6 +102,8 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
     static final double pivotPosFloat = UtilityValues.PIVOT_POS_FLOAT;
     static final double pivotPosTransfer = UtilityValues.PIVOT_POS_TRANSFER;
 
+    static final double pivotPosHang = UtilityValues.PIVOT_POS_HANG;
+
     static final double turnPosDown = UtilityValues.TURN_POS_DOWN;
     static final double turnPosTransfer = UtilityValues.TURN_POS_TRANSFER;
 
@@ -561,7 +563,7 @@ public class FinalTeleOpHarrisonburg extends LinearOpMode {
 
             if (gamepad1.dpad_up) {
                 isPressedEndOHYE = true;
-                pivotServo.setPosition(pivotPosHover);
+                pivotServo.setPosition(pivotPosHang);
             } else {
                 if (isPressedEndOHYE) {
                     hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
