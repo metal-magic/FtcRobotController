@@ -66,8 +66,8 @@ public class CompetitionAutoRight extends LinearOpMode {
     }
 
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
-    static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM,-742,-290,AngleUnit.DEGREES,0); // Specimen Chamber 1
-    static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, -750, -290, AngleUnit.DEGREES, 0); // Specimen Chamber 2
+    static final Pose2D TARGET_1 = new Pose2D(DistanceUnit.MM,-747,-290,AngleUnit.DEGREES,0); // Specimen Chamber 1
+    static final Pose2D TARGET_2 = new Pose2D(DistanceUnit.MM, -755, -290, AngleUnit.DEGREES, 0); // Specimen Chamber 2
     static final Pose2D TARGET_3 = new Pose2D(DistanceUnit.MM,-400,582, AngleUnit.DEGREES,0); // April Tag scanning
     static final Pose2D TARGET_4 = new Pose2D(DistanceUnit.MM, -1340, 635, AngleUnit.DEGREES, 0); // April Tag Position
     static final Pose2D TARGET_5 = new Pose2D(DistanceUnit.MM, -1240, 830, AngleUnit.DEGREES, 0);
@@ -76,7 +76,7 @@ public class CompetitionAutoRight extends LinearOpMode {
     static final Pose2D TARGET_8 = new Pose2D(DistanceUnit.MM, -1250, 1090, AngleUnit.DEGREES, 0);
     static final Pose2D TARGET_9 = new Pose2D(DistanceUnit.MM, -350, 942, AngleUnit.DEGREES, 170);
     static final Pose2D TARGET_10 = new Pose2D(DistanceUnit.MM, -165, 942, AngleUnit.DEGREES, 170);
-    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -64, 942 , AngleUnit.DEGREES, 170);
+    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -70, 942 , AngleUnit.DEGREES, 170);
     static final Pose2D WAYPOINT_CHAMBER = new Pose2D(DistanceUnit.MM, -184, -74.614, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_NEW = new Pose2D(DistanceUnit.MM,-770,-74,AngleUnit.DEGREES,0);
     static final Pose2D CHAMBER_WAYPOINT2 = new Pose2D(DistanceUnit.MM, -670, -74.614, AngleUnit.DEGREES, 0);
@@ -242,7 +242,7 @@ public class CompetitionAutoRight extends LinearOpMode {
 //                        }
                         odo.update();
                     } else {
-                        if (linearSlideMotor.getCurrentPosition() > 50) {
+                        if (linearSlideMotor.getCurrentPosition() > 20) {
                             linearSlideMotor.setPower(-1);
                         } else {
                             linearSlideMotor.setPower(0);

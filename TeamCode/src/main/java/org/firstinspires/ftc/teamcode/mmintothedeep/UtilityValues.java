@@ -66,7 +66,7 @@ public class UtilityValues {
     public static final double PIVOT_POS_HOVER = 0.57333333; //0.7-0.05;
     public static final double PIVOT_POS_SUB = 0.57333333; //0.7-0.05;
     public static final double PIVOT_POS_FLOAT = 0.30;
-    public static final double PIVOT_POS_TRANSFER = 0.2105; //0.229; //0.39-0.05;
+    public static final double PIVOT_POS_TRANSFER = 0.2093; //0.229; //0.39-0.05;
     public static final double PIVOT_POS_HANG = 0.46; //0.229; //0.39-0.05;
 
 
