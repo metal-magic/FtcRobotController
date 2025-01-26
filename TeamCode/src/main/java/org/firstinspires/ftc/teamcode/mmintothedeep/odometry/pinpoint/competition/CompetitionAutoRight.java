@@ -76,7 +76,8 @@ public class CompetitionAutoRight extends LinearOpMode {
     static final Pose2D TARGET_8 = new Pose2D(DistanceUnit.MM, -1250, 1090, AngleUnit.DEGREES, 0);
     static final Pose2D TARGET_9 = new Pose2D(DistanceUnit.MM, -350, 942, AngleUnit.DEGREES, 170);
     static final Pose2D TARGET_10 = new Pose2D(DistanceUnit.MM, -165, 942, AngleUnit.DEGREES, 170);
-    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -70, 942 , AngleUnit.DEGREES, 170);
+    static final Pose2D TARGET_11 = new Pose2D(DistanceUnit.MM, -60, 942 , AngleUnit.DEGREES, 170);
+    static final Pose2D TARGET_12 = new Pose2D(DistanceUnit.MM, -80, 942 , AngleUnit.DEGREES, 170);
     static final Pose2D WAYPOINT_CHAMBER = new Pose2D(DistanceUnit.MM, -184, -74.614, AngleUnit.DEGREES, 0);
     static final Pose2D CHAMBER_NEW = new Pose2D(DistanceUnit.MM,-770,-74,AngleUnit.DEGREES,0);
     static final Pose2D CHAMBER_WAYPOINT2 = new Pose2D(DistanceUnit.MM, -670, -74.614, AngleUnit.DEGREES, 0);
@@ -120,6 +121,10 @@ public class CompetitionAutoRight extends LinearOpMode {
     public boolean condition = false;
 
     public Pose2D currPose;
+
+    public Pose2D lastPose;
+
+    public boolean third = false;
 
 
     @Override
@@ -302,7 +307,12 @@ public class CompetitionAutoRight extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_11:
-                    if(nav.driveTo(odo.getPosition(),TARGET_11,0.4,1)){
+                    if (third) {
+                        lastPose = TARGET_12;
+                    } else {
+                        lastPose = TARGET_11;
+                    }
+                    if(nav.driveTo(odo.getPosition(),lastPose,0.4,1)){
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_12;
                         leftFrontDrive.setPower(0);
@@ -318,6 +328,7 @@ public class CompetitionAutoRight extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_12:
+                    third = true;
                     if(nav.driveTo(odo.getPosition(), CHAMBER_WAYPOINT3,0.8,0)){
                         telemetry.addLine("There!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_13;

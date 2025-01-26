@@ -72,12 +72,19 @@ public class CompetitionAutoLeft extends LinearOpMode {
 //    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-500,535,AngleUnit.DEGREES,120);
 
 
+
+
+//    static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
+//    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-448,155,AngleUnit.DEGREES,45);
+//    static final Pose2D SAMPLE_1 = new Pose2D(DistanceUnit.MM,-302,450,AngleUnit.DEGREES,90);
+//    static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-522,450,AngleUnit.DEGREES,90);
+//    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-500,545,AngleUnit.DEGREES,121);
+
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
-    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-440,155,AngleUnit.DEGREES,45);
+    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-450,110,AngleUnit.DEGREES,40);
     static final Pose2D SAMPLE_1 = new Pose2D(DistanceUnit.MM,-302,450,AngleUnit.DEGREES,90);
     static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-522,450,AngleUnit.DEGREES,90);
-    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-500,545,AngleUnit.DEGREES,121);
-
+    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-515,570,AngleUnit.DEGREES,120);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
     static final double slidePosSpecDown = 2300; //UtilityValues.SLIDE_POS_SPEC_DOWN;
@@ -192,7 +199,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                     the robot has reached the target, and has been there for (holdTime) seconds.
                     Once driveTo returns true, it prints a telemetry line and moves the state machine forward.
                      */
-                    if (nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.4, 0.5)){
+                    if (nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.65, 0.5)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_2;
                         while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -212,7 +219,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                     break;
                 case DRIVE_TO_TARGET_2:
                     //drive to the second target
-                    if (nav.driveTo(odo.getPosition(), SAMPLE_1, 0.6, 0.5)){
+                    if (nav.driveTo(odo.getPosition(), SAMPLE_1, 0.65, 0.5)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_3;
                         while (linearSlideMotor.getCurrentPosition() > slidePosDown) {
@@ -232,9 +239,9 @@ public class CompetitionAutoLeft extends LinearOpMode {
                         pivotServo.setPosition(pivotPosTransfer);
                         //sleep(500);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        sleep(800);
+                        sleep(1000);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
-                        sleep(500);
+                        sleep(800);
                         pivotServo.setPosition(pivotPosFloat);
                         sleep(200);
                     } else {
@@ -246,7 +253,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_3:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.5)){
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.65, 0.5)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_4;
                         while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -258,7 +265,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                         flipServo.setPosition(flipPosDown);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                            linearSlideMotor.setPower(1);
+                            linearSlideMotor.setPower(0.9);
                         } else {
                             linearSlideMotor.setPower(0);
                         }
@@ -266,7 +273,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                     break;
                 case DRIVE_TO_TARGET_4:
                     //drive to the second target
-                    if (nav.driveTo(odo.getPosition(), SAMPLE_2, 0.6, 0.5)){
+                    if (nav.driveTo(odo.getPosition(), SAMPLE_2, 0.65, 0.5)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_5;
                         while (linearSlideMotor.getCurrentPosition() > slidePosDown) {
@@ -286,9 +293,9 @@ public class CompetitionAutoLeft extends LinearOpMode {
                         pivotServo.setPosition(pivotPosTransfer);
                         //sleep(500);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        sleep(800);
+                        sleep(1000);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
-                        sleep(500);
+                        sleep(800);
                         pivotServo.setPosition(pivotPosFloat);
                         sleep(200);
                     } else {
@@ -300,7 +307,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_5:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.5)){
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.65, 0.5)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_6;
                         while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -320,7 +327,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                     break;
                 case DRIVE_TO_TARGET_6:
                     //drive to the second target
-                    if (nav.driveTo(odo.getPosition(), SAMPLE_3, 0.6, 0.5)){
+                    if (nav.driveTo(odo.getPosition(), SAMPLE_3, 0.65, 0.5)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_7;
                         while (linearSlideMotor.getCurrentPosition() > slidePosDown) {
@@ -340,9 +347,9 @@ public class CompetitionAutoLeft extends LinearOpMode {
                         pivotServo.setPosition(pivotPosTransfer);
                         //sleep(500);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        sleep(800);
+                        sleep(1000);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
-                        sleep(500);
+                        sleep(800);
                         pivotServo.setPosition(pivotPosFloat);
                         sleep(200);
                     } else {
@@ -354,7 +361,7 @@ public class CompetitionAutoLeft extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_7:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.5)){
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.65, 0.5)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.AT_TARGET;
                         while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
