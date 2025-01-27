@@ -69,7 +69,9 @@ public class TeleOpTestToBasket extends LinearOpMode {
         DRIVE_TO_TARGET_13,
         DRIVE_TO_TARGET_14,
         DRIVE_TO_TARGET_15,
-        DRIVE_TO_TARGET_BASKET
+        DRIVE_TO_TARGET_BASKET,
+        DRIVE_TO_TARGET_SUB_WAYPOINT,
+        DRIVE_TO_TARGET_SUBMERSIBLE
     }
 
 //    static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
@@ -90,6 +92,9 @@ public class TeleOpTestToBasket extends LinearOpMode {
     static final Pose2D SAMPLE_1 = new Pose2D(DistanceUnit.MM, -302, 450, AngleUnit.DEGREES, 90);
     static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM, -522, 450, AngleUnit.DEGREES, 90);
     static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM, -515, 570, AngleUnit.DEGREES, 120);
+    static final Pose2D SUBMERSIBLE_TARGET = new Pose2D(DistanceUnit.MM, 300, 1569, AngleUnit.DEGREES, 0);
+    static final Pose2D SUB_WAYPOINT_TARGET = new Pose2D(DistanceUnit.MM, -254, 1424, AngleUnit.DEGREES, 0);
+
 
     boolean atTarget = false;
 
@@ -165,6 +170,30 @@ public class TeleOpTestToBasket extends LinearOpMode {
                     }
                     atTarget = false;
                     break;
+                case DRIVE_TO_TARGET_SUB_WAYPOINT:
+                    if (nav.driveTo(odo.getPosition(), SUB_WAYPOINT_TARGET, 1, 0.5)) {
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_SUBMERSIBLE;
+
+                        leftFrontDrive.setPower(0);
+                        rightBackDrive.setPower(0);
+                        leftBackDrive.setPower(0);
+                        rightBackDrive.setPower(0);
+                    }
+                    atTarget = false;
+                    break;
+                case DRIVE_TO_TARGET_SUBMERSIBLE:
+                    if (nav.driveTo(odo.getPosition(), SUBMERSIBLE_TARGET, 0.3, 0.5)) {
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.AT_TARGET;
+
+                        leftFrontDrive.setPower(0);
+                        rightBackDrive.setPower(0);
+                        leftBackDrive.setPower(0);
+                        rightBackDrive.setPower(0);
+                    }
+                    atTarget = false;
+                    break;
                 case AT_TARGET:
                     atTarget = true;
 
@@ -183,10 +212,10 @@ public class TeleOpTestToBasket extends LinearOpMode {
                 leftBackDrive.setPower(nav.getMotorPower(DriveToPoint.DriveMotor.LEFT_BACK));
                 rightBackDrive.setPower(nav.getMotorPower(DriveToPoint.DriveMotor.RIGHT_BACK));
             } else {
-                leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
                 double y = -gamepad2.left_stick_y - gamepad1.left_stick_y / 2; // REVERSED -gamepad1.left_stick_y.gamestick so
                 // gamepad1 can also do movement for hanging
@@ -228,8 +257,12 @@ public class TeleOpTestToBasket extends LinearOpMode {
 
                 if (gamepad2.x) {
                     stateMachine = StateMachine.DRIVE_TO_TARGET_BASKET;
+                    atTarget = false;
                 }
-                atTarget = false;
+                if (gamepad2.y) {
+                    stateMachine = StateMachine.DRIVE_TO_TARGET_SUB_WAYPOINT;
+                    atTarget = false;
+                }
             }
 
             telemetry.addData("current state:", stateMachine);
