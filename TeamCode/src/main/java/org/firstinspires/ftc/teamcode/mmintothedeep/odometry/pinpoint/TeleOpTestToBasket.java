@@ -28,6 +28,10 @@ import java.util.Locale;
 @TeleOp(name = "TeleOp To Basket")
 //@Disabled
 
+/*
+ * Try to go to the basket in teleop using odo
+ */
+
 public class TeleOpTestToBasket extends LinearOpMode {
 
     DcMotor leftFrontDrive;
@@ -152,7 +156,7 @@ public class TeleOpTestToBasket extends LinearOpMode {
                      */
                     if (nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.65, 0.5)) {
                         telemetry.addLine("at position #1!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_2;
+                        stateMachine = StateMachine.AT_TARGET;
 
                         leftFrontDrive.setPower(0);
                         rightBackDrive.setPower(0);
