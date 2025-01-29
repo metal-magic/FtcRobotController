@@ -80,7 +80,6 @@ public class LinearSlideTest extends OpMode {
 
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
     }
 
     @Override
@@ -104,13 +103,11 @@ public class LinearSlideTest extends OpMode {
             telemetry.addData("slide", linearSlideMotor.getCurrentPosition());
 
 
-
-                //limit 3887
-            if (linearSlideMotor.getCurrentPosition() < 10000 && gamepad2.right_trigger >= 0.1F) {
+            if (gamepad2.right_trigger >= 0.1F) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 linearSlideMotor.setPower(1);
-            } else if (linearSlideMotor.getCurrentPosition() > 50 && gamepad2.left_trigger >= 0.1F) {
+            } else if (gamepad2.left_trigger >= 0.1F) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 linearSlideMotor.setPower(-1);
