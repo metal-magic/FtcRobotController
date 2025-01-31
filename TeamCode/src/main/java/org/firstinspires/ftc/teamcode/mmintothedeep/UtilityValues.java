@@ -62,24 +62,22 @@ public class UtilityValues {
     public static final double SLIDE_POS_SAMP = 5200;
     public static final double SLIDE_POS_STABLE = 2000;
 
-    public static final double PIVOT_POS_DOWN = 0.658; //0.76-0.05;
-    public static final double PIVOT_POS_HOVER = 0.57333333; //0.7-0.05;
+    public static final double PIVOT_POS_DOWN = 0.1078; //0.658; //0.76-0.05;
+    public static final double PIVOT_POS_HOVER = 0.202; //0.57333333; //0.7-0.05;
     public static final double PIVOT_POS_SUB = 0.57333333; //0.7-0.05;
-    public static final double PIVOT_POS_FLOAT = 0.30;
-    public static final double PIVOT_POS_TRANSFER = 0.2093; //0.229; //0.39-0.05;
-    public static final double PIVOT_POS_HANG = 0.46; //0.229; //0.39-0.05;
+    public static final double PIVOT_POS_FLOAT = 0.4806;
+    public static final double PIVOT_POS_TRANSFER = 0.5417; //0.229; //0.39-0.05;
+    public static final double PIVOT_POS_HANG = 0.30; //0.229; //0.39-0.05;
+    public static final double PIVOT_POS_OUT_OF_SUBMERSIBLE = 0.2644;
 
+    public static final double TURN_POS_DOWN = 0.0694;
+    public static final double TURN_POS_TRANSFER = 0.7178;
 
-    public static final double PIVOT_POS_OUT_OF_SUBMERSIBLE = 0.55;
+    public static final double FLIP_POS_DOWN = 0.1861; //0.06; // 0.1
+    public static final double FLIP_POS_SCORE = 0.8128; //0.7;
 
-    public static final double TURN_POS_DOWN = 0.06;
-    public static final double TURN_POS_TRANSFER = 0.795926;
-
-    public static final double FLIP_POS_DOWN = 0.06; // 0.1
-    public static final double FLIP_POS_SCORE = 0.7;
-
-    public static final double GRIPPER_POS_CLOSE = 0;
-    public static final double GRIPPER_POS_OPEN = 0.3;
+    public static final double GRIPPER_POS_CLOSE = 0.11;
+    public static final double GRIPPER_POS_OPEN = 0.2794;
 
     public static final double CLIP_POS_CLOSE = 0;
     public static final double CLIP_POS_OPEN = 0.3;
