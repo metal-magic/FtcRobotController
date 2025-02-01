@@ -74,7 +74,7 @@ public class LinearSlideTest extends OpMode {
     @Override
     public void init() {
 
-        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor1");
 
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 

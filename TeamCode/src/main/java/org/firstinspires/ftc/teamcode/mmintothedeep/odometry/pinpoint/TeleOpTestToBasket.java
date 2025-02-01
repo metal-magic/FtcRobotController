@@ -116,7 +116,10 @@ public class TeleOpTestToBasket extends LinearOpMode {
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBackDrive.setDirection(UtilityValues.compLeftBackDirection);
+        leftFrontDrive.setDirection(UtilityValues.compLeftFrontDirection);
+        rightBackDrive.setDirection(UtilityValues.compRightBackDirection);
+        rightFrontDrive.setDirection(UtilityValues.compRightFrontDirection);
 
         odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
         odo.setOffsets(0, 130); //these are tuned for 3110-0002-0001 Product Insight #1

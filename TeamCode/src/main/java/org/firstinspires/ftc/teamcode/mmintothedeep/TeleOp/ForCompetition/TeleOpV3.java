@@ -166,10 +166,10 @@ public class TeleOpV3 extends LinearOpMode {
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBackDrive.setDirection(UtilityValues.compLeftBackDirection);
+        leftFrontDrive.setDirection(UtilityValues.compLeftFrontDirection);
+        rightBackDrive.setDirection(UtilityValues.compRightBackDirection);
+        rightFrontDrive.setDirection(UtilityValues.compRightFrontDirection);
 
 //        hangSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        hangSlideMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -215,6 +215,13 @@ public class TeleOpV3 extends LinearOpMode {
         boolean CutPower = false;
         double motorSpeed;
         while (opModeIsActive()) {
+
+            // flip the bucket
+            if (gamepad2.x) {
+                flipServo.setPosition(flipPosScore);
+                sleep(1000);
+                flipServo.setPosition(flipPosDown);
+            }
 
             double y = -gamepad2.left_stick_y - gamepad1.left_stick_y / 2; // REVERSED -gamepad1.left_stick_y.gamestick so
             // gamepad1 can also do movement for hanging
@@ -327,11 +334,11 @@ public class TeleOpV3 extends LinearOpMode {
                 }
             } else if (slideMidDown) {
                 if (linearSlideMotor.getCurrentPosition() > slidePosSpecDown) {
-                    linearSlideMotor.setPower(-0.8);
+                    linearSlideMotor.setPower(-0.6);
                 } else {
                     linearSlideMotor.setPower(0);
                     slideMidDown = false;
-                    clipServo.setPosition(0.3);
+                    clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
                     sleep(200);
                     slideDown = true;
                 }
@@ -346,7 +353,7 @@ public class TeleOpV3 extends LinearOpMode {
 
             // Transfer and slide up
             if (gamepad2.dpad_up) {
-                if (linearSlideMotor.getCurrentPosition() > slidePosDown) {
+                if (linearSlideMotor.getCurrentPosition() > 300) {
                     linearSlideMotor.setPower(-1);
                 }
                 isTransferring = true;
@@ -355,6 +362,11 @@ public class TeleOpV3 extends LinearOpMode {
                 pivotServo.setPosition(pivotPosTransfer);
                 // nah dontsleep(500);
                 turnServo.setPosition(turnPosTransfer);
+                while (linearSlideMotor.getCurrentPosition() < 300) {
+                    linearSlideMotor.setPower(0.7);
+                    moveRobot();
+                }
+                linearSlideMotor.setPower(0);
                 startTime = System.currentTimeMillis();
 //                sleep(800);
 //                gripperServo1.setPosition(gripperPosOpen);
@@ -453,12 +465,7 @@ public class TeleOpV3 extends LinearOpMode {
             }
 
 
-            // flip the bucket
-            if (gamepad2.x) {
-                flipServo.setPosition(flipPosScore);
-                sleep(1000);
-                flipServo.setPosition(flipPosDown);
-            }
+
 
             // Slide all the way up
             if (gamepad2.a) {
@@ -567,6 +574,49 @@ public class TeleOpV3 extends LinearOpMode {
 
             telemetry.update();
         }
+    }
+
+    public void moveRobot() {
+        double y = -gamepad2.left_stick_y - gamepad1.left_stick_y / 2; // REVERSED -gamepad1.left_stick_y.gamestick so
+        // gamepad1 can also do movement for hanging
+        // making sure it doesnt go over 1 or -1
+        if (y < -1) {
+            y = -1;
+        } else if (y > 1) {
+            y = 1;
+        }
+        double x = gamepad2.left_stick_x + gamepad1.left_stick_x / 2; // gamepad1 can also do movement for hanging
+        // making sure it doesnt go over 1 or -1
+        if (x > 1) {
+            x = 1;
+        } else if (x < -1) {
+            x = -1;
+        }
+        double rx = gamepad2.right_stick_x + gamepad1.right_stick_x / 2; // gamepad1 can also do movement for hanging
+        // making sure it doesnt go over 1 or -1
+        if (rx > 1) {
+            rx = 1;
+        } else if (rx < -1) {
+            rx = -1;
+        }
+
+        if (gamepad1.x) {
+            linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
+        // Denominator is the largest motor power (abs value) or 1
+        // This makes sure that the ratio stays the same
+        // but only when at least one is out of range [-1, 1]
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+        double frontLeftPower = (y + x + rx) / denominator;
+        double backLeftPower = (y - x + rx) / denominator;
+        double frontRightPower = (y - x - rx) / denominator;
+        double backRightPower = (y + x - rx) / denominator;
+
+        leftFrontDrive.setPower(frontLeftPower);
+        leftBackDrive.setPower(backLeftPower);
+        rightFrontDrive.setPower(frontRightPower);
+        rightBackDrive.setPower(backRightPower);
     }
 
 }

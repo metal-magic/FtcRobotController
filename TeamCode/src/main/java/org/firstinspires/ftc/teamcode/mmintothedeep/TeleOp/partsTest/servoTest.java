@@ -40,9 +40,9 @@ public class servoTest extends OpMode {
         } else if (gamepad1.left_bumper) {
             testServo.setPosition(0);
         } else if (gamepad1.y) {
-            testServo.setPosition(testServo.getPosition()+0.01);
+            testServo.setPosition(testServo.getPosition()+0.001);
         } else if (gamepad1.a) {
-            testServo.setPosition(testServo.getPosition()-0.01);
+            testServo.setPosition(testServo.getPosition()-0.001);
         }
 
         // add to telemetry
