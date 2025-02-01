@@ -167,7 +167,7 @@ public class TeleOpV3 extends LinearOpMode {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -268,7 +268,7 @@ public class TeleOpV3 extends LinearOpMode {
 
             // slide control
 
-            if (linearSlideMotor.getCurrentPosition() > 5275) {
+            if (linearSlideMotor.getCurrentPosition() > 3500) {
                 linearSlideMotor.setPower(0);
                 slideDown = false;
                 slideUp = false;
@@ -288,7 +288,7 @@ public class TeleOpV3 extends LinearOpMode {
                 linearSlideMotor.setPower(-0.8);
             } else if (slideUp) {
                 if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                    if (linearSlideMotor.getCurrentPosition() > 3750) {
+                    if (linearSlideMotor.getCurrentPosition() > 3500) {
                         linearSlideMotor.setPower(0.8);
                     } else {
                         linearSlideMotor.setPower(1);
@@ -338,7 +338,7 @@ public class TeleOpV3 extends LinearOpMode {
             } else {
                 linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 linearSlideMotor.setPower(0);
-                if (linearSlideMotor.getCurrentPosition() > 5275) {
+                if (linearSlideMotor.getCurrentPosition() > 3500) {
                     linearSlideMotor.setPower(0);
                 }
             }

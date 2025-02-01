@@ -92,12 +92,6 @@ public class motorTest extends OpMode {
 //        fakeServo2.setPosition(1);
 
             telemetry.addData("slide", testMotor.getCurrentPosition());
-            if (gamepad1.right_bumper) {
-                CutPower = true;
-                while (CutPower) {
-                    testMotor.setPower(1);
-                }
-            }
             //limit 3887
             if ( gamepad2.right_trigger >= 0.1F) {
                 testMotor.setDirection(DcMotor.Direction.FORWARD);

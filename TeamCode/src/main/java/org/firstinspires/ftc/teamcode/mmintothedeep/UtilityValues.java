@@ -56,11 +56,11 @@ public class UtilityValues {
     // for second competition 'upper body' presets
 
     public static final double SLIDE_POS_DOWN = 50;
-    public static final double SLIDE_POS_SPEC_DOWN = 2080;
+    public static final double SLIDE_POS_SPEC_DOWN = 1435;
     //changed from 2200 to 2195 - aditya 1/13
-    public static final double SLIDE_POS_SPEC_UP = 2750;
-    public static final double SLIDE_POS_SAMP = 5200;
-    public static final double SLIDE_POS_STABLE = 2000;
+    public static final double SLIDE_POS_SPEC_UP = 1984;
+    public static final double SLIDE_POS_SAMP = 3384;
+    public static final double SLIDE_POS_STABLE = 1400;
 
     public static final double PIVOT_POS_DOWN = 0.1078; //0.658; //0.76-0.05;
     public static final double PIVOT_POS_HOVER = 0.202; //0.57333333; //0.7-0.05;
