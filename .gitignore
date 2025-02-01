@@ -40,6 +40,7 @@ proguard/
 captures/
 
 # IntelliJ
+.idea/*
 *.iml
 .idea/
 
@@ -79,3 +80,5 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+.vscode/settings.json
+.vscode/settings.json
