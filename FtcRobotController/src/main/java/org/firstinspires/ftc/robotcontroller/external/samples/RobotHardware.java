@@ -72,7 +72,6 @@ public class RobotHardware {
     public static final double ARM_DOWN_POWER  = -0.45 ;
 
     // Define a constructor that allows the OpMode to pass a reference to itself.
-    public RobotHardware () {}
     public RobotHardware (LinearOpMode opmode) {
         myOpMode = opmode;
     }
