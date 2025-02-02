@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.partsTest;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@TeleOp
 public class motorPivotTest extends OpMode {
 
     DcMotor testMotor;
@@ -32,6 +34,9 @@ public class motorPivotTest extends OpMode {
         }
 
         testMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
+
+        telemetry.addData("Motor Position", testMotor.getCurrentPosition());
+
 
     }
 

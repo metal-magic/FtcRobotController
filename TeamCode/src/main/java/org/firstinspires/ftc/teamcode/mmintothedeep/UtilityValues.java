@@ -91,7 +91,13 @@ public class UtilityValues {
     public static final double GRIPPER_POS_CLOSE = 0.11;
     public static final double GRIPPER_POS_OPEN = 0.2794;
 
-    public static final double CLIP_POS_CLOSE = 0.65;
-    public static final double CLIP_POS_OPEN = 1;
+    public static final double CLIP_POS_CLOSE = 1;
+    public static final double CLIP_POS_OPEN = 0.65;
+
+    public static final int PIVOT_MOTOR_DOWN = -30;
+    public static final int PIVOT_MOTOR_ALIGN = -100;
+    public static final int PIVOT_MOTOR_SUB = -200;
+    public static final int PIVOT_MOTOR_FLOAT = -470;
+    public static final int PIVOT_MOTOR_TRANSFER = -660;
 
 }

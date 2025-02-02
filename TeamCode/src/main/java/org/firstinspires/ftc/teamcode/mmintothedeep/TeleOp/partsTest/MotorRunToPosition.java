@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.partsTest;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+@TeleOp
 public class MotorRunToPosition extends OpMode {
 
     public DcMotor testMotor = null;
@@ -31,6 +33,7 @@ public class MotorRunToPosition extends OpMode {
         }
 
         telemetry.addData("Motor Position", testMotor.getCurrentPosition());
+        telemetry.addData("test", testMotor.getCurrentPosition());
 
     }
 

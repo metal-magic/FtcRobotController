@@ -48,9 +48,11 @@ import java.util.Date;
 @TeleOp(name= "TeleOp v3")
 public class TeleOpV3 extends LinearOpMode {
 
+    int newTarget;
+
     public Servo gripperServo1 = null;
     // public Servo gripperServo2 = null;
-    public Servo pivotServo = null;
+    //public Servo pivotServo = null;
     public Servo turnServo = null;
     public Servo clipServo = null;
     public Servo flipServo = null;
@@ -59,6 +61,8 @@ public class TeleOpV3 extends LinearOpMode {
     DcMotor rightFrontDrive = null;
     DcMotor leftBackDrive = null;
     DcMotor rightBackDrive = null;
+
+    DcMotor pivotMotor = null;
 
 //    public DcMotor hangSlideMotor = null;
 //    public DcMotor hangSlideMotor2 = null;
@@ -139,7 +143,7 @@ public class TeleOpV3 extends LinearOpMode {
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         // gripperServo2 = hardwareMap.servo.get("gripperServo2");
-        pivotServo = hardwareMap.servo.get("pivotServo");
+        //pivotServo = hardwareMap.servo.get("pivotServo");
         //pivotServo.setDirection(Servo.Direction.REVERSE);
 
         turnServo = hardwareMap.servo.get("turnServo");
@@ -148,6 +152,10 @@ public class TeleOpV3 extends LinearOpMode {
         clipServo = hardwareMap.servo.get("clipServo");
 
         flipServo = hardwareMap.servo.get("flipServo");
+
+        pivotMotor = hardwareMap.get(DcMotor.class, "pivotMotor");
+        pivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        pivotMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 //        hangSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor1");
 //        hangSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -194,7 +202,8 @@ public class TeleOpV3 extends LinearOpMode {
 
         waitForStart();
 
-        pivotServo.setPosition(UtilityValues.PIVOT_POS_FLOAT);
+        //pivotServo.setPosition(UtilityValues.PIVOT_POS_FLOAT);
+        //runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, );
         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
         gripperServo1.setPosition(gripperPosOpen);
 
@@ -212,9 +221,28 @@ public class TeleOpV3 extends LinearOpMode {
 
         flipServo.setPosition(flipPosDown);
 
+        boolean resetPivot = true;
         boolean CutPower = false;
         double motorSpeed;
         while (opModeIsActive()) {
+
+            if (gamepad1.dpad_left) {
+                pivotMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                pivotMotor.setPower(-0.5);
+                resetPivot = true;
+            } else if (gamepad1.dpad_right) {
+                pivotMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                pivotMotor.setPower(0.5);
+                resetPivot = true;
+            } else {
+                if (resetPivot) {
+                    pivotMotor.setPower(0);
+                }
+            }
+            if (gamepad1.dpad_down) {
+                pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                resetPivot = false;
+            }
 
             // flip the bucket
             if (gamepad2.x) {
@@ -270,7 +298,8 @@ public class TeleOpV3 extends LinearOpMode {
             }
 
             if (gamepad1.y || gamepad2.back) {
-                pivotServo.setPosition(pivotPosFloat);
+                //pivotServo.setPosition(pivotPosFloat);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.4);
             }
 
             // slide control
@@ -359,8 +388,9 @@ public class TeleOpV3 extends LinearOpMode {
                 isTransferring = true;
                 flipServo.setPosition(flipPosDown);
                 gripperServo1.setPosition(gripperPosClose);
-                pivotServo.setPosition(pivotPosTransfer);
-                // nah dontsleep(500);
+                //pivotServo.setPosition(pivotPosTransfer);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.2);
+                // nah dont sleep(500);
                 turnServo.setPosition(turnPosTransfer);
                 while (linearSlideMotor.getCurrentPosition() < 300) {
                     linearSlideMotor.setPower(0.7);
@@ -389,7 +419,8 @@ public class TeleOpV3 extends LinearOpMode {
                     slideStable = false;
                     isTransferring = false;
                 } else if (System.currentTimeMillis() > startTime + 1600.0) {
-                    pivotServo.setPosition(pivotPosFloat);
+                    //pivotServo.setPosition(pivotPosFloat);
+                    runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.3);
                 } else if (System.currentTimeMillis() > startTime + 1200.0) {
                     gripperServo1.setPosition(gripperPosOpen);
                 }
@@ -400,8 +431,9 @@ public class TeleOpV3 extends LinearOpMode {
                 turnServo.setPosition(turnPosDown);
                 flipServo.setPosition(flipPosDown);
 
-                pivotServo.setPosition(pivotPosHover);
-                pivotServo.setPosition(pivotPosHover);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.3);
+                //pivotServo.setPosition(pivotPosHover);
+                //pivotServo.setPosition(pivotPosHover);
                 //gripperServo1.setPosition(gripperPosOpen);
 
                 slideDown = linearSlideMotor.getCurrentPosition() > 100;
@@ -417,7 +449,8 @@ public class TeleOpV3 extends LinearOpMode {
                 turnServo.setPosition(turnPosDown);
                 flipServo.setPosition(flipPosDown);
 
-                pivotServo.setPosition(UtilityValues.PIVOT_POS_OUT_OF_SUBMERSIBLE);
+                //pivotServo.setPosition(UtilityValues.PIVOT_POS_OUT_OF_SUBMERSIBLE);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.3);
                 gripperServo1.setPosition(gripperPosClose);
             }
             // pick up
@@ -426,7 +459,8 @@ public class TeleOpV3 extends LinearOpMode {
                 turnServo.setPosition(turnPosDown);
                 flipServo.setPosition(flipPosDown);
                 sleep(100);
-                pivotServo.setPosition(pivotPosDown);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.3);
+                //pivotServo.setPosition(pivotPosDown);
                 sleep(200);
 //                gripperServo1.setPosition(gripperPosClose);
                 slideDown = linearSlideMotor.getCurrentPosition() > 100;
@@ -561,8 +595,8 @@ public class TeleOpV3 extends LinearOpMode {
 //            }
 
 
-
-            telemetry.addLine("Pivot: " + String.valueOf(pivotServo.getPosition()));
+            telemetry.addData("Pivot", pivotMotor.getCurrentPosition());
+            // telemetry.addLine("Pivot: " + String.valueOf(pivotServo.getPosition()));
             telemetry.addLine("Turn: " + String.valueOf(turnServo.getPosition()));
             telemetry.addLine("Gripper: " + String.valueOf(gripperServo1.getPosition()));
             telemetry.addLine("Clip: " + String.valueOf(clipServo.getPosition()));
@@ -617,6 +651,20 @@ public class TeleOpV3 extends LinearOpMode {
         leftBackDrive.setPower(backLeftPower);
         rightFrontDrive.setPower(frontRightPower);
         rightBackDrive.setPower(backRightPower);
+    }
+
+    public void runToPosition(DcMotor motor, int ticks, double power) {
+        newTarget = ticks;
+        motor.setTargetPosition(newTarget);
+        motor.setPower(power);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void goToZero(DcMotor motor) {
+        newTarget = 0;
+        motor.setTargetPosition(newTarget);
+        motor.setPower(0.8);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 }
