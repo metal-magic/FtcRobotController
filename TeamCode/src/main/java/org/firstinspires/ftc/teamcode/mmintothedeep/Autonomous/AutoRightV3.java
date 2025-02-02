@@ -383,4 +383,8 @@ public class AutoRightV3 extends LinearOpMode {
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
+    public void getDistance(Pose2D currentPosition, Pose2D targetPosition) {
+        currentPosition
+    }
+
 }
