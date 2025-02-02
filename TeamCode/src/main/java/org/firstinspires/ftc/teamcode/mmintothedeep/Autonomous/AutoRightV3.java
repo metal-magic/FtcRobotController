@@ -71,18 +71,18 @@ public class AutoRightV3 extends LinearOpMode {
     }
 
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
-    static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-238,747,AngleUnit.DEGREES,-90); // Specimen Chamber 1
+    static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-238,720,AngleUnit.DEGREES,-90); // Specimen Chamber 1
     static final Pose2D WAYPOINT_1 = new Pose2D(DistanceUnit.MM, 540, 620, AngleUnit.DEGREES, -90); // Specimen Chamber 2
     static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,650,1410, AngleUnit.DEGREES,-90); // April Tag scanning
     static final Pose2D READY_TO_PUSH_1 = new Pose2D(DistanceUnit.MM, 840, 1200, AngleUnit.DEGREES, -90); // April Tag Position
     static final Pose2D PUSH_1 = new Pose2D(DistanceUnit.MM, 840, 210, AngleUnit.DEGREES, -90);
     static final Pose2D WAYPOINT_3 = new Pose2D(DistanceUnit.MM, 840, 1200, AngleUnit.DEGREES, -90);
-    static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM, 1120, 1770, AngleUnit.DEGREES, -90);
+    static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM, 1120, 1200, AngleUnit.DEGREES, -90);
     static final Pose2D PUSH_2 = new Pose2D(DistanceUnit.MM, 1120, 280, AngleUnit.DEGREES, -90);
     static final Pose2D GRAB_WAYPOINT = new Pose2D(DistanceUnit.MM, 880, 310, AngleUnit.DEGREES, 90);
-    static final Pose2D GRAB = new Pose2D(DistanceUnit.MM, 900, 50, AngleUnit.DEGREES, 90);
-    static final Pose2D WAYPOINT_CHAMBER = new Pose2D(DistanceUnit.MM, -165, 942, AngleUnit.DEGREES, -90);
-    static final Pose2D HIGH_CHAMBER_2 = new Pose2D(DistanceUnit.MM, -400, 747, AngleUnit.DEGREES, -90);
+    static final Pose2D GRAB = new Pose2D(DistanceUnit.MM, 900, 100, AngleUnit.DEGREES, 90);
+    static final Pose2D WAYPOINT_CHAMBER = new Pose2D(DistanceUnit.MM, -270, 285, AngleUnit.DEGREES, -90);
+    static final Pose2D HIGH_CHAMBER_2 = new Pose2D(DistanceUnit.MM, -400, 720, AngleUnit.DEGREES, -90);
 
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
@@ -208,111 +208,131 @@ public class AutoRightV3 extends LinearOpMode {
                     stateMachine = StateMachine.DRIVE_TO_TARGET_1;
                     break;
                 case DRIVE_TO_TARGET_1:
-                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER, 0.4, 0)){
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER, 0.4, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_2;
                     }
                     break;
                 case DRIVE_TO_TARGET_2:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_1, 0.9, 0)){
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_1, 0.9, 0.2)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_3;
                     }
+                    break;
                 case DRIVE_TO_TARGET_3:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_2, 0.9, 0)){
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_2, 0.7, 0.2)){
                         telemetry.addLine("at position #3!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_4;
                     }
+                    break;
                 case DRIVE_TO_TARGET_4:
-                    if (nav.driveTo(odo.getPosition(), READY_TO_PUSH_1, 0.9, 0)){
+                    if (nav.driveTo(odo.getPosition(), READY_TO_PUSH_1, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_5;
                     }
+                    break;
                 case DRIVE_TO_TARGET_5:
-                    if (nav.driveTo(odo.getPosition(), PUSH_1, 0.9, 0)){
+                    if (nav.driveTo(odo.getPosition(), PUSH_1, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_6;
                     }
+                    break;
                 case DRIVE_TO_TARGET_6:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_3, 0.9, 0)){
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_3, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_7;
                     }
+                    break;
                 case DRIVE_TO_TARGET_7:
-                    if (nav.driveTo(odo.getPosition(), READY_TO_PUSH_2, 0.9, 0)){
+                    if (nav.driveTo(odo.getPosition(), READY_TO_PUSH_2, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_8;
                     }
+                    break;
                 case DRIVE_TO_TARGET_8:
-                    if (nav.driveTo(odo.getPosition(), PUSH_2, 0.9, 0)){
+                    if (nav.driveTo(odo.getPosition(), PUSH_2, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_9;
                     }
+                    break;
                 case DRIVE_TO_TARGET_9:
-                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0)){
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_10;
                     }
+                    break;
                 case DRIVE_TO_TARGET_10:
-                    if (nav.driveTo(odo.getPosition(), GRAB, 0.4, 0)){
+                    if (nav.driveTo(odo.getPosition(), GRAB, 0.4, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_11;
                     }
+                    break;
                 case DRIVE_TO_TARGET_11:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.9, 0)){
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_12;
                     }
+                    break;
                 case DRIVE_TO_TARGET_12:
-                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0)){
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_13;
                     }
+                    break;
                 case DRIVE_TO_TARGET_13:
-                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0)){
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_14;
                     }
+                    break;
                 case DRIVE_TO_TARGET_14:
-                    if (nav.driveTo(odo.getPosition(), GRAB, 0.4, 0)){
+                    if (nav.driveTo(odo.getPosition(), GRAB, 0.4, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_15;
                     }
+                    break;
                 case DRIVE_TO_TARGET_15:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.9, 0)){
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_16;
                     }
+                    break;
                 case DRIVE_TO_TARGET_16:
-                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0)){
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_17;
                     }
+                    break;
                 case DRIVE_TO_TARGET_17:
-                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0)){
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_18;
                     }
+                    break;
                 case DRIVE_TO_TARGET_18:
-                    if (nav.driveTo(odo.getPosition(), GRAB, 0.4, 0)){
+                    if (nav.driveTo(odo.getPosition(), GRAB, 0.4, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_19;
                     }
+                    break;
                 case DRIVE_TO_TARGET_19:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.9, 0)){
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_20;
                     }
+                    break;
                 case DRIVE_TO_TARGET_20:
-                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0)){
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_21;
                     }
+                    break;
                 case DRIVE_TO_TARGET_21:
-                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0)){
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.AT_TARGET;
                     }
+                    break;
                 case AT_TARGET:
 
                     atTarget = true;
