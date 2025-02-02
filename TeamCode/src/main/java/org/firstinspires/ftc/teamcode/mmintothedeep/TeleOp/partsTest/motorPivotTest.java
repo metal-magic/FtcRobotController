@@ -11,7 +11,7 @@ public class motorPivotTest extends OpMode {
 
     @Override
     public void init() {
-        testMotor = hardwareMap.dcMotor.get("testMotor");
+        testMotor = hardwareMap.dcMotor.get("pivotMotor");
 
         testMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
