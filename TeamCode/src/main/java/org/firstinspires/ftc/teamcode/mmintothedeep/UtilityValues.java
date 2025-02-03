@@ -94,16 +94,16 @@ public class UtilityValues {
     public static final double CLIP_POS_CLOSE = 1;
     public static final double CLIP_POS_OPEN = 0.65;
 
-    public static final int PIVOT_MOTOR_DOWN = -30;
+    public static final int PIVOT_MOTOR_DOWN = 0;
     public static final int PIVOT_MOTOR_ALIGN = -100;
     public static final int PIVOT_MOTOR_SUB = -200;
-    public static final int PIVOT_MOTOR_FLOAT = -550;
+    public static final int PIVOT_MOTOR_FLOAT = -450;
     public static final int PIVOT_MOTOR_TRANSFER = -660;
 
-    public static final int PIVOT_MOTOR_DOWN_AUTO = 650;
+    public static final int PIVOT_MOTOR_DOWN_AUTO = 670;
     public static final int PIVOT_MOTOR_ALIGN_AUTO = 625;
     public static final int PIVOT_MOTOR_SUB_AUTO = 550;
-    public static final int PIVOT_MOTOR_FLOAT_AUTO = 150;
+    public static final int PIVOT_MOTOR_FLOAT_AUTO = 230;
     public static final int PIVOT_MOTOR_TRANSFER_AUTO = 50;
 
 

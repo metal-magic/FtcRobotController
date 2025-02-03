@@ -210,6 +210,12 @@ public class SmoothSpline extends LinearOpMode {
                 case DRIVE_TO_TARGET_1:
                     if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER, getNetPower(odo.getPosition(), HIGH_CHAMBER), 0.2)){
                         telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_2;
+                    }
+                    break;
+                case DRIVE_TO_TARGET_2:
+                    if (nav.driveTo(odo.getPosition(), startingPos, getNetPower(odo.getPosition(), startingPos), 0.2)){
+                        telemetry.addLine("at home sigma sigma!");
                         stateMachine = StateMachine.AT_TARGET;
                     }
                     break;
@@ -270,22 +276,23 @@ public class SmoothSpline extends LinearOpMode {
     }
 
     public double getHeadingDiff(Pose2D currentPosition, Pose2D targetPosition) {
-        return Math.abs(currentPosition.getHeading(AngleUnit.DEGREES) - targetPosition.getHeading(AngleUnit.DEGREES));
+        return Math.abs(currentPosition.getHeading(AngleUnit.DEGREES)%360 - targetPosition.getHeading(AngleUnit.DEGREES)%360);
     }
 
-    public double getNetPower(Pose2D currrentPosition, Pose2D targetPosition) {
-        double distance = getDistance(currrentPosition, targetPosition);
-        double heading = getHeadingDiff(currrentPosition, targetPosition);
+    public double getNetPower(Pose2D currentPosition, Pose2D targetPosition) {
+        double distance = getDistance(currentPosition, targetPosition);
+        double heading = getHeadingDiff(currentPosition, targetPosition);
 
         double headingPower = heading / 180;
-        double distancePower = distance/500;
-        double totalPower = headingPower - distancePower;
+        double distancePower = distance/1000;
+        double totalPower = headingPower + distancePower;
+        //totalPower *= 1.5;
         if (totalPower > 1) {
             totalPower = 1;
         }
-        if (totalPower < 0.2) {
-            totalPower = 0.2;
-        }
+        totalPower = Math.max(totalPower, 0.3);
+        telemetry.addData("heading", headingPower);
+        telemetry.addData("distance", distancePower);
 
         return totalPower;
 
