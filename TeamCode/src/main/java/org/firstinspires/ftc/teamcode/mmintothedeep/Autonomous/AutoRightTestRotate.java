@@ -216,7 +216,7 @@ public class AutoRightTestRotate extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_2:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_1, 0.9, 0.2)){
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_1, 0.4, 0.2)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_4;
                         nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 16);
