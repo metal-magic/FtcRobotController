@@ -71,7 +71,7 @@ public class AutoRightClaw extends LinearOpMode {
     }
 
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
-    static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-238,720,AngleUnit.DEGREES,-90); // Specimen Chamber 1
+    static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-238,750,AngleUnit.DEGREES,-90); // Specimen Chamber 1
     static final Pose2D WAYPOINT_1 = new Pose2D(DistanceUnit.MM, 540, 620, AngleUnit.DEGREES, -90); // Specimen Chamber 2
     static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,650,1410, AngleUnit.DEGREES,-90); // April Tag scanning
     static final Pose2D READY_TO_PUSH_1 = new Pose2D(DistanceUnit.MM, 840, 1200, AngleUnit.DEGREES, -90); // April Tag Position
@@ -82,7 +82,7 @@ public class AutoRightClaw extends LinearOpMode {
     static final Pose2D GRAB_WAYPOINT = new Pose2D(DistanceUnit.MM, 880, 310, AngleUnit.DEGREES, 90);
     static final Pose2D GRAB = new Pose2D(DistanceUnit.MM, 900, 50, AngleUnit.DEGREES, 90);
     static final Pose2D WAYPOINT_CHAMBER = new Pose2D(DistanceUnit.MM, -270, 285, AngleUnit.DEGREES, -90);
-    static final Pose2D HIGH_CHAMBER_2 = new Pose2D(DistanceUnit.MM, -400, 720, AngleUnit.DEGREES, -90);
+    static final Pose2D HIGH_CHAMBER_2 = new Pose2D(DistanceUnit.MM, -400, 750, AngleUnit.DEGREES, -90);
     static final Pose2D TRANSFER_FIRST = new Pose2D(DistanceUnit.MM, 967, 408, AngleUnit.DEGREES, 90);
     static final Pose2D TRANSFER_SECOND = new Pose2D(DistanceUnit.MM, 1211, 392, AngleUnit.DEGREES, 90);
 
