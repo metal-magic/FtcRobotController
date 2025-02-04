@@ -221,6 +221,7 @@ public class AutoRightClaw extends LinearOpMode {
                         }
                         linearSlideMotor.setPower(0);
                         clipServo.setPosition(clipPosOpen);
+                        sleep(200);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < UtilityValues.SLIDE_POS_SPEC_UP) {
                             linearSlideMotor.setPower(1);
@@ -401,6 +402,7 @@ public class AutoRightClaw extends LinearOpMode {
                         }
                         linearSlideMotor.setPower(0);
                         clipServo.setPosition(clipPosOpen);
+                        sleep(200);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < UtilityValues.SLIDE_POS_SPEC_UP) {
                             linearSlideMotor.setPower(-1);
@@ -456,6 +458,7 @@ public class AutoRightClaw extends LinearOpMode {
                         }
                         linearSlideMotor.setPower(0);
                         clipServo.setPosition(clipPosOpen);
+                        sleep(200);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < UtilityValues.SLIDE_POS_SPEC_UP) {
                             linearSlideMotor.setPower(1);
@@ -509,6 +512,7 @@ public class AutoRightClaw extends LinearOpMode {
                         }
                         linearSlideMotor.setPower(0);
                         clipServo.setPosition(clipPosOpen);
+                        sleep(200);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < UtilityValues.SLIDE_POS_SPEC_UP) {
                             linearSlideMotor.setPower(1);
