@@ -17,10 +17,10 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.GoBildaPin
 
 import java.util.Locale;
 
-@Autonomous(name="!TestSlowDown")
+@Autonomous(name="!Rotate Right V3", group="Pinpoint")
 //@Disabled
 
-public class TestSlowDown extends LinearOpMode {
+public class AutoRightTestRotate extends LinearOpMode {
 
     int newTarget;
 
@@ -71,7 +71,18 @@ public class TestSlowDown extends LinearOpMode {
     }
 
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
-    static final Pose2D TEST_POINT_1 = new Pose2D(DistanceUnit.MM,-238,720,AngleUnit.DEGREES,-90); // Specimen Chamber 1
+    static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-238,720,AngleUnit.DEGREES,-90); // Specimen Chamber 1
+    static final Pose2D WAYPOINT_1 = new Pose2D(DistanceUnit.MM, 630, 300, AngleUnit.DEGREES, 0); // Specimen Chamber 2
+    static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,977,1176, AngleUnit.DEGREES,-90); // April Tag scanning
+    static final Pose2D READY_TO_PUSH_1 = new Pose2D(DistanceUnit.MM, 686, 1235, AngleUnit.DEGREES, 100); // April Tag Position
+    static final Pose2D PUSH_1 = new Pose2D(DistanceUnit.MM, 960, 337, AngleUnit.DEGREES, 90);
+    static final Pose2D WAYPOINT_3 = new Pose2D(DistanceUnit.MM, 840, 1200, AngleUnit.DEGREES, -90);
+    static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM, 957, 1143, AngleUnit.DEGREES, 119);
+    static final Pose2D PUSH_2 = new Pose2D(DistanceUnit.MM, 1177, 77, AngleUnit.DEGREES, 90);
+    static final Pose2D GRAB_WAYPOINT = new Pose2D(DistanceUnit.MM, 880, 310, AngleUnit.DEGREES, 90);
+    static final Pose2D GRAB = new Pose2D(DistanceUnit.MM, 900, 100, AngleUnit.DEGREES, 90);
+    static final Pose2D WAYPOINT_CHAMBER = new Pose2D(DistanceUnit.MM, -270, 285, AngleUnit.DEGREES, -90);
+    static final Pose2D HIGH_CHAMBER_2 = new Pose2D(DistanceUnit.MM, -400, 720, AngleUnit.DEGREES, -90);
 
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
@@ -112,8 +123,6 @@ public class TestSlowDown extends LinearOpMode {
 
     public boolean third = false;
 
-    int p;
-    double pPower;
 
     @Override
     public void runOpMode() {
@@ -197,27 +206,154 @@ public class TestSlowDown extends LinearOpMode {
                     //the first step in the autonomous
                     odo.setPosition(startingPos);
                     stateMachine = StateMachine.DRIVE_TO_TARGET_1;
-                    //nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 40);
+                    nav.setXYCoefficients(0.008, 0.00001, 10, DistanceUnit.MM, 16);
                     break;
                 case DRIVE_TO_TARGET_1:
-                    if (nav.driveTo(odo.getPosition(), TEST_POINT_1, pPower, 0.2)){
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER, 0.4, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_2;
-                    }
-                    if ((int) getDistance(odo.getPosition(), TEST_POINT_1) < 300) {
-                        pPower = 0.2;
-                    } else {
-                        pPower = 0.7;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 16);
                     }
                     break;
                 case DRIVE_TO_TARGET_2:
-                    if (nav.driveTo(odo.getPosition(), startingPos, 1, 0.2)){
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_1, 0.9, 0.2)){
+                        telemetry.addLine("at position #2!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_4;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 16);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_3:
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_2, 0.7, 0.2)){
+                        telemetry.addLine("at position #3!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_4;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 16);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_4:
+                    if (nav.driveTo(odo.getPosition(), READY_TO_PUSH_1, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_5;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_5:
+                    if (nav.driveTo(odo.getPosition(), PUSH_1, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_7;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_6:
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_3, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_7;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_7:
+                    if (nav.driveTo(odo.getPosition(), READY_TO_PUSH_2, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_8;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_8:
+                    if (nav.driveTo(odo.getPosition(), PUSH_2, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_11;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_9:
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_10;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_10:
+                    if (nav.driveTo(odo.getPosition(), GRAB, 0.4, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_11;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 16);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_11:
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_12;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_12:
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_13;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 16);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_13:
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_14;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_14:
+                    if (nav.driveTo(odo.getPosition(), GRAB, 0.4, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_15;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 16);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_15:
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_16;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_16:
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_17;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 16);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_17:
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_18;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_18:
+                    if (nav.driveTo(odo.getPosition(), GRAB, 0.4, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_19;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 16);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_19:
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_20;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_20:
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0.2)){
+                        telemetry.addLine("at position #1!");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_21;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 16);
+                    }
+                    break;
+                case DRIVE_TO_TARGET_21:
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.7, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.AT_TARGET;
+                        nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
                     }
-                    p = (int) getDistance(odo.getPosition(), TEST_POINT_1);
-                    double pPower = Math.max(1, p * 0.01);
-                    //nav.setXYCoefficients(0.008, 0.3, 20, DistanceUnit.MM, 16);
                     break;
                 case AT_TARGET:
 
