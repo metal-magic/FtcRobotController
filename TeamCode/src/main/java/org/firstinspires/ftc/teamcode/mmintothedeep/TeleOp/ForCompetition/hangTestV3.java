@@ -45,8 +45,8 @@ import java.util.Date;
   =========================================
  */
 
-@TeleOp(name= "TeleOp v3")
-public class TeleOpV3 extends LinearOpMode {
+@TeleOp(name= "hangTestV3")
+public class hangTestV3 extends LinearOpMode {
 
     int newTarget;
 
@@ -61,6 +61,8 @@ public class TeleOpV3 extends LinearOpMode {
     DcMotor rightFrontDrive = null;
     DcMotor leftBackDrive = null;
     DcMotor rightBackDrive = null;
+    public DcMotor hangSlideMotorLeft = null;
+    public DcMotor hangSlideMotorRight = null;
 
     DcMotor pivotMotor = null;
 
@@ -188,6 +190,17 @@ public class TeleOpV3 extends LinearOpMode {
         linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         linearSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        hangSlideMotorLeft = hardwareMap.dcMotor.get("handSlideMotorLeft");
+        hangSlideMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangSlideMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangSlideMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        hangSlideMotorRight = hardwareMap.dcMotor.get("handSlideMotorRight");
+        hangSlideMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangSlideMotorRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangSlideMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
 //        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        linearSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -225,8 +238,7 @@ public class TeleOpV3 extends LinearOpMode {
 
         flipServo.setPosition(flipPosDown);
         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.3);
-        pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        boolean resetPivot = false;
+        boolean resetPivot = true;
         boolean CutPower = false;
         double motorSpeed;
         while (opModeIsActive()) {
@@ -520,9 +532,6 @@ public class TeleOpV3 extends LinearOpMode {
                 currSpecPos = 1;
             }
 
-
-
-
             // Slide all the way up
             if (gamepad2.a) {
                 slideUp = true;
@@ -560,7 +569,7 @@ public class TeleOpV3 extends LinearOpMode {
                 slideUp = false;
                 isTransferring = false;
                 slideStable = false;
-                clipServo.setPosition(clipPosClose);
+                clipServo.setPosition(0);
             }
 
             if (gamepad2.left_trigger > 0.3) {
@@ -571,50 +580,43 @@ public class TeleOpV3 extends LinearOpMode {
                 isTransferring = false;
             }
 
-//            if (gamepad1.right_bumper) {
-//                hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-//                hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                hangSlideMotor.setPower(-0.7);
-//            } else if (gamepad1.left_bumper) {
-//                if (hangSlideMotor.getCurrentPosition() > -4338) {
-//                    hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-//                    hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                    hangSlideMotor.setPower(0.7);
-//                }
-//            } else {
-//                if (!isPressedEndOHYE) {
-//                    hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//                    hangSlideMotor.setPower(0);
-//                }
-//            }
-//
-//            if (gamepad1.right_trigger >= 0.3F) {
-//                hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
-//                hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                hangSlideMotor2.setPower(0.7 * 0.41);
-//            } else if (gamepad1.left_trigger >= 0.3F) {
-//                if (hangSlideMotor.getCurrentPosition() > -4338) {
-//                    hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
-//                    hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                    hangSlideMotor2.setPower(-0.7 * 0.41);
-//                }
-//            } else {
-//                if (!isPressedEndOHYE) {
-//                    hangSlideMotor2.setPower(0);
-//                }
-//            }
-//
-//            if (gamepad1.dpad_up) {
-//                isPressedEndOHYE = true;
-//                pivotServo.setPosition(pivotPosHang);
-//            } else {
-//                if (isPressedEndOHYE) {
-//                    hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//                    hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//                    hangSlideMotor.setPower(-0.7);
-//                    hangSlideMotor2.setPower(0.7 * 0.41);
-//                }
-//            }
+            if (gamepad1.right_bumper) {
+                hangSlideMotorLeft.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotorLeft.setPower(-0.7);
+            } else if (gamepad1.left_bumper) {
+                if (hangSlideMotorLeft.getCurrentPosition() > -4338) {
+                    hangSlideMotorLeft.setDirection(DcMotor.Direction.FORWARD);
+                    hangSlideMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    hangSlideMotorLeft.setPower(0.7);
+                }
+            } else {
+                if (!isPressedEndOHYE) {
+                    hangSlideMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    hangSlideMotorLeft.setPower(0);
+                }
+            }
+
+
+            if (gamepad1.right_bumper) {
+                hangSlideMotorLeft.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotorLeft.setPower(-0.7);
+            } else if (gamepad1.left_bumper) {
+                hangSlideMotorLeft.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotorLeft.setPower(0.7);
+            }
+
+            if (gamepad1.right_trigger >= 0.3F) {
+                hangSlideMotorRight.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotorRight.setPower(-0.7);
+            } else if (gamepad1.left_trigger >= 0.3F) {
+                hangSlideMotorRight.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotorRight.setPower(0.7);
+            }
 
 
             telemetry.addData("Pivot", pivotMotor.getCurrentPosition());

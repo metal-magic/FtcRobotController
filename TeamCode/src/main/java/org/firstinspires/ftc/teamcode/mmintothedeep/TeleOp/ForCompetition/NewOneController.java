@@ -319,7 +319,6 @@ public class NewOneController extends OpMode {
         if (gamepad1.right_bumper) {
             hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
             hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
             hangSlideMotor.setPower(-0.7);
         } else if (gamepad1.left_bumper) {
             if (hangSlideMotor.getCurrentPosition() > -4338) {

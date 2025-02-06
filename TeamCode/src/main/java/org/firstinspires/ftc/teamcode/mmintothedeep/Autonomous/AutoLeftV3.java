@@ -231,7 +231,7 @@ public class AutoLeftV3 extends LinearOpMode {
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.3);
                        linearSlideMotor.setPower(0);
                        flipServo.setPosition(flipPosScore);
-                       sleep(400);
+                       sleep(600);
                        flipServo.setPosition(flipPosDown);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -307,9 +307,13 @@ public class AutoLeftV3 extends LinearOpMode {
                     if (nav.driveTo(odo.getPosition(), SAMPLE_2, 0.65, 0.5)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_5;
-                        while (linearSlideMotor.getCurrentPosition() > slidePosDown) {
+                        while (linearSlideMotor.getCurrentPosition() > 300) {
                             linearSlideMotor.setPower(-1);
                         }
+                        while (linearSlideMotor.getCurrentPosition() < 300) {
+                            linearSlideMotor.setPower(0.3);
+                        }
+                        linearSlideMotor.setPower(0);
                         // pick up
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
@@ -366,9 +370,13 @@ public class AutoLeftV3 extends LinearOpMode {
                     if (nav.driveTo(odo.getPosition(), SAMPLE_3, 0.65, 0.5)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_7;
-                        while (linearSlideMotor.getCurrentPosition() > slidePosDown) {
+                        while (linearSlideMotor.getCurrentPosition() > 300) {
                             linearSlideMotor.setPower(-1);
                         }
+                        while (linearSlideMotor.getCurrentPosition() < 300) {
+                            linearSlideMotor.setPower(0.3);
+                        }
+                        linearSlideMotor.setPower(0);
                         // pick up
                         gripperServo1.setPosition(0.35);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
