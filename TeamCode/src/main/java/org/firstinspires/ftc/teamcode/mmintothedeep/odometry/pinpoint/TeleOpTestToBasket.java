@@ -95,7 +95,6 @@ public class TeleOpTestToBasket extends LinearOpMode {
     static final Pose2D SUBMERSIBLE_TARGET = new Pose2D(DistanceUnit.MM, 300, 1569, AngleUnit.DEGREES, 0);
     static final Pose2D SUB_WAYPOINT_TARGET = new Pose2D(DistanceUnit.MM, -254, 1424, AngleUnit.DEGREES, 0);
 
-
     boolean atTarget = false;
 
     @Override
