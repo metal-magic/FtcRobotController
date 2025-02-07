@@ -61,8 +61,8 @@ public class hangTestV3 extends LinearOpMode {
     DcMotor rightFrontDrive = null;
     DcMotor leftBackDrive = null;
     DcMotor rightBackDrive = null;
-    public DcMotor hangSlideMotorLeft = null;
-    public DcMotor hangSlideMotorRight = null;
+    public DcMotor hangSlideMotor1 = null;
+    public DcMotor hangSlideMotor2 = null;
 
     DcMotor pivotMotor = null;
 
@@ -191,15 +191,15 @@ public class hangTestV3 extends LinearOpMode {
         linearSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hangSlideMotorLeft = hardwareMap.dcMotor.get("handSlideMotorLeft");
-        hangSlideMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hangSlideMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        hangSlideMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        hangSlideMotor1 = hardwareMap.dcMotor.get("hangSlideMotor1");
+        hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangSlideMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangSlideMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        hangSlideMotorRight = hardwareMap.dcMotor.get("handSlideMotorRight");
-        hangSlideMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        hangSlideMotorRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        hangSlideMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        hangSlideMotor2 = hardwareMap.dcMotor.get("hangSlideMotor2");
+        hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangSlideMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 //        linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -581,41 +581,41 @@ public class hangTestV3 extends LinearOpMode {
             }
 
             if (gamepad1.right_bumper) {
-                hangSlideMotorLeft.setDirection(DcMotor.Direction.FORWARD);
-                hangSlideMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                hangSlideMotorLeft.setPower(-0.7);
+                hangSlideMotor1.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotor1.setPower(-0.7);
             } else if (gamepad1.left_bumper) {
-                if (hangSlideMotorLeft.getCurrentPosition() > -4338) {
-                    hangSlideMotorLeft.setDirection(DcMotor.Direction.FORWARD);
-                    hangSlideMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    hangSlideMotorLeft.setPower(0.7);
+                if (hangSlideMotor1.getCurrentPosition() > -4338) {
+                    hangSlideMotor1.setDirection(DcMotor.Direction.FORWARD);
+                    hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    hangSlideMotor1.setPower(0.7);
                 }
             } else {
                 if (!isPressedEndOHYE) {
-                    hangSlideMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                    hangSlideMotorLeft.setPower(0);
+                    hangSlideMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    hangSlideMotor1.setPower(0);
                 }
             }
 
 
             if (gamepad1.right_bumper) {
-                hangSlideMotorLeft.setDirection(DcMotor.Direction.FORWARD);
-                hangSlideMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                hangSlideMotorLeft.setPower(-0.7);
+                hangSlideMotor1.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotor1.setPower(-0.7);
             } else if (gamepad1.left_bumper) {
-                hangSlideMotorLeft.setDirection(DcMotor.Direction.FORWARD);
-                hangSlideMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                hangSlideMotorLeft.setPower(0.7);
+                hangSlideMotor1.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotor1.setPower(0.7);
             }
 
             if (gamepad1.right_trigger >= 0.3F) {
-                hangSlideMotorRight.setDirection(DcMotor.Direction.FORWARD);
-                hangSlideMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                hangSlideMotorRight.setPower(-0.7);
+                hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotor2.setPower(-0.7);
             } else if (gamepad1.left_trigger >= 0.3F) {
-                hangSlideMotorRight.setDirection(DcMotor.Direction.FORWARD);
-                hangSlideMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                hangSlideMotorRight.setPower(0.7);
+                hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
+                hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hangSlideMotor2.setPower(0.7);
             }
 
 
@@ -626,8 +626,8 @@ public class hangTestV3 extends LinearOpMode {
             telemetry.addLine("Clip: " + String.valueOf(clipServo.getPosition()));
             telemetry.addLine("Flip: " + String.valueOf(flipServo.getPosition()));
             telemetry.addLine("Slide: " + String.valueOf(linearSlideMotor.getCurrentPosition()));
-//            telemetry.addLine("Hang1: " + String.valueOf(hangSlideMotor.getCurrentPosition()));
-//            telemetry.addLine("Hang2: " + String.valueOf(hangSlideMotor2.getCurrentPosition()));
+            telemetry.addLine("Hang1: " + String.valueOf(hangSlideMotor1.getCurrentPosition()));
+            telemetry.addLine("Hang2: " + String.valueOf(hangSlideMotor2.getCurrentPosition()));
             telemetry.addData("slideUp", slideUp);
 
             telemetry.update();
