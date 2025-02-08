@@ -70,12 +70,12 @@ import java.util.List;
 import java.util.Locale;
 
 /*
-  =========================================
+  =========================================k
   This OpMode was created to test the linear slide motor
   =========================================
  */
 
-@TeleOp(name= "TeleOpWithOdo")
+@TeleOp(name= "!!! STATES - MAIN TeleOp with Odo")
 public class TeleOpOdoHelp extends LinearOpMode {
 
     int newTarget;
@@ -94,8 +94,8 @@ public class TeleOpOdoHelp extends LinearOpMode {
 
     DcMotor pivotMotor = null;
 
-//    public DcMotor hangSlideMotor = null;
-//    public DcMotor hangSlideMotor2 = null;
+    public DcMotor hangSlideMotor1 = null;
+    public DcMotor hangSlideMotor2 = null;
 
     public Date previousTime = new Date();
 
@@ -172,6 +172,7 @@ public class TeleOpOdoHelp extends LinearOpMode {
     boolean stopWheels = false;
 
     boolean atTarget = false;
+    boolean isHangPressed = false;
 
     GoBildaPinpointDriver odo; // Declare OpMode member for the Odometry Computer
     DriveToPoint nav = new DriveToPoint(this); //OpMode member for the point-to-point navigation class
@@ -186,6 +187,8 @@ public class TeleOpOdoHelp extends LinearOpMode {
     static final Pose2D CHAMBER_TARGET = new Pose2D(DistanceUnit.MM, -1270, 430, AngleUnit.DEGREES, -90);
 
     public void runOpMode() {
+
+
 
         gripperServo1 = hardwareMap.servo.get("gripperServo1");
         // gripperServo2 = hardwareMap.servo.get("gripperServo2");
@@ -224,6 +227,20 @@ public class TeleOpOdoHelp extends LinearOpMode {
         leftFrontDrive.setDirection(UtilityValues.compLeftFrontDirection);
         rightBackDrive.setDirection(UtilityValues.compRightBackDirection);
         rightFrontDrive.setDirection(UtilityValues.compRightFrontDirection);
+
+        hangSlideMotor1 = hardwareMap.dcMotor.get("hangSlideMotor1");
+        hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangSlideMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangSlideMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        hangSlideMotor2 = hardwareMap.dcMotor.get("hangSlideMotor2");
+        hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangSlideMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        hangSlideMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangSlideMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
 //        hangSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        hangSlideMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -689,51 +706,49 @@ public class TeleOpOdoHelp extends LinearOpMode {
                     slideMidUp = false;
                     isTransferring = false;
                 }
+                if (gamepad1.right_bumper) {
+                    hangSlideMotor1.setDirection(DcMotor.Direction.FORWARD);
+                    hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    hangSlideMotor1.setPower(-0.7);
+                } else if (gamepad1.left_bumper) {
+                    hangSlideMotor1.setDirection(DcMotor.Direction.FORWARD);
+                    hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    hangSlideMotor1.setPower(0.7);
+                } else {
+                    if (!isHangPressed) {
+                        hangSlideMotor1.setPower(0);
+                    }
+                }
 
-//            if (gamepad1.right_bumper) {
-//                hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-//                hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                hangSlideMotor.setPower(-0.7);
-//            } else if (gamepad1.left_bumper) {
-//                if (hangSlideMotor.getCurrentPosition() > -4338) {
-//                    hangSlideMotor.setDirection(DcMotor.Direction.FORWARD);
-//                    hangSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                    hangSlideMotor.setPower(0.7);
-//                }
-//            } else {
-//                if (!isPressedEndOHYE) {
-//                    hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//                    hangSlideMotor.setPower(0);
-//                }
-//            }
-//
-//            if (gamepad1.right_trigger >= 0.3F) {
-//                hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
-//                hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                hangSlideMotor2.setPower(0.7 * 0.41);
-//            } else if (gamepad1.left_trigger >= 0.3F) {
-//                if (hangSlideMotor.getCurrentPosition() > -4338) {
-//                    hangSlideMotor2.setDirection(DcMotor.Direction.FORWARD);
-//                    hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//                    hangSlideMotor2.setPower(-0.7 * 0.41);
-//                }
-//            } else {
-//                if (!isPressedEndOHYE) {
-//                    hangSlideMotor2.setPower(0);
-//                }
-//            }
-//
-//            if (gamepad1.dpad_up) {
-//                isPressedEndOHYE = true;
-//                pivotServo.setPosition(pivotPosHang);
-//            } else {
-//                if (isPressedEndOHYE) {
-//                    hangSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//                    hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//                    hangSlideMotor.setPower(-0.7);
-//                    hangSlideMotor2.setPower(0.7 * 0.41);
-//                }
-//            }
+                if (gamepad1.right_trigger >= 0.3F) {
+                    hangSlideMotor2.setDirection(DcMotor.Direction.REVERSE);
+                    hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    hangSlideMotor2.setPower(-0.7*(1459.0/2040.0));
+                } else if (gamepad1.left_trigger >= 0.3F) {
+                    hangSlideMotor2.setDirection(DcMotor.Direction.REVERSE);
+                    hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    hangSlideMotor2.setPower(0.7*(1459.0/2040.0));
+                } else {
+                    if (!isHangPressed) {
+                        hangSlideMotor2.setPower(0);
+                    }
+                }
+
+                if (gamepad1.dpad_up) {
+                    isHangPressed = true;
+                } else {
+                    if (isHangPressed) {
+                        hangSlideMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                        hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                        hangSlideMotor1.setPower(-0.7 * (1459.0/2050.0));
+                        hangSlideMotor2.setPower(-0.7);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_HANG, 0.34);
+                    }
+                }
+
+                if (gamepad1.right_stick_button) {
+                    runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_HANG, 0.34);
+                }
 
 
                 telemetry.addData("Pivot", pivotMotor.getCurrentPosition());

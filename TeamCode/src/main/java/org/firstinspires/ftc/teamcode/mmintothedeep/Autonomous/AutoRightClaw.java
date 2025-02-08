@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.GoBildaPin
 
 import java.util.Locale;
 
-@Autonomous(name="!Comp Auto Right V3 WITH DA CLAW SIGMA SIGMA BOY SIGMA BOY SIGMA BOY", group="Pinpoint")
+@Autonomous(name="!!!STATES - AUTO RIGHT 3+0+PARK using claw")
 //@Disabled
 
 public class AutoRightClaw extends LinearOpMode {
@@ -95,6 +95,8 @@ public class AutoRightClaw extends LinearOpMode {
 
     static final double flipPosDown = UtilityValues.FLIP_POS_DOWN;
     static final double flipPosScore = UtilityValues.FLIP_POS_SCORE;
+    static final double flipPosMid = UtilityValues.FLIP_POS_MID;
+
 
     static final double clipPosClose = UtilityValues.CLIP_POS_CLOSE;
     static final double clipPosOpen = UtilityValues.CLIP_POS_OPEN;
@@ -144,7 +146,7 @@ public class AutoRightClaw extends LinearOpMode {
         pivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         pivotMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT_AUTO, 0.4);
+
 
         turnServo = hardwareMap.servo.get("turnServo");
 
@@ -199,6 +201,8 @@ public class AutoRightClaw extends LinearOpMode {
         // Wait for the game to start (driver presses START)
         waitForStart();
         resetRuntime();
+
+        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT_AUTO, 0.4);
 
         nav.setXYCoefficients(0.008, 0.00001, 20, DistanceUnit.MM, 30);
 
@@ -260,18 +264,21 @@ public class AutoRightClaw extends LinearOpMode {
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                         flipServo.setPosition(flipPosDown);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN_AUTO, 0.3);
-                        sleep(100);
+                        sleep(300);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-                        sleep(450);
+                        sleep(250);
                         // transfer
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER_AUTO, 0.3);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER_AUTO, 0.20);
+                        sleep(200);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        sleep(700);
+                        sleep(1200);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
                         sleep(300);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB_AUTO, 0.5);
-                        sleep(400);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB_AUTO, 0.4);
+                        sleep(300);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+                        flipServo.setPosition(flipPosMid);
+                        sleep(50);
                         flipServo.setPosition(flipPosScore);
                         sleep(300);
                         flipServo.setPosition(flipPosDown);
@@ -305,20 +312,22 @@ public class AutoRightClaw extends LinearOpMode {
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                         flipServo.setPosition(flipPosDown);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN_AUTO, 0.3);
-                        sleep(100);
+                        sleep(300);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-                        sleep(500);
+                        sleep(300);
                         // transfer
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER_AUTO, 0.3);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER_AUTO, 0.20);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        sleep(700);
+                        sleep(1200);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
-                        sleep(300);
+                        sleep(100);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT_AUTO, 0.5);
-                        sleep(300);
+                        sleep(350);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+                        flipServo.setPosition(flipPosMid);
+                        sleep(50);
                         flipServo.setPosition(flipPosScore);
-                        sleep(400);
+                        sleep(350);
                         flipServo.setPosition(flipPosDown);
                         while (linearSlideMotor.getCurrentPosition() > 20) {
                             linearSlideMotor.setPower(-1);
@@ -358,7 +367,7 @@ public class AutoRightClaw extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_9:
-                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.6, 0.25)){
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.625, 0.25)){
                         while (linearSlideMotor.getCurrentPosition() > 50) {
                             linearSlideMotor.setPower(-1);
                         }
@@ -370,7 +379,7 @@ public class AutoRightClaw extends LinearOpMode {
                     runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT_AUTO, 0.5);
                     break;
                 case DRIVE_TO_TARGET_10:
-                    if (nav.driveTo(odo.getPosition(), GRAB, 0.6, 0.7)){
+                    if (nav.driveTo(odo.getPosition(), GRAB, 0.625, 0.7)){
                         clipServo.setPosition(clipPosClose);
                         sleep(200);
                         telemetry.addLine("at position #1!");
@@ -390,7 +399,7 @@ public class AutoRightClaw extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_12:
-                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0.2)){
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.725, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_13;
                         while (linearSlideMotor.getCurrentPosition() < UtilityValues.SLIDE_POS_SPEC_UP) {
@@ -411,7 +420,7 @@ public class AutoRightClaw extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_13:
-                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.8, 0.2)){
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.825, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_14;
                         while (linearSlideMotor.getCurrentPosition() > 50) {
@@ -427,7 +436,7 @@ public class AutoRightClaw extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_14:
-                    if (nav.driveTo(odo.getPosition(), GRAB, 0.6, 0.7)){
+                    if (nav.driveTo(odo.getPosition(), GRAB, 0.625, 0.7)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_15;
                         clipServo.setPosition(clipPosClose);
@@ -435,7 +444,7 @@ public class AutoRightClaw extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_15:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.9, 0.2)){
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.925, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_16;
                     } else {
@@ -447,7 +456,7 @@ public class AutoRightClaw extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_16:
-                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.8, 0.25)){
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.825, 0.25)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_17;
                         while (linearSlideMotor.getCurrentPosition() < UtilityValues.SLIDE_POS_SPEC_UP) {
@@ -468,7 +477,7 @@ public class AutoRightClaw extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_17:
-                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.65, 0.25)){
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.675, 0.25)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_18;
                         while (linearSlideMotor.getCurrentPosition() > 50) {
@@ -484,14 +493,14 @@ public class AutoRightClaw extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_18:
-                    if (nav.driveTo(odo.getPosition(), GRAB, 0.6, 0.25)){
+                    if (nav.driveTo(odo.getPosition(), GRAB, 0.625, 0.25)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_19;
                         clipServo.setPosition(clipPosClose);
                     }
                     break;
                 case DRIVE_TO_TARGET_19:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.9, 0.2)){
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_CHAMBER, 0.925, 0.2)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_20;
                     } else {
@@ -503,7 +512,7 @@ public class AutoRightClaw extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_20:
-                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.7, 0.25)){
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER_2, 0.725, 0.25)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_21;
                         while (linearSlideMotor.getCurrentPosition() < UtilityValues.SLIDE_POS_SPEC_UP) {
@@ -524,7 +533,7 @@ public class AutoRightClaw extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_21:
-                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.9, 0.25)){
+                    if (nav.driveTo(odo.getPosition(), GRAB_WAYPOINT, 0.925, 0.25)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.AT_TARGET;
                     } else {

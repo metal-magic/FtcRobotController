@@ -45,7 +45,7 @@ import java.util.Date;
   =========================================
  */
 
-@TeleOp(name= "TeleOp v3")
+@TeleOp(name= "TeleOp v3 - Alternate without odo and other features")
 public class TeleOpV3 extends LinearOpMode {
 
     int newTarget;

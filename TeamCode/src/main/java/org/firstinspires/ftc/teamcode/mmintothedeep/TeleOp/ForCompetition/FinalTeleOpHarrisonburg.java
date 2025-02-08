@@ -47,6 +47,7 @@ import java.util.Date;
  */
 
 @TeleOp(name = "!! FINAL TeleOp for Harrisonburg competition")
+@Disabled
 public class FinalTeleOpHarrisonburg extends LinearOpMode {
 
     public Servo gripperServo1 = null;

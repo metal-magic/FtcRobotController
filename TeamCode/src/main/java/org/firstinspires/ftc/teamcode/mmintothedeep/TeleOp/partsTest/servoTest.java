@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.partsTest;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,7 +21,8 @@ import com.qualcomm.robotcore.hardware.Servo;
  * =======================================================================
  */
 
-@TeleOp(group = "Test Parts", name = "Servo Test")
+@TeleOp(group = "parts", name = "Servo Test")
+@Disabled
 public class servoTest extends OpMode {
     public Servo testServo = null;
 

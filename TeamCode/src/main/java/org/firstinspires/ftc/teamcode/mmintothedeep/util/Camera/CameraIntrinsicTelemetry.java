@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.util.Camera;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -41,7 +42,7 @@ import org.firstinspires.ftc.vision.opencv.PredominantColorProcessor;
  */
 
 @TeleOp(name="Optimize Camera Exposure", group = "Concept")
-// @Disabled
+@Disabled
 public class CameraIntrinsicTelemetry extends LinearOpMode
 {
     private VisionPortal visionPortal = null;        // Used to manage the video source.

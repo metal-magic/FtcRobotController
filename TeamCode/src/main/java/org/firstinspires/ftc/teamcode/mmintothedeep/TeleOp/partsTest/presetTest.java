@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.partsTest;
 
 import android.util.Size;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -48,7 +49,8 @@ import java.util.concurrent.TimeUnit;
   =========================================
  */
 
-@TeleOp(name = "presetTest")
+@TeleOp(name = "presetTest", group = "parts")
+@Disabled
 public class presetTest extends OpMode {
 
     public Servo gripperServo1 = null;

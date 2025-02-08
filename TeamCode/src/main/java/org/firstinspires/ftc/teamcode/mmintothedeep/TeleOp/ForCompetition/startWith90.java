@@ -60,7 +60,7 @@ For support, contact tech@gobilda.com
 -Ethan Doak
  */
 
-@TeleOp(name="!startWith90", group="Pinpoint")
+@TeleOp(name="!COMP ODO startWith90")
 //@Disabled
 
 public class startWith90 extends LinearOpMode {
