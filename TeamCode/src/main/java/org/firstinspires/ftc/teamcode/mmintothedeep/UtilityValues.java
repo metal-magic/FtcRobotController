@@ -92,7 +92,7 @@ public class UtilityValues {
     public static final double GRIPPER_POS_CLOSE = 0.11;
     public static final double GRIPPER_POS_OPEN = 0.2794;
 
-    public static final double CLIP_POS_CLOSE = 0.2;
+    public static final double CLIP_POS_CLOSE = 0.3;
     public static final double CLIP_POS_OPEN = 0;
 
     public static final int PIVOT_MOTOR_DOWN = 0;
@@ -108,8 +108,8 @@ public class UtilityValues {
     public static final int PIVOT_MOTOR_FLOAT_AUTO = 230;
     public static final int PIVOT_MOTOR_TRANSFER_AUTO = 50;
 
-    public static final double SPECIMEN_PIVOT_DOWN = 0.2783;
-    public static final double SPECIMEN_PIVOT_UP = 0.29;
-    public static final double SPECIMEN_PIVOT_SCORE = 0.74;
+    public static final double SPECIMEN_PIVOT_DOWN = 0.865;
+    public static final double SPECIMEN_PIVOT_UP = 0.70;
+    public static final double SPECIMEN_PIVOT_SCORE = 0.35;
 
 }
