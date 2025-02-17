@@ -24,7 +24,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 import java.util.Locale;
 
-@Autonomous(name="!AutoLeftV3", group="Pinpoint")
+@Autonomous(name="!!!!AutoLeftV3")
 //@Disabled
 
 public class AutoLeftV3 extends LinearOpMode {
@@ -93,7 +93,12 @@ public class AutoLeftV3 extends LinearOpMode {
     static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-530,382,AngleUnit.DEGREES,90);
 
     //    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-515,570,AngleUnit.DEGREES,120);
-    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-510,450,AngleUnit.DEGREES,115);
+    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-510,450,AngleUnit.DEGREES,117);
+
+    static final Pose2D WAYPOINT_SUB = new Pose2D(DistanceUnit.MM,-320,1225,AngleUnit.DEGREES,0);
+
+    static final Pose2D SUB = new Pose2D(DistanceUnit.MM,250,1650,AngleUnit.DEGREES,0);
+
 
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
@@ -402,9 +407,9 @@ public class AutoLeftV3 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_7:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.5)){
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.2)){
                         telemetry.addLine("at position #3");
-                        stateMachine = StateMachine.AT_TARGET;
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_8;
                         while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
                             linearSlideMotor.setPower(1);
                         }
@@ -412,14 +417,59 @@ public class AutoLeftV3 extends LinearOpMode {
                         flipServo.setPosition(flipPosScore);
                         sleep(400);
                         flipServo.setPosition(flipPosDown);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.2);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.2);
                         sleep(200);
+                        atTarget = false;
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
                             linearSlideMotor.setPower(1);
                         } else {
                             linearSlideMotor.setPower(0);
                         }
+                    }
+                    break;
+                case DRIVE_TO_TARGET_8:
+                    if(nav.driveTo(odo.getPosition(), WAYPOINT_SUB, 0.7, 0.2)){
+                        telemetry.addLine("at position #4");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_9;
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.5);
+                    } else {
+                        if (linearSlideMotor.getCurrentPosition() > 50) {
+                            linearSlideMotor.setPower(-1);
+                        } else {
+                            linearSlideMotor.setPower(0);
+                        }
+                    }
+                    break;
+                case DRIVE_TO_TARGET_9:
+                    if(nav.driveTo(odo.getPosition(), SUB, 0.7, 0.5)){
+                        telemetry.addLine("at position #3");
+                        stateMachine = StateMachine.DRIVE_TO_TARGET_10;
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.5);
+                        sleep(200);
+                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
+                        sleep(100);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.5);
+                        sleep(100);
+                    } else {
+                        if (linearSlideMotor.getCurrentPosition() > 50) {
+                            linearSlideMotor.setPower(-1);
+                        } else {
+                            linearSlideMotor.setPower(0);
+                        }
+                    }
+                    break;
+                case DRIVE_TO_TARGET_10:
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.5)){
+                        telemetry.addLine("at position #3");
+                        stateMachine = StateMachine.AT_TARGET;
+                    } else {
+                        if (linearSlideMotor.getCurrentPosition() < 50) {
+                            linearSlideMotor.setPower(-1);
+                        } else {
+                            linearSlideMotor.setPower(0);
+                        }
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.5);
                     }
                     break;
                 case AT_TARGET:
@@ -444,7 +494,7 @@ public class AutoLeftV3 extends LinearOpMode {
                 rightBackDrive.setPower(0);
                 leftBackDrive.setPower(0);
                 rightBackDrive.setPower(0);
-                if (linearSlideMotor.getCurrentPosition() > 0) {
+                if (linearSlideMotor.getCurrentPosition() > 50) {
                     linearSlideMotor.setPower(-1);
                 }
             }
