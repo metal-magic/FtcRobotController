@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.partsTest;
 
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
  *
  * For detailed instructions on how a HuskyLens is used in FTC, please see this tutorial:
  * https://ftc-docs.firstinspires.org/en/latest/devices/huskylens/huskylens.html
- * 
+ *
  * This sample illustrates how to detect AprilTags, but can be used to detect other types
  * of objects by changing the algorithm. It assumes that the HuskyLens is configured with
  * a name of "huskylens".
@@ -59,9 +59,8 @@ import java.util.concurrent.TimeUnit;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
-@TeleOp(name = "Sensor: HuskyLens", group = "Sensor")
-@Disabled
-public class SensorHuskyLens extends LinearOpMode {
+@TeleOp(name = "HuskyLensTest", group = "Sensor")
+public class huskyLensTest extends LinearOpMode {
 
     private final int READ_PERIOD = 1;
 
