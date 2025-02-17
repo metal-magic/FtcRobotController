@@ -23,7 +23,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(group = "parts", name = "Servo Test")
 //@Disabled
-public class servoTest extends OpMode {
+public class
+
+servoTest extends OpMode {
     public Servo testServo = null;
 
     @Override
