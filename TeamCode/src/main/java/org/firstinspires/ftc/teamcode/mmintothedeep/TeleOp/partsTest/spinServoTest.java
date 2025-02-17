@@ -23,12 +23,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(group = "parts", name = "Servo Test")
 //@Disabled
-public class servoTest extends OpMode {
+public class spinServoTest extends OpMode {
     public Servo testServo = null;
 
     @Override
     public void init() {
-        testServo = hardwareMap.servo.get("testServo");
+        testServo = hardwareMap.servo.get("turnServo");
 //        testServo.setPosition(0);
     }
 

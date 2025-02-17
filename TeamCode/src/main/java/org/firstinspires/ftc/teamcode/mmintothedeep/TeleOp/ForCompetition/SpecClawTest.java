@@ -58,7 +58,7 @@ public class SpecClawTest extends LinearOpMode {
         if (gamepad2.dpad_down) {
             pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
             //sleepWithSlightly(1000);
-            sleepWithSlightly(1000, -0.1);
+            sleepWithSlightly(1000, 0.3);
             clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
             sleepWithMoving(200);
             pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);

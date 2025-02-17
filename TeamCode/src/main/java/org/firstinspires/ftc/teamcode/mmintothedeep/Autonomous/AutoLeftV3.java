@@ -264,12 +264,12 @@ public class AutoLeftV3 extends LinearOpMode {
                         sleep(500);
                         // transfer
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.2);
-                        sleep(500);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.6);
+                        sleep(100);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        sleep(1000);
-                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
                         sleep(400);
+                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
+                        sleep(300);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.4);
                         sleep(200);
                     } else {
@@ -323,20 +323,19 @@ public class AutoLeftV3 extends LinearOpMode {
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.2);
                         sleep(300);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-                        sleep(500);
+                        sleep(200);
                         // transfer
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.2);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.6);
                         //pivotServo.setPosition(pivotPosTransfer);
                         //sleep(500);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        sleep(1400);
+                        sleep(400);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
-                        sleep(1200);
+                        sleep(300);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.2);
                         //pivotServo.setPosition(pivotPosFloat);
                         sleep(500);
-                        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() > slidePosTransfer) {
                             linearSlideMotor.setPower(-1);
@@ -389,18 +388,19 @@ public class AutoLeftV3 extends LinearOpMode {
                         sleep(500);
                         // transfer
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.2);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.6);
                         //pivotServo.setPosition(pivotPosTransfer);
                         //sleep(500);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        sleep(1400);
+                        sleep(400);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
-                        sleep(1200);
+                        sleep(300);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.2);
                         //pivotServo.setPosition(pivotPosFloat);
                         sleep(500);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                     } else {
+                        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                         if (linearSlideMotor.getCurrentPosition() > slidePosTransfer) {
                             linearSlideMotor.setPower(-1);
                         } else {
