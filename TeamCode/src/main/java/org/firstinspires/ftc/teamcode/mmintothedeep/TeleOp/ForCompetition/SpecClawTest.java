@@ -57,11 +57,14 @@ public class SpecClawTest extends LinearOpMode {
         }
         if (gamepad2.dpad_down) {
             pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
-            sleepWithSlightly(1000);
+            //sleepWithSlightly(1000);
+            sleepWithSlightly(1000, -0.1);
             clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
             sleepWithMoving(200);
             pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
         }
+
+        telemetry.addData("Spec Arm Position", pivotServo.getPosition());
     }
 
     public void initDriveMotors() {
@@ -89,11 +92,11 @@ public class SpecClawTest extends LinearOpMode {
         }
     }
 
-    public void sleepWithSlightly(int miliseconds) {
+    public void sleepWithSlightly(int miliseconds, double power) {
         double startTime = System.currentTimeMillis();
         double endTimer = startTime + miliseconds;
         while(System.currentTimeMillis() < endTimer) {
-            moveRobotSlightly();
+            moveRobotSlightly(power);
         }
     }
 
@@ -136,11 +139,11 @@ public class SpecClawTest extends LinearOpMode {
         rightBackDrive.setPower(backRightPower);
     }
 
-    public void moveRobotSlightly() {
-        rightBackDrive.setPower(0.5);
-        rightFrontDrive.setPower(0.5);
-        leftBackDrive.setPower(0.5);
-        leftFrontDrive.setPower(0.5);
+    public void moveRobotSlightly(double power) {
+        rightBackDrive.setPower(power);
+        rightFrontDrive.setPower(power);
+        leftBackDrive.setPower(power);
+        leftFrontDrive.setPower(power);
     }
 
 }
