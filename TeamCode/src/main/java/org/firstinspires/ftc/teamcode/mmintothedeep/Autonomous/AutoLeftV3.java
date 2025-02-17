@@ -216,7 +216,7 @@ public class AutoLeftV3 extends LinearOpMode {
                     the robot has reached the target, and has been there for (holdTime) seconds.
                     Once driveTo returns true, it prints a telemetry line and moves the state machine forward.
                      */
-                    if (nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.65, 0.5)){
+                    if (nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.5)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_2;
                         pivotMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -243,10 +243,15 @@ public class AutoLeftV3 extends LinearOpMode {
                     break;
                 case DRIVE_TO_TARGET_2:
                     //drive to the second target
-                    if (nav.driveTo(odo.getPosition(), SAMPLE_1, 0.65, 0.5)){
+                    if (nav.driveTo(odo.getPosition(), SAMPLE_1, 0.7, 0.5)){
                         linearSlideMotor.setPower(0);
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_3;
+                        // pick up
+                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
+                        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+                        flipServo.setPosition(flipPosDown);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.3);
                         while (linearSlideMotor.getCurrentPosition() > 300) {
                             linearSlideMotor.setPower(-1);
                         }
@@ -254,20 +259,14 @@ public class AutoLeftV3 extends LinearOpMode {
                             linearSlideMotor.setPower(0.3);
                         }
                         linearSlideMotor.setPower(0);
-                        // pick up
-                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
-                        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-                        flipServo.setPosition(flipPosDown);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.3);
-                        sleep(300);
+                        sleep(200);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-                        sleep(500);
+                        sleep(200);
                         // transfer
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.6);
-                        sleep(100);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        sleep(400);
+                        sleep(500);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
                         sleep(300);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.4);
@@ -281,7 +280,7 @@ public class AutoLeftV3 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_3:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.65, 0.5)){
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.5)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_4;
                         while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -304,9 +303,13 @@ public class AutoLeftV3 extends LinearOpMode {
                     break;
                 case DRIVE_TO_TARGET_4:
                     //drive to the second target
-                    if (nav.driveTo(odo.getPosition(), SAMPLE_2, 0.65, 0.5)){
+                    if (nav.driveTo(odo.getPosition(), SAMPLE_2, 0.7, 0.5)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_5;
+                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
+                        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+                        flipServo.setPosition(flipPosDown);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.3);
                         while (linearSlideMotor.getCurrentPosition() > 300) {
                             linearSlideMotor.setPower(-1);
                         }
@@ -314,14 +317,7 @@ public class AutoLeftV3 extends LinearOpMode {
                             linearSlideMotor.setPower(0.3);
                         }
                         linearSlideMotor.setPower(0);
-                        // pick up
-                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
-                        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-                        flipServo.setPosition(flipPosDown);
-                        sleep(300);
-                        //pivotServo.setPosition(pivotPosDown);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.2);
-                        sleep(300);
+                        sleep(200);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
                         sleep(200);
                         // transfer
@@ -330,12 +326,12 @@ public class AutoLeftV3 extends LinearOpMode {
                         //pivotServo.setPosition(pivotPosTransfer);
                         //sleep(500);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        sleep(400);
+                        sleep(500);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
                         sleep(300);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.2);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.6);
+                        sleep(100);
                         //pivotServo.setPosition(pivotPosFloat);
-                        sleep(500);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() > slidePosTransfer) {
                             linearSlideMotor.setPower(-1);
@@ -345,7 +341,7 @@ public class AutoLeftV3 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_5:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.65, 0.5)){
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.5)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_6;
                         while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -356,6 +352,7 @@ public class AutoLeftV3 extends LinearOpMode {
                         flipServo.setPosition(flipPosScore);
                         sleep(400);
                         flipServo.setPosition(flipPosDown);
+                        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
                             linearSlideMotor.setPower(1);
@@ -366,9 +363,13 @@ public class AutoLeftV3 extends LinearOpMode {
                     break;
                 case DRIVE_TO_TARGET_6:
                     //drive to the second target
-                    if (nav.driveTo(odo.getPosition(), SAMPLE_3, 0.65, 0.5)){
+                    if (nav.driveTo(odo.getPosition(), SAMPLE_3, 0.7, 0.5)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_7;
+                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
+                        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+                        flipServo.setPosition(flipPosDown);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.3);
                         while (linearSlideMotor.getCurrentPosition() > 300) {
                             linearSlideMotor.setPower(-1);
                         }
@@ -376,13 +377,6 @@ public class AutoLeftV3 extends LinearOpMode {
                             linearSlideMotor.setPower(0.3);
                         }
                         linearSlideMotor.setPower(0);
-                        // pick up
-                        gripperServo1.setPosition(0.35);
-                        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-                        flipServo.setPosition(flipPosDown);
-                        sleep(300);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.2);
-                        //pivotServo.setPosition(pivotPosDown);
                         sleep(300);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
                         sleep(500);
@@ -400,7 +394,6 @@ public class AutoLeftV3 extends LinearOpMode {
                         sleep(500);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                     } else {
-                        turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                         if (linearSlideMotor.getCurrentPosition() > slidePosTransfer) {
                             linearSlideMotor.setPower(-1);
                         } else {
@@ -409,7 +402,7 @@ public class AutoLeftV3 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_7:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.65, 0.5)){
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.5)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.AT_TARGET;
                         while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
