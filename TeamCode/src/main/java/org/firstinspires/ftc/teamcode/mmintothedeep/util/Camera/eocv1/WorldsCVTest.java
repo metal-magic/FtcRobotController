@@ -29,7 +29,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
@@ -37,6 +40,7 @@ import org.opencv.core.RotatedRect;
 
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /*
  * This OpMode illustrates how to use a video source (camera) to locate specifically colored regions
@@ -63,8 +67,14 @@ import java.util.List;
 // @Disabled
 @Autonomous
 //@Disabled
-public class AdvancedColorBlobsTest extends LinearOpMode
+public class WorldsCVTest extends LinearOpMode
 {
+    private VisionPortal visionPortal = null;        // Used to manage the video source.
+    private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
+    private ColorBlobLocatorProcessor colorLocator;
+    private int myExposure;
+    private int myGain;
+
     @Override
     public void runOpMode()
     {
@@ -108,15 +118,6 @@ public class AdvancedColorBlobsTest extends LinearOpMode
          *                                    object, such as when removing noise from an image.
          *                                    "pixels" in the range of 2-4 are suitable for low res images.
          */
-        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.RED)         // use a predefined color match
-                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.6875, 0.7083, 0.6875, -0.7083))  // search central 1/4 of camera view
-                // .setDrawContours(true) (DO NOT UNCOMMENT)                       // Show contours on the Stream Preview
-                .setBlurSize(3)                               // Smooth the transitions between different colors in image
-                //.setErodeSize(6)
-                //.setDilateSize(6)
-                .build();
 
         /*
          * Build a vision portal to run the Color Locator process.
@@ -130,15 +131,18 @@ public class AdvancedColorBlobsTest extends LinearOpMode
          *  or
          *      .setCamera(BuiltinCameraDirection.BACK)    ... for a Phone Camera
          */
-        VisionPortal portal = new VisionPortal.Builder()
-                .addProcessor(colorLocator)
-                .setCameraResolution(new Size(640, 480))
-                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
-                .build();
+
 
 
         telemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
+
+        initColorBlobsProcessor(ColorRange.RED);
+
+        getCameraSetting();
+        myExposure = 30;
+        myGain = 230;
+        setManualExposure(myExposure, myGain);
 
         // WARNING:  To be able to view the stream preview on the Driver Station, this code runs in INIT mode.
         while (opModeIsActive() || opModeInInit())
@@ -184,17 +188,95 @@ public class AdvancedColorBlobsTest extends LinearOpMode
             sleep(200);
             // Display the size (area) and center location for each Blob.
             for(ColorBlobLocatorProcessor.Blob b : blobs)
-             {
-                 RotatedRect boxFit = b.getBoxFit();
-                 telemetry.addLine(String.valueOf(b.getContourArea()));
-                 telemetry.addLine(String.valueOf(b.getDensity()));
-                 telemetry.addLine(String.valueOf(b.getAspectRatio()));
-                 telemetry.addLine(String.valueOf((int) boxFit.center.x));
-                 telemetry.addLine(String.valueOf((int) boxFit.center.y));
-             }
+            {
+                RotatedRect boxFit = b.getBoxFit();
+                telemetry.addLine(String.valueOf(b.getContourArea()));
+                telemetry.addLine(String.valueOf(b.getDensity()));
+                telemetry.addLine(String.valueOf(b.getAspectRatio()));
+                telemetry.addLine(String.valueOf((int) boxFit.center.x));
+                telemetry.addLine(String.valueOf((int) boxFit.center.y));
+            }
 
             telemetry.update();
             sleep(20);
+        }
+    }
+
+    // Method to initialize colorBlobProcessor (Drawing boxes around samples)
+    public void initColorBlobsProcessor(ColorRange color) {
+        colorLocator = new ColorBlobLocatorProcessor.Builder()
+                .setTargetColorRange(color)         // use a predefined color match
+                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1 , 1, -1))  // search central 1/4 of camera view
+                // .setDrawContours(true)                        // Show contours on the Stream Preview
+                .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                .setErodeSize(3)
+                .setDilateSize(2)
+                .build();
+
+        visionPortal = new VisionPortal.Builder()
+                .addProcessor(colorLocator)
+                .setCameraResolution(new Size(640, 480))
+                .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
+                .build();
+    }
+
+    // Method to manually set exposure and gain values
+    private boolean setManualExposure(int exposureMS, int gain) {
+        // Ensure Vision Portal has been setup.
+        if (visionPortal == null) {
+            return false;
+        }
+
+        // Wait for the camera to be open
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+
+        // Set camera controls unless we are stopping.
+        if (!isStopRequested())
+        {
+            // Set exposure. Make sure we are in Manual Mode for these values to take effect.
+            ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+            if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                exposureControl.setMode(ExposureControl.Mode.Manual);
+                sleep(5);
+            }
+            exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+            sleep(2);
+
+            // Set Gain.
+            GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+            gainControl.setGain(gain);
+            sleep(10);
+            return (true);
+        } else {
+            return (false);
+        }
+    }
+
+    // Method to stream camera frames to the driver station
+    private void getCameraSetting() {
+        // Ensure Vision Portal has been setup.
+        if (visionPortal == null) {
+            return;
+        }
+
+        // Wait for the camera to be open
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
         }
     }
 }
