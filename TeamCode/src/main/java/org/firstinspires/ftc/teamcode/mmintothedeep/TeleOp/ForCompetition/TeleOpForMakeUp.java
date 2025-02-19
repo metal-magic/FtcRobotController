@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.ForCompetition;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.configuration.Utility;
 
 import org.firstinspires.ftc.teamcode.mmintothedeep.UtilityValues;
 
+@TeleOp(name="MAKE UP COMP TELEOP")
 public class TeleOpForMakeUp extends LinearOpMode {
 
     public Servo gripperServo1 = null;
