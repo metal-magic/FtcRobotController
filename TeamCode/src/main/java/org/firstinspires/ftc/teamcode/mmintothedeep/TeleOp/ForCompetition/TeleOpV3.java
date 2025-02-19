@@ -411,7 +411,7 @@ public class TeleOpV3 extends LinearOpMode {
                 flipServo.setPosition(flipPosDown);
                 gripperServo1.setPosition(gripperPosClose);
                 //pivotServo.setPosition(pivotPosTransfer);
-                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.85);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.6);
                 // nah dont sleep(500);
                 turnServo.setPosition(turnPosTransfer);
                 while (linearSlideMotor.getCurrentPosition() < 300) {
@@ -442,7 +442,7 @@ public class TeleOpV3 extends LinearOpMode {
                     isTransferring = false;
                 } else if (System.currentTimeMillis() > startTime + 650.0) {
                     //pivotServo.setPosition(pivotPosFloat);
-                    runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.3);
+                    runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.6);
                 } else if (System.currentTimeMillis() > startTime + 400.0) {
                     gripperServo1.setPosition(gripperPosOpen);
                 }
