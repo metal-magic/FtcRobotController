@@ -71,10 +71,10 @@ public class TeleOpForMakeUp extends LinearOpMode {
     }
 
     public void initialize() {
-        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
-        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        linearSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFrontDrive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBackDrive");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
 
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
