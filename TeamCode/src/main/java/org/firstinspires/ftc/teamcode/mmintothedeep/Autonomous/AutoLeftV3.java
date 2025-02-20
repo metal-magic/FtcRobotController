@@ -479,7 +479,7 @@ public class AutoLeftV3 extends LinearOpMode {
 
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.2);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-                        
+
                         while (linearSlideMotor.getCurrentPosition() < UtilityValues.SLIDE_POS_SAMP) {
                             linearSlideMotor.setPower(1);
                         }
