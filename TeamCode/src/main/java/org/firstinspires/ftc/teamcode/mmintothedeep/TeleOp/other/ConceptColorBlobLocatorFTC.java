@@ -61,12 +61,13 @@ import java.util.List;
  */
 
 @TeleOp(name = "FTC Concept: Vision Color-Locator")
-@Disabled
-public class ConceptColorBlobLocatorFTC extends LinearOpMode
-{
+public class ConceptColorBlobLocatorFTC extends LinearOpMode {
+
+    ColorBlobLocatorProcessor colorLocator;
+    VisionPortal portal;
+
     @Override
-    public void runOpMode()
-    {
+    public void runOpMode() {
         /* Build a "Color Locator" vision processor based on the ColorBlobLocatorProcessor class.
          * - Specify the color range you are looking for.  You can use a predefined color, or create you own color range
          *     .setTargetColorRange(ColorRange.BLUE)                      // use a predefined color match
@@ -107,7 +108,7 @@ public class ConceptColorBlobLocatorFTC extends LinearOpMode
          *                                    object, such as when removing noise from an image.
          *                                    "pixels" in the range of 2-4 are suitable for low res images.
          */
-        ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
+        colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(ColorRange.YELLOW)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
@@ -127,7 +128,7 @@ public class ConceptColorBlobLocatorFTC extends LinearOpMode
          *  or
          *      .setCamera(BuiltinCameraDirection.BACK)    ... for a Phone Camera
          */
-        VisionPortal portal = new VisionPortal.Builder()
+        portal = new VisionPortal.Builder()
                 .addProcessor(colorLocator)
                 .setCameraResolution(new Size(320, 240))
                 .setCamera(hardwareMap.get(WebcamName.class, "testWebcam"))
@@ -184,8 +185,23 @@ public class ConceptColorBlobLocatorFTC extends LinearOpMode
                         b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
             }
 
+            if (!blobs.isEmpty()) {
+
+            }
+
             telemetry.update();
             sleep(50);
         }
+    }
+
+    public void whereToMove(double x, double y) {
+        double pixelsToInchesX = 9.0/320.0;
+        double pixelsToInchesY = 6.0/240.0;
+
+        x -= (double) 320 /2;
+        y -= (double) 240 /2;
+
+        telemetry.addLine("Move: " + x/pixelsToInchesX + ", " + y/pixelsToInchesY);
+
     }
 }
