@@ -96,6 +96,7 @@ public class UtilityValues {
     public static final double CLIP_POS_OPEN = 0;
 
     public static final int PIVOT_MOTOR_DOWN = 0;
+    public static final int PIVOT_MOTOR_COLOR = -120;
     public static final int PIVOT_MOTOR_ALIGN = -160;
     public static final int PIVOT_MOTOR_SUB = -200;
     public static final int PIVOT_MOTOR_FLOAT = -450;

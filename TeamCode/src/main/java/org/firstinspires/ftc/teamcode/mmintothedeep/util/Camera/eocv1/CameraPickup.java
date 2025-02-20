@@ -222,6 +222,10 @@ public class CameraPickup extends LinearOpMode {
         pivotMotor = hardwareMap.get(DcMotor.class, "pivotMotor");
         pivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         pivotMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.3);
+        pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
 //        hangSlideMotor = hardwareMap.dcMotor.get("hangSlideMotor1");
 //        hangSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -305,7 +309,7 @@ public class CameraPickup extends LinearOpMode {
         telemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
         telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
 
-        initColorBlobsProcessor(ColorRange.RED);
+        initColorBlobsProcessor(ColorRange.YELLOW);
 
         getCameraSetting();
         myExposure = 30;
@@ -322,7 +326,6 @@ public class CameraPickup extends LinearOpMode {
         gripperServo1.setPosition(gripperPosOpen);
 
         double startTimeAtStart = System.currentTimeMillis();
-        pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         while (linearSlideMotor.getCurrentPosition() > 50) {
             if (System.currentTimeMillis() > startTimeAtStart + 2000) {
                 break;
@@ -336,8 +339,7 @@ public class CameraPickup extends LinearOpMode {
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         flipServo.setPosition(flipPosDown);
-        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.3);
-        pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         boolean resetPivot = false;
         boolean CutPower = false;
         double motorSpeed;
@@ -821,6 +823,10 @@ public class CameraPickup extends LinearOpMode {
                     atTarget = false;
                 }
 
+                if (gamepad1.left_bumper) {
+                    runToPosition(pivotMotor, 130, 0.34);
+                }
+
                 telemetry.update();
                 if (gamepad2.y) {
                     clipServo.setPosition(clipPosClose);
@@ -1022,15 +1028,13 @@ public class CameraPickup extends LinearOpMode {
         ColorBlobLocatorProcessor.Blob largestBlob = blobs.get(0);
         RotatedRect boxFit = largestBlob.getBoxFit();
 
-        sample_pos = new Pose2D(DistanceUnit.INCH, -1* ((int) boxFit.center.y - 240) / 240.0 * 3.75, -1* ((int) boxFit.center.x - 320) / 320.0 * 5.0, AngleUnit.DEGREES, 0);
+        sample_pos = new Pose2D(DistanceUnit.INCH, (240 - (int) boxFit.center.y) / 240.0 * 4.0, -1 * ((int) boxFit.center.x - 320) / 320.0 * 6.0, AngleUnit.DEGREES, 0);
 
         telemetry.addData("Pose X", sample_pos.getX(DistanceUnit.INCH));
         telemetry.addData("Pose Y", sample_pos.getY(DistanceUnit.INCH));
         telemetry.addData("Pose Heading", sample_pos.getHeading(AngleUnit.DEGREES));
 
-
         telemetry.update();
         sleep(20);
     }
-
 }
