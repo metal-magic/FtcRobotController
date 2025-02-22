@@ -471,19 +471,14 @@ public class AutoLeftV4 extends LinearOpMode {
                     if(nav.driveTo(odo.getPosition(), SUB, 0.7, 0.5)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.ALIGN_TO_SAMPLE;
-                        while (linearSlideMotor.getCurrentPosition() > 300) {
-                            linearSlideMotor.setPower(-1);
-                        }
-                        while (linearSlideMotor.getCurrentPosition() < 300) {
-                            linearSlideMotor.setPower(0.3);
-                        }
                         linearSlideMotor.setPower(0);
-                        sleep(300);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_COLOR, 0.5);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.5);
                         alignToSample();
                     } else {
-                        if (linearSlideMotor.getCurrentPosition() > 50) {
+                        if (linearSlideMotor.getCurrentPosition() > 300) {
                             linearSlideMotor.setPower(-1);
+                        } else if (linearSlideMotor.getCurrentPosition() < 300){
+                            linearSlideMotor.setPower(0.3);
                         } else {
                             linearSlideMotor.setPower(0);
                         }
@@ -533,15 +528,15 @@ public class AutoLeftV4 extends LinearOpMode {
                     if (nav.driveTo(odo.getPosition(), sample_pos, 0.65, 0.5)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_10;
-                        sleep(200);
-                        gripperServo1.setPosition(0.45);
-                        alignToSample();
+                        //sleep(200);
+                        gripperServo1.setPosition(0.45); //UtilityValues.GRIPPER_POS_OPEN);
+                        //alignToSample();
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.5);
-                        sleep(300);
+                        sleep(400);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-                        sleep(100);
+                        sleep(400);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.5);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.5);
                         sleep(100);
                         timeToTransfer5th = System.currentTimeMillis();
 

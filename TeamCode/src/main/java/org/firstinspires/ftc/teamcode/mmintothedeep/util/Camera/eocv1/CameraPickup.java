@@ -1014,7 +1014,7 @@ public class CameraPickup extends LinearOpMode {
         sleep(20);
     }
 
-    private void alignToSample () {
+    private void alignToSample() {
 
         // Read the current list
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
