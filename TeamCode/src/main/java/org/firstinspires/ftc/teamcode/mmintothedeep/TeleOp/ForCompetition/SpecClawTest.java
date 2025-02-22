@@ -33,6 +33,8 @@ public class SpecClawTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             runLoop();
+            telemetry.addData("Spec Arm Position", pivotServo.getPosition());
+//            telemetry.addData("Spec Arm Position", pivotServo.getPosition());
         }
     }
 

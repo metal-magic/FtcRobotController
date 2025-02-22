@@ -9,19 +9,31 @@ import com.qualcomm.robotcore.hardware.configuration.Utility;
 
 import org.firstinspires.ftc.teamcode.mmintothedeep.UtilityValues;
 
-@TeleOp(name="MAKE UP COMP TELEOP")
+@TeleOp(name="!!!!! MAKE UP COMP TELEOP")
 public class TeleOpForMakeUp extends LinearOpMode {
 
     public Servo gripperServo1 = null;
     public Servo turnServo = null;
     public Servo clipServo = null;
     public Servo flipServo = null;
+    public Servo pivotServo = null;
     public DcMotor linearSlideMotor = null;
+
     DcMotor leftFrontDrive = null;
     DcMotor rightFrontDrive = null;
     DcMotor leftBackDrive = null;
     DcMotor rightBackDrive = null;
     DcMotor pivotMotor = null;
+
+    public int clawPosition = 0;
+    public boolean wasPressedToggle = false;
+
+    public int CLAWS_OPEN = 1;
+    public int CLAWS_CLOSE = 0;
+
+    public static long startTime = 0;
+
+    public boolean isTransferring = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -34,17 +46,90 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            boolean transferButton = gamepad2.left_trigger > 0.3;
-            boolean alignButton = gamepad2.right_trigger > 0.3;
+            boolean transferButton = gamepad2.right_trigger > 0.3;
+            boolean alignButton = gamepad2.left_trigger > 0.3;
             boolean downButton = gamepad2.right_bumper;
             boolean slideResetButton = gamepad1.x;
+            boolean clawToggleButton = gamepad2.right_bumper;
+            boolean specimenUpButton = gamepad2.dpad_up;
+            boolean specimenDownButton = gamepad2.dpad_down;
+            boolean specimenPickUpButton = gamepad2.dpad_right;
 
             moveRobot();
             slidePositions(transferButton, alignButton, downButton, slideResetButton);
+            claws(clawToggleButton);
+            specimenScore(specimenUpButton, specimenDownButton, specimenPickUpButton);
+            isTransferring(isTransferring);
 
         }
 
 
+    }
+
+    public void claws(boolean toggle) {
+
+        // toggle
+        if (toggle && !wasPressedToggle) {
+            clawPosition = (clawPosition + 1) % 2;
+        }
+
+        // servo open and close
+        if (clawPosition == CLAWS_OPEN) {
+            gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
+            clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
+        } else if (clawPosition == CLAWS_CLOSE){
+            gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
+            clipServo.setPosition(UtilityValues.CLIP_POS_CLOSE);
+        }
+
+        wasPressedToggle = toggle;
+    }
+
+    public void specimenScore(boolean specUp, boolean specDown, boolean specMiddle) {
+        // pivot specimen
+        if (specUp) {
+            pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+        }
+
+        if (specDown) {
+            pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
+            //sleepWithSlightly(1000);
+            sleepWithSlightly(1000, 0.3);
+            clawPosition = CLAWS_OPEN;
+            clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
+            sleepWithMoving(200);
+            pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
+        }
+
+        if (specMiddle) {
+            pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
+            clawPosition = CLAWS_OPEN;
+            clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
+        }
+
+    }
+
+    public void sleepWithMoving(int miliseconds) {
+        double startTime = System.currentTimeMillis();
+        double endTimer = startTime + miliseconds;
+        while(System.currentTimeMillis() < endTimer) {
+            moveRobot();
+        }
+    }
+
+    public void sleepWithSlightly(int miliseconds, double power) {
+        double startTime = System.currentTimeMillis();
+        double endTimer = startTime + miliseconds;
+        while(System.currentTimeMillis() < endTimer) {
+            moveRobotSlightly(power);
+        }
+    }
+
+    public void moveRobotSlightly(double power) {
+        rightBackDrive.setPower(power);
+        rightFrontDrive.setPower(power);
+        leftBackDrive.setPower(power);
+        leftFrontDrive.setPower(power);
     }
 
     public void afterStart() {
@@ -99,17 +184,27 @@ public class TeleOpForMakeUp extends LinearOpMode {
         turnServo = hardwareMap.servo.get("turnServo");
         clipServo = hardwareMap.servo.get("clipServo");
         flipServo = hardwareMap.servo.get("flipServo");
-
+        pivotServo = hardwareMap.servo.get("specPivot");
 
     }
 
     public void slidePositions(boolean slideUpControl, boolean alignControl, boolean downControl, boolean resetSlideControl) {
 
         if (slideUpControl) {
-            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
+            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 0.5);
+            isTransferring = true;
+            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+            clawPosition = CLAWS_CLOSE;
+            gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
+            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.6);
+            turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
+
+            linearSlideMotor.setPower(0);
+            startTime = System.currentTimeMillis();
         }
 
         if (alignControl) {
+            isTransferring = false;
             turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
             flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
             runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_DOWN, 1);
@@ -117,6 +212,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
         }
 
         if (downControl) {
+            isTransferring = false;
             runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_DOWN, 1);
             runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.4);
         }
@@ -126,6 +222,19 @@ public class TeleOpForMakeUp extends LinearOpMode {
             linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
 
+    }
+
+    public void isTransferring(boolean isTransferring) {
+        if (isTransferring) {
+            if (System.currentTimeMillis() > startTime + 1000.0) {
+                runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
+            } else if (System.currentTimeMillis() > startTime + 650.0) {
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.6);
+            } else if (System.currentTimeMillis() > startTime + 400.0) {
+                clawPosition = CLAWS_OPEN;
+                gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
+            }
+        }
     }
 
     public void moveRobot() {

@@ -79,7 +79,7 @@ public class AutoRightV4 extends LinearOpMode {
     static final Pose2D WAYPOINT_3 = new Pose2D(DistanceUnit.MM,-1324,910,AngleUnit.DEGREES,0);
     static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM,-1261,1103,AngleUnit.DEGREES,0);
     static final Pose2D PUSH_2_AND_PICK = new Pose2D(DistanceUnit.MM,-60,1091,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM,-795,-288,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM,-708,-225,AngleUnit.DEGREES,0);
     static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-69,1064,AngleUnit.DEGREES,0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
@@ -212,7 +212,7 @@ public class AutoRightV4 extends LinearOpMode {
                     clipServo.setPosition(UtilityValues.CLIP_POS_CLOSE);
                     break;
                 case DRIVE_TO_TARGET_1:
-                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER, 0.65, 0.3)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_2;
 
@@ -224,7 +224,7 @@ public class AutoRightV4 extends LinearOpMode {
                     break;
 
                 case DRIVE_TO_TARGET_2:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_1, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_1, 0.65, 0)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_3;
 
@@ -235,7 +235,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_3:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_2, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_2, 0.65, 0)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_4;
 
@@ -246,7 +246,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_4:
-                    if (nav.driveTo(odo.getPosition(), READY_PUSH_1, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), READY_PUSH_1, 0.65, 0)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_5;
 
@@ -257,7 +257,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_5:
-                    if (nav.driveTo(odo.getPosition(), PUSH_1, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), PUSH_1, 0.65, 0)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_6;
 
@@ -268,7 +268,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_6:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_3, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_3, 0.65, 0)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_7;
 
@@ -279,7 +279,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_7:
-                    if (nav.driveTo(odo.getPosition(), READY_TO_PUSH_2, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), READY_TO_PUSH_2, 0.65, 0)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_8;
 
@@ -290,7 +290,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_8:
-                    if (nav.driveTo(odo.getPosition(), PUSH_2_AND_PICK, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), PUSH_2_AND_PICK, 0.65, 0.3)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_9;
 
@@ -301,7 +301,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_9:
-                    if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_10;
 
@@ -312,7 +312,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_10:
-                    if (nav.driveTo(odo.getPosition(), NEW_PICK_UP, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), NEW_PICK_UP, 0.65, 0.3)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_11;
 
@@ -323,7 +323,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_11:
-                    if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_12;
 
@@ -334,7 +334,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_12:
-                    if (nav.driveTo(odo.getPosition(), NEW_PICK_UP, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), NEW_PICK_UP, 0.65, 0.3)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_13;
 
@@ -345,7 +345,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_13:
-                    if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.5, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.AT_TARGET;
 
