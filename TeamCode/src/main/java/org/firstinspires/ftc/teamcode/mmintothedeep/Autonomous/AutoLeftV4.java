@@ -608,7 +608,7 @@ public class AutoLeftV4 extends LinearOpMode {
         ColorBlobLocatorProcessor.Blob largestBlob = blobs.get(0);
         RotatedRect boxFit = largestBlob.getBoxFit();
 
-        sample_pos = new Pose2D(DistanceUnit.INCH, odo.getPosX() / 25.4 + (240 - (int) boxFit.center.y) / 240.0 * 4.0, odo.getPosY() / 25.4 + -1 * ((int) boxFit.center.x - 320) / 320.0 * 6.0, AngleUnit.DEGREES, 0);
+        sample_pos = new Pose2D(DistanceUnit.INCH, odo.getPosX() / 25.4 + (320 - (int) boxFit.center.y) / 320.0 * 4.0, odo.getPosY() / 25.4 + -1 * ((int) boxFit.center.x - 240) / 240.0 * 6.0, AngleUnit.DEGREES, 0);
 
         telemetry.addData("Pose X", sample_pos.getX(DistanceUnit.INCH));
         telemetry.addData("Pose Y", sample_pos.getY(DistanceUnit.INCH));
