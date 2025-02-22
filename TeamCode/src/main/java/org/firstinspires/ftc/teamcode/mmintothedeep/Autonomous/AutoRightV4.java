@@ -29,6 +29,8 @@ public class AutoRightV4 extends LinearOpMode {
     DcMotor leftBackDrive;
     DcMotor rightBackDrive;
 
+    public Servo specimenServo = null;
+
     private Position cameraPosition = new Position(DistanceUnit.INCH,
             6, -3.5, 0, 0);
     private YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(AngleUnit.DEGREES,
@@ -71,7 +73,7 @@ public class AutoRightV4 extends LinearOpMode {
     }
 
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
-    static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-798,-220,AngleUnit.DEGREES,0);
+    static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-764,-220,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_1 = new Pose2D(DistanceUnit.MM,-600,534,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,-1324,640,AngleUnit.DEGREES,0);
     static final Pose2D READY_PUSH_1 = new Pose2D(DistanceUnit.MM,-1261,820,AngleUnit.DEGREES,0);
@@ -79,8 +81,8 @@ public class AutoRightV4 extends LinearOpMode {
     static final Pose2D WAYPOINT_3 = new Pose2D(DistanceUnit.MM,-1324,910,AngleUnit.DEGREES,0);
     static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM,-1261,1103,AngleUnit.DEGREES,0);
     static final Pose2D PUSH_2_AND_PICK = new Pose2D(DistanceUnit.MM,-60,1091,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM,-708,-225,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-69,1064,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM,-700,-230,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-40,1064,AngleUnit.DEGREES,0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
     static final double slidePosSpecDown = UtilityValues.SLIDE_POS_SPEC_DOWN; //UtilityValues.SLIDE_POS_SPEC_DOWN;
@@ -132,6 +134,8 @@ public class AutoRightV4 extends LinearOpMode {
         // to the names assigned during the robot configuration step on the DS or RC devices.
 
         clipServo = hardwareMap.servo.get("clipServo");
+
+        specimenServo = hardwareMap.servo.get("specPivot");
 
         flipServo = hardwareMap.servo.get("flipServo");
 
@@ -217,9 +221,12 @@ public class AutoRightV4 extends LinearOpMode {
                         stateMachine = StateMachine.DRIVE_TO_TARGET_2;
 
                         powerOff();
+
+                        specimenScore();
                         
                     } else {
-
+                        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 0.3);
+                        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
                     }
                     break;
 
@@ -296,6 +303,9 @@ public class AutoRightV4 extends LinearOpMode {
 
                         powerOff();
 
+                        clipServo.setPosition(clipPosClose);
+                        sleep(300);
+
                     } else {
 
                     }
@@ -304,7 +314,9 @@ public class AutoRightV4 extends LinearOpMode {
                     if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_10;
-
+                        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+                        sleep(900);
+                        specimenScore();
                         powerOff();
 
                     } else {
@@ -318,6 +330,9 @@ public class AutoRightV4 extends LinearOpMode {
 
                         powerOff();
 
+                        clipServo.setPosition(clipPosClose);
+                        sleep(300);
+
                     } else {
 
                     }
@@ -327,6 +342,11 @@ public class AutoRightV4 extends LinearOpMode {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_12;
 
+                        powerOff();
+
+                        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+                        sleep(900);
+                        specimenScore();
                         powerOff();
 
                     } else {
@@ -340,6 +360,9 @@ public class AutoRightV4 extends LinearOpMode {
 
                         powerOff();
 
+                        clipServo.setPosition(clipPosClose);
+                        sleep(300);
+
                     } else {
 
                     }
@@ -349,6 +372,11 @@ public class AutoRightV4 extends LinearOpMode {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.AT_TARGET;
 
+                        powerOff();
+
+                        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+                        sleep(900);
+                        specimenScore();
                         powerOff();
 
                     } else {
@@ -438,6 +466,31 @@ public class AutoRightV4 extends LinearOpMode {
         rightBackDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightBackDrive.setPower(0);
+    }
+
+    public void specimenScore() {
+
+        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
+        //sleepWithSlightly(1000);
+        sleepWithSlightly(800, -0.3);
+        clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
+        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
+
+    }
+
+    public void sleepWithSlightly(int miliseconds, double power) {
+        double startTime = System.currentTimeMillis();
+        double endTimer = startTime + miliseconds;
+        while(System.currentTimeMillis() < endTimer) {
+            moveRobotSlightly(power);
+        }
+    }
+
+    public void moveRobotSlightly(double power) {
+        rightBackDrive.setPower(power);
+        rightFrontDrive.setPower(power);
+        leftBackDrive.setPower(power);
+        leftFrontDrive.setPower(power);
     }
 
 }

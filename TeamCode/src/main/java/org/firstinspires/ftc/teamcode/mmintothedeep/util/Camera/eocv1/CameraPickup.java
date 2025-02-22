@@ -46,6 +46,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.DriveToPoi
 import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.GoBildaPinpointDriver;
 import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.TeleOpTestToBasket;
 
+import java.util.ArrayList;
 import java.util.Date;
 import android.util.Size;
 
@@ -188,6 +189,9 @@ public class CameraPickup extends LinearOpMode {
     boolean atTarget = false;
     boolean isHangPressed = false;
 
+    public static int ratioY = 5;
+    public static int ratioX = 3;
+
     GoBildaPinpointDriver odo; // Declare OpMode member for the Odometry Computer
     DriveToPoint nav = new DriveToPoint(this); //OpMode member for the point-to-point navigation class
 
@@ -223,7 +227,7 @@ public class CameraPickup extends LinearOpMode {
         pivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         pivotMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.3);
+        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_COLOR, 0.3);
         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
@@ -701,6 +705,7 @@ public class CameraPickup extends LinearOpMode {
 
 
 
+
                 // Slide all the way up
                 if (gamepad2.a) {
                     slideUp = true;
@@ -839,6 +844,22 @@ public class CameraPickup extends LinearOpMode {
                     odo.setPosition(startingPos);
                     stateMachine = StateMachine.DRIVE_TO_TARGET_CHAMBER;
                     atTarget = false;
+                }
+
+                if (gamepad1.left_bumper) {
+                    ratioY += 1;
+                }
+
+                if (gamepad1.left_trigger >= 0.3F) {
+                    ratioY -= 1;
+                }
+
+                if (gamepad1.right_bumper) {
+                    ratioX += 1;
+                }
+
+                if (gamepad1.right_trigger >= 0.3F) {
+                    ratioX -= 1;
                 }
             }
 
@@ -1019,16 +1040,39 @@ public class CameraPickup extends LinearOpMode {
         // Read the current list
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
 
-        ColorBlobLocatorProcessor.Util.filterByArea(2000, 25000, blobs);  // filter out very small blobs.
+        ColorBlobLocatorProcessor.Util.filterByArea(2000, 50000, blobs);  // filter out very small blobs.
 
         while (blobs.isEmpty()) {
             blobs = colorLocator.getBlobs();
         }
 
-        ColorBlobLocatorProcessor.Blob largestBlob = blobs.get(0);
-        RotatedRect boxFit = largestBlob.getBoxFit();
+        double offsetX = 360.0;
+        double offsetY = 240.0;
 
-        sample_pos = new Pose2D(DistanceUnit.INCH, (240 - (int) boxFit.center.y) / 240.0 * 4.0, -1 * ((int) boxFit.center.x - 320) / 320.0 * 6.0, AngleUnit.DEGREES, 0);
+        int index = 0;
+        double lowestScore = 1000000;
+        int i = 0;
+
+        for (ColorBlobLocatorProcessor.Blob b : blobs) {
+            RotatedRect boxFit = b.getBoxFit();
+            double currAngle = boxFit.angle;
+            if (boxFit.size.width < boxFit.size.height) {
+                currAngle -= 90;
+            }
+            double score = (Math.abs(currAngle+90)*5+Math.sqrt(Math.pow((offsetY-boxFit.center.y), 2)+Math.pow((offsetX-boxFit.center.x), 2)));
+            if (score < lowestScore) {
+                lowestScore = score;
+                index = i;
+            }
+            i++;
+        }
+
+        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(index);
+        RotatedRect boxFit = bestBlob.getBoxFit();
+
+        sample_pos = new Pose2D(DistanceUnit.INCH, (offsetY - (int) boxFit.center.y) / offsetY * ratioY, -1 * ((int) boxFit.center.x - offsetX) / offsetX * ratioX, AngleUnit.DEGREES, 0);
+
+        telemetry.addData("lowestScore", lowestScore);
 
         telemetry.addData("Pose X", sample_pos.getX(DistanceUnit.INCH));
         telemetry.addData("Pose Y", sample_pos.getY(DistanceUnit.INCH));

@@ -99,17 +99,17 @@ public class UtilityValues {
     public static final int PIVOT_MOTOR_COLOR = -120;
     public static final int PIVOT_MOTOR_ALIGN = -140;
     public static final int PIVOT_MOTOR_SUB = -200;
-    public static final int PIVOT_MOTOR_FLOAT = -500;
+    public static final int PIVOT_MOTOR_FLOAT = -550;
     public static final int PIVOT_MOTOR_TRANSFER = -660;
     public static final int PIVOT_MOTOR_HANG = -275;
 
     public static final int PIVOT_MOTOR_DOWN_AUTO = 670;
     public static final int PIVOT_MOTOR_ALIGN_AUTO = 625;
     public static final int PIVOT_MOTOR_SUB_AUTO = 550;
-    public static final int PIVOT_MOTOR_FLOAT_AUTO = 230;
+    public static final int PIVOT_MOTOR_FLOAT_AUTO = 150;
     public static final int PIVOT_MOTOR_TRANSFER_AUTO = 50;
 
-    public static final double SPECIMEN_PIVOT_DOWN = 0.13;
+    public static final double SPECIMEN_PIVOT_DOWN = 0.1733;
     public static final double SPECIMEN_PIVOT_UP = 0.74;
     public static final double SPECIMEN_PIVOT_SCORE = 0.3;
 

@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.configuration.Utility;
 
 import org.firstinspires.ftc.teamcode.mmintothedeep.UtilityValues;
 
@@ -16,7 +15,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
     public Servo turnServo = null;
     public Servo clipServo = null;
     public Servo flipServo = null;
-    public Servo pivotServo = null;
+    public Servo specimenServo = null;
     public DcMotor linearSlideMotor = null;
 
     DcMotor leftFrontDrive = null;
@@ -90,21 +89,21 @@ public class TeleOpForMakeUp extends LinearOpMode {
     public void specimenScore(boolean specUp, boolean specDown, boolean specMiddle) {
         // pivot specimen
         if (specUp) {
-            pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+            specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
         }
 
         if (specDown) {
-            pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
+            specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
             //sleepWithSlightly(1000);
             sleepWithSlightly(1000, -0.3);
             clawPosition = CLAWS_OPEN;
             clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
             sleepWithMoving(200);
-            pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
+            specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
         }
 
         if (specMiddle) {
-            pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
+            specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
             clawPosition = CLAWS_OPEN;
             clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
         }
@@ -186,7 +185,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
         turnServo = hardwareMap.servo.get("turnServo");
         clipServo = hardwareMap.servo.get("clipServo");
         flipServo = hardwareMap.servo.get("flipServo");
-        pivotServo = hardwareMap.servo.get("specPivot");
+        specimenServo = hardwareMap.servo.get("specPivot");
 
     }
 
