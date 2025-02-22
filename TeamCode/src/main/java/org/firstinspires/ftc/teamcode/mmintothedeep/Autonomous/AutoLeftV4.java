@@ -321,7 +321,7 @@ public class AutoLeftV4 extends LinearOpMode {
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                         linearSlideMotor.setPower(0);
                         flipServo.setPosition(flipPosScore);
-                        sleep(400);
+                        sleep(300);
                         flipServo.setPosition(flipPosDown);
                     } else {
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.4);
@@ -382,7 +382,7 @@ public class AutoLeftV4 extends LinearOpMode {
                         linearSlideMotor.setPower(0);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.2);
                         flipServo.setPosition(flipPosScore);
-                        sleep(400);
+                        sleep(300);
                         flipServo.setPosition(flipPosDown);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                     } else {
@@ -446,7 +446,7 @@ public class AutoLeftV4 extends LinearOpMode {
                         sleep(400);
                         flipServo.setPosition(flipPosDown);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.2);
-                        sleep(200);
+                        sleep(300);
                         atTarget = false;
                     } else {
                         if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
@@ -499,7 +499,7 @@ public class AutoLeftV4 extends LinearOpMode {
                         }
                         linearSlideMotor.setPower(0);
                         flipServo.setPosition(flipPosScore);
-                        sleep(400);
+                        sleep(300);
                         flipServo.setPosition(flipPosDown);
                     } else {
                         // events in reverse order for else logic
@@ -532,7 +532,7 @@ public class AutoLeftV4 extends LinearOpMode {
                         gripperServo1.setPosition(0.35); //UtilityValues.GRIPPER_POS_OPEN);
                         //alignToSample();
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.5);
-                        sleep(400);
+                        sleep(300);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
                         sleep(400);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);

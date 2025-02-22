@@ -46,17 +46,19 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            boolean transferButton = gamepad2.right_trigger > 0.3;
+            boolean transferButton = gamepad2.left_bumper;
             boolean alignButton = gamepad2.left_trigger > 0.3;
-            boolean downButton = gamepad2.right_bumper;
+            boolean downButton = gamepad2.right_trigger > 0.3;
             boolean slideResetButton = gamepad1.x;
             boolean clawToggleButton = gamepad2.right_bumper;
             boolean specimenUpButton = gamepad2.dpad_up;
             boolean specimenDownButton = gamepad2.dpad_down;
             boolean specimenPickUpButton = gamepad2.dpad_right;
+            boolean flipButton = gamepad2.x;
+            boolean pivotFloat = gamepad2.back;
 
             moveRobot();
-            slidePositions(transferButton, alignButton, downButton, slideResetButton);
+            slidePositions(transferButton, alignButton, downButton, slideResetButton, flipButton, pivotFloat);
             claws(clawToggleButton);
             specimenScore(specimenUpButton, specimenDownButton, specimenPickUpButton);
             isTransferring(isTransferring);
@@ -94,7 +96,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
         if (specDown) {
             pivotServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
             //sleepWithSlightly(1000);
-            sleepWithSlightly(1000, 0.3);
+            sleepWithSlightly(1000, -0.3);
             clawPosition = CLAWS_OPEN;
             clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
             sleepWithMoving(200);
@@ -188,7 +190,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
     }
 
-    public void slidePositions(boolean slideUpControl, boolean alignControl, boolean downControl, boolean resetSlideControl) {
+    public void slidePositions(boolean slideUpControl, boolean alignControl, boolean downControl, boolean resetSlideControl, boolean flip, boolean pivotFloat) {
 
         if (slideUpControl) {
             runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 0.5);
@@ -220,6 +222,21 @@ public class TeleOpForMakeUp extends LinearOpMode {
         if (resetSlideControl) {
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
+        if (flip) {
+            isTransferring = false;
+            flipServo.setPosition(UtilityValues.FLIP_POS_SCORE);
+            sleepWithMoving(300);
+            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+            turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_DOWN, 1);
+            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.4);
+        }
+
+        if (pivotFloat) {
+            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.4);
         }
 
     }
