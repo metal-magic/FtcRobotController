@@ -86,7 +86,7 @@ public class UtilityValues {
 
 //    public static final double FLIP_POS_DOWN = 0.1861; //0.06; // 0.1
     public static final double FLIP_POS_DOWN = 0.13;
-    public static final double FLIP_POS_SCORE = 0.8128; //0.7;
+    public static final double FLIP_POS_SCORE = 0.83; //0.7;
     public static final double FLIP_POS_MID = 0.36; //0.7;
 
     public static final double GRIPPER_POS_CLOSE = 0.11;
@@ -97,7 +97,7 @@ public class UtilityValues {
 
     public static final int PIVOT_MOTOR_DOWN = 0;
     public static final int PIVOT_MOTOR_COLOR = -120;
-    public static final int PIVOT_MOTOR_ALIGN = -160;
+    public static final int PIVOT_MOTOR_ALIGN = -140;
     public static final int PIVOT_MOTOR_SUB = -200;
     public static final int PIVOT_MOTOR_FLOAT = -500;
     public static final int PIVOT_MOTOR_TRANSFER = -660;
