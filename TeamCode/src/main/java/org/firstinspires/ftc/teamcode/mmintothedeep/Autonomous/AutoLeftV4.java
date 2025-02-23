@@ -618,7 +618,6 @@ public class AutoLeftV4 extends LinearOpMode {
         sleep(20);
     }
 
-    // Method to initialize colorBlobProcessor (Drawing boxes around samples)
     public void initColorBlobsProcessor(ColorRange color) {
         colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(color)         // use a predefined color match

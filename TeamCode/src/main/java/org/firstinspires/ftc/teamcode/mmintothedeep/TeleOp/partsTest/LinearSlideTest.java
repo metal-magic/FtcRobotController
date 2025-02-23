@@ -76,7 +76,7 @@ public class LinearSlideTest extends OpMode {
     @Override
     public void init() {
 
-        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor1");
+        linearSlideMotor = hardwareMap.dcMotor.get("linearSlideMotor");
 
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -108,11 +108,11 @@ public class LinearSlideTest extends OpMode {
             if (gamepad2.right_trigger >= 0.1F) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(1);
+                linearSlideMotor.setPower(-1*gamepad2.right_trigger);
             } else if (gamepad2.left_trigger >= 0.1F) {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                linearSlideMotor.setPower(-1);
+                linearSlideMotor.setPower(1*gamepad2.left_trigger);
             } else {
                 linearSlideMotor.setDirection(DcMotor.Direction.FORWARD);
                 linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
