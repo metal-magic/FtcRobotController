@@ -47,7 +47,6 @@ import java.util.Objects;
  */
 
 @TeleOp(name = "linearSlideTest", group = "parts")
-@Disabled
 public class LinearSlideTest extends OpMode {
 
     public DcMotor linearSlideMotor = null;

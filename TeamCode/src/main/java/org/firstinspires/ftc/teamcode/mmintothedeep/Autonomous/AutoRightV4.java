@@ -72,17 +72,17 @@ public class AutoRightV4 extends LinearOpMode {
         DRIVE_TO_TARGET_25
     }
 
-    static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 0); // Starting position
-    static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-764,-220,AngleUnit.DEGREES,0);
-    static final Pose2D WAYPOINT_1 = new Pose2D(DistanceUnit.MM,-600,534,AngleUnit.DEGREES,0);
-    static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,-1324,640,AngleUnit.DEGREES,0);
-    static final Pose2D READY_PUSH_1 = new Pose2D(DistanceUnit.MM,-1261,820,AngleUnit.DEGREES,0);
-    static final Pose2D PUSH_1 = new Pose2D(DistanceUnit.MM,-237,910,AngleUnit.DEGREES,0);
-    static final Pose2D WAYPOINT_3 = new Pose2D(DistanceUnit.MM,-1324,910,AngleUnit.DEGREES,0);
-    static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM,-1261,1103,AngleUnit.DEGREES,0);
-    static final Pose2D PUSH_2_AND_PICK = new Pose2D(DistanceUnit.MM,-60,1091,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM,-700,-230,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-40,1064,AngleUnit.DEGREES,0);
+    static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 90); // Starting position
+    static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-718,-268,AngleUnit.DEGREES, 0);
+    static final Pose2D WAYPOINT_1 = new Pose2D(DistanceUnit.MM,-509,449,AngleUnit.DEGREES,0);
+    static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,-1343,701,AngleUnit.DEGREES,0);
+    static final Pose2D READY_PUSH_1 = new Pose2D(DistanceUnit.MM,-1219,883,AngleUnit.DEGREES,0);
+    static final Pose2D PUSH_1 = new Pose2D(DistanceUnit.MM,-325,895,AngleUnit.DEGREES,0);
+    static final Pose2D WAYPOINT_3 = new Pose2D(DistanceUnit.MM,-1326,928,AngleUnit.DEGREES,0);
+    static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM,-1200,994,AngleUnit.DEGREES,0);
+    static final Pose2D PUSH_2_AND_PICK = new Pose2D(DistanceUnit.MM,-36,957,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM,-688,-230,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-62,967,AngleUnit.DEGREES,0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
     static final double slidePosSpecDown = UtilityValues.SLIDE_POS_SPEC_DOWN; //UtilityValues.SLIDE_POS_SPEC_DOWN;

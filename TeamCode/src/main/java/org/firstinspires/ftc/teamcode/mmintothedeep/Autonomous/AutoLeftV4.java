@@ -47,6 +47,8 @@ public class AutoLeftV4 extends LinearOpMode {
 
     long timeToTransfer5th;
 
+    public static int ratioY = 5;
+    public static int ratioX = 3;
 
     static final double cameraOffsetY = -127.0;
     static final double cameraOffsetX = -203.2;
@@ -147,6 +149,8 @@ public class AutoLeftV4 extends LinearOpMode {
 
     boolean atTarget = false;
     public Servo turnServo = null;
+
+    public static final int toleranceMotorSleep = 20;
 
 
     @Override
@@ -254,28 +258,21 @@ public class AutoLeftV4 extends LinearOpMode {
                         pivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                         pivotMotor.setPower(0);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
-                        while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                            linearSlideMotor.setPower(1);
-                        }
+                        waitSlide((int) slidePosUp);
                         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                         pivotMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.3);
-                        linearSlideMotor.setPower(0);
                         flipServo.setPosition(flipPosScore);
-                        sleep(600);
+                        sleep(400);
                         flipServo.setPosition(flipPosDown);
+                        sleep(250);
                     } else {
-                        if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                            linearSlideMotor.setPower(1);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
+                        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
                     }
                     break;
                 case DRIVE_TO_TARGET_2:
                     //drive to the first sample
                     if (nav.driveTo(odo.getPosition(), SAMPLE_1, 0.7, 0.4)){
-                        linearSlideMotor.setPower(0);
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_3;
                         // pick up
@@ -283,13 +280,9 @@ public class AutoLeftV4 extends LinearOpMode {
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                         flipServo.setPosition(flipPosDown);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.3);
-                        while (linearSlideMotor.getCurrentPosition() > 300) {
-                            linearSlideMotor.setPower(-1);
-                        }
-                        while (linearSlideMotor.getCurrentPosition() < 300) {
-                            linearSlideMotor.setPower(0.3);
-                        }
-                        linearSlideMotor.setPower(0);
+
+                        waitSlide((int) UtilityValues.SLIDE_POS_TRANSFER);
+
                         sleep(200);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
                         sleep(200);
@@ -303,33 +296,27 @@ public class AutoLeftV4 extends LinearOpMode {
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.4);
                         sleep(200);
                     } else {
-                        if (linearSlideMotor.getCurrentPosition() > 300) {
-                            linearSlideMotor.setPower(-1);
-                        } else if (linearSlideMotor.getCurrentPosition() < 300){
-                            linearSlideMotor.setPower(0.3);
-                        }
+
+                        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
+
                     }
                     break;
                 case DRIVE_TO_TARGET_3:
                     if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.4)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_4;
-                        while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                            linearSlideMotor.setPower(1);
-                        }
+
+                        waitSlide((int) UtilityValues.SLIDE_POS_SAMP);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.2);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-                        linearSlideMotor.setPower(0);
                         flipServo.setPosition(flipPosScore);
-                        sleep(300);
+                        sleep(400);
                         flipServo.setPosition(flipPosDown);
+                        sleep(250);
                     } else {
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.4);
-                        if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                            linearSlideMotor.setPower(0.9);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
+
+                        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.4);
                     }
                     break;
@@ -342,13 +329,9 @@ public class AutoLeftV4 extends LinearOpMode {
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                         flipServo.setPosition(flipPosDown);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.3);
-                        while (linearSlideMotor.getCurrentPosition() > 300) {
-                            linearSlideMotor.setPower(-1);
-                        }
-                        while (linearSlideMotor.getCurrentPosition() < 300) {
-                            linearSlideMotor.setPower(0.3);
-                        }
-                        linearSlideMotor.setPower(0);
+
+                        waitSlide((int) UtilityValues.SLIDE_POS_TRANSFER);
+
                         sleep(200);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
                         sleep(200);
@@ -365,32 +348,26 @@ public class AutoLeftV4 extends LinearOpMode {
                         sleep(100);
                         //pivotServo.setPosition(pivotPosFloat);
                     } else {
-                        if (linearSlideMotor.getCurrentPosition() > slidePosTransfer) {
-                            linearSlideMotor.setPower(-1);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
+
+
+                        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
                     }
                     break;
                 case DRIVE_TO_TARGET_5:
                     if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.4)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_6;
-                        while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                            linearSlideMotor.setPower(1);
-                        }
-                        linearSlideMotor.setPower(0);
+
+                        waitSlide((int) UtilityValues.SLIDE_POS_SAMP);
+
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.2);
                         flipServo.setPosition(flipPosScore);
-                        sleep(300);
+                        sleep(400);
                         flipServo.setPosition(flipPosDown);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+                        sleep(250);
                     } else {
-                        if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                            linearSlideMotor.setPower(1);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
+                        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.4);
                     }
                     break;
@@ -403,13 +380,9 @@ public class AutoLeftV4 extends LinearOpMode {
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                         flipServo.setPosition(flipPosDown);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.3);
-                        while (linearSlideMotor.getCurrentPosition() > 300) {
-                            linearSlideMotor.setPower(-1);
-                        }
-                        while (linearSlideMotor.getCurrentPosition() < 300) {
-                            linearSlideMotor.setPower(0.3);
-                        }
-                        linearSlideMotor.setPower(0);
+
+                        waitSlide((int) UtilityValues.SLIDE_POS_TRANSFER);
+
                         sleep(300);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
                         sleep(500);
@@ -427,21 +400,16 @@ public class AutoLeftV4 extends LinearOpMode {
                         sleep(500);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                     } else {
-                        if (linearSlideMotor.getCurrentPosition() > slidePosTransfer) {
-                            linearSlideMotor.setPower(-1);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
+                        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
                     }
                     break;
                 case DRIVE_TO_TARGET_7:
                     if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.4)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_8;
-                        while (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                            linearSlideMotor.setPower(1);
-                        }
-                        linearSlideMotor.setPower(0);
+
+                        waitSlide((int) UtilityValues.SLIDE_POS_SAMP);
+
                         flipServo.setPosition(flipPosScore);
                         sleep(400);
                         flipServo.setPosition(flipPosDown);
@@ -449,11 +417,8 @@ public class AutoLeftV4 extends LinearOpMode {
                         sleep(300);
                         atTarget = false;
                     } else {
-                        if (linearSlideMotor.getCurrentPosition() < slidePosUp) {
-                            linearSlideMotor.setPower(1);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
+                        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
+
                     }
                     break;
                 case DRIVE_TO_TARGET_8:
@@ -461,11 +426,7 @@ public class AutoLeftV4 extends LinearOpMode {
                         telemetry.addLine("at position #4");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_9;
                     } else {
-                        if (linearSlideMotor.getCurrentPosition() > 50) {
-                            linearSlideMotor.setPower(-1);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
+                        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.8);
                     }
                     break;
@@ -473,17 +434,10 @@ public class AutoLeftV4 extends LinearOpMode {
                     if(nav.driveTo(odo.getPosition(), SUB, 0.7, 0.3)) {
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.ALIGN_TO_SAMPLE;
-                        linearSlideMotor.setPower(0);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.5);
                         alignToSample();
                     } else {
-                        if (linearSlideMotor.getCurrentPosition() > 300) {
-                            linearSlideMotor.setPower(-1);
-                        } else if (linearSlideMotor.getCurrentPosition() < 300){
-                            linearSlideMotor.setPower(0.3);
-                        } else {
-                            linearSlideMotor.setPower(0);
-                        }
+                        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
                     }
                     break;
                 case DRIVE_TO_TARGET_10:
@@ -494,10 +448,8 @@ public class AutoLeftV4 extends LinearOpMode {
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.2);
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
 
-                        while (linearSlideMotor.getCurrentPosition() < UtilityValues.SLIDE_POS_SAMP) {
-                            linearSlideMotor.setPower(1);
-                        }
-                        linearSlideMotor.setPower(0);
+                        waitSlide((int) UtilityValues.SLIDE_POS_SAMP);
+
                         flipServo.setPosition(flipPosScore);
                         sleep(300);
                         flipServo.setPosition(flipPosDown);
@@ -505,11 +457,7 @@ public class AutoLeftV4 extends LinearOpMode {
                         // events in reverse order for else logic
                         if (timeElapsed5th(1700)) {
                             turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-                            if (linearSlideMotor.getCurrentPosition() < UtilityValues.SLIDE_POS_SAMP) {
-                                linearSlideMotor.setPower(1);
-                            } else {
-                                linearSlideMotor.setPower(0);
-                            }
+                            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
                         } else if (timeElapsed5th(1200)) {
                             runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.2);
                         } else if (timeElapsed5th(900)) {
@@ -588,35 +536,34 @@ public class AutoLeftV4 extends LinearOpMode {
     }
 
     public void runToPosition(DcMotor motor, int ticks, double power) {
-        newTarget = ticks;
-        motor.setTargetPosition(newTarget);
+        motor.setTargetPosition(ticks);
         motor.setPower(power);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    private void alignToSample () {
-
-        // Read the current list
-        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-
-        ColorBlobLocatorProcessor.Util.filterByArea(2000, 20000, blobs);  // filter out very small blobs.
-
-        while (blobs.isEmpty()) {
-            blobs = colorLocator.getBlobs();
-        }
-
-        ColorBlobLocatorProcessor.Blob largestBlob = blobs.get(0);
-        RotatedRect boxFit = largestBlob.getBoxFit();
-
-        sample_pos = new Pose2D(DistanceUnit.INCH, odo.getPosX() / 25.4 + (240 - (int) boxFit.center.y) / 240.0 * 4.0, odo.getPosY() / 25.4 + -1 * ((int) boxFit.center.x - 320) / 320.0 * 6.0, AngleUnit.DEGREES, 0);
-
-        telemetry.addData("Pose X", sample_pos.getX(DistanceUnit.INCH));
-        telemetry.addData("Pose Y", sample_pos.getY(DistanceUnit.INCH));
-        telemetry.addData("Pose Heading", sample_pos.getHeading(AngleUnit.DEGREES));
-
-        telemetry.update();
-        sleep(20);
-    }
+//    private void alignToSample () {
+//
+//        // Read the current list
+//        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+//
+//        ColorBlobLocatorProcessor.Util.filterByArea(2000, 20000, blobs);  // filter out very small blobs.
+//
+//        while (blobs.isEmpty()) {
+//            blobs = colorLocator.getBlobs();
+//        }
+//
+//        ColorBlobLocatorProcessor.Blob largestBlob = blobs.get(0);
+//        RotatedRect boxFit = largestBlob.getBoxFit();
+//
+//        sample_pos = new Pose2D(DistanceUnit.INCH, odo.getPosX() / 25.4 + (240 - (int) boxFit.center.y) / 240.0 * 4.0, odo.getPosY() / 25.4 + -1 * ((int) boxFit.center.x - 320) / 320.0 * 6.0, AngleUnit.DEGREES, 0);
+//
+//        telemetry.addData("Pose X", sample_pos.getX(DistanceUnit.INCH));
+//        telemetry.addData("Pose Y", sample_pos.getY(DistanceUnit.INCH));
+//        telemetry.addData("Pose Heading", sample_pos.getHeading(AngleUnit.DEGREES));
+//
+//        telemetry.update();
+//        sleep(20);
+//    }
 
     public void initColorBlobsProcessor(ColorRange color) {
         colorLocator = new ColorBlobLocatorProcessor.Builder()
@@ -694,5 +641,61 @@ public class AutoLeftV4 extends LinearOpMode {
             telemetry.update();
         }
     }
+
+    private void alignToSample() {
+
+        // Read the current list
+        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+
+        ColorBlobLocatorProcessor.Util.filterByArea(2000, 50000, blobs);  // filter out very small blobs.
+
+        while (blobs.isEmpty()) {
+            blobs = colorLocator.getBlobs();
+        }
+
+        double offsetX = 360.0;
+        double offsetY = 240.0;
+
+        int index = 0;
+        double lowestScore = 1000000;
+        int i = 0;
+
+        for (ColorBlobLocatorProcessor.Blob b : blobs) {
+            RotatedRect boxFit = b.getBoxFit();
+            double currAngle = boxFit.angle;
+            if (boxFit.size.width < boxFit.size.height) {
+                currAngle -= 90;
+            }
+            double score = (Math.abs(currAngle+90)*5+Math.sqrt(Math.pow((offsetY-boxFit.center.y), 2)+Math.pow((offsetX-boxFit.center.x), 2)));
+            if (score < lowestScore) {
+                lowestScore = score;
+                index = i;
+            }
+            i++;
+        }
+
+        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(index);
+        RotatedRect boxFit = bestBlob.getBoxFit();
+
+        sample_pos = new Pose2D(DistanceUnit.INCH, odo.getPosX() / 25.4 + (offsetY - (int) boxFit.center.y) / offsetY * ratioY, odo.getPosY() / 25.4 + -1 * ((int) boxFit.center.x - offsetX) / offsetX * ratioX, AngleUnit.DEGREES, 0);
+
+        telemetry.addData("lowestScore", lowestScore);
+
+        telemetry.addData("Pose X", sample_pos.getX(DistanceUnit.INCH));
+        telemetry.addData("Pose Y", sample_pos.getY(DistanceUnit.INCH));
+        telemetry.addData("Pose Heading", sample_pos.getHeading(AngleUnit.DEGREES));
+
+        telemetry.update();
+        sleep(20);
+    }
+
+    public void waitSlide(int pos) {
+
+        while (linearSlideMotor.getCurrentPosition() < pos - toleranceMotorSleep || linearSlideMotor.getCurrentPosition() > pos + toleranceMotorSleep) {
+            // nothing
+        }
+
+    }
+
 
 }
