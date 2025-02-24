@@ -24,6 +24,8 @@ public class AutoRightV4 extends LinearOpMode {
 
     int newTarget;
 
+    int step = 1;
+
     DcMotor leftFrontDrive;
     DcMotor rightFrontDrive;
     DcMotor leftBackDrive;
@@ -75,14 +77,15 @@ public class AutoRightV4 extends LinearOpMode {
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 90); // Starting position
     static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-718,-268,AngleUnit.DEGREES, 0);
     static final Pose2D WAYPOINT_1 = new Pose2D(DistanceUnit.MM,-509,449,AngleUnit.DEGREES,0);
-    static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,-1343,701,AngleUnit.DEGREES,0);
+    static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,-1343,670,AngleUnit.DEGREES,0);
     static final Pose2D READY_PUSH_1 = new Pose2D(DistanceUnit.MM,-1219,883,AngleUnit.DEGREES,0);
     static final Pose2D PUSH_1 = new Pose2D(DistanceUnit.MM,-325,895,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_3 = new Pose2D(DistanceUnit.MM,-1326,928,AngleUnit.DEGREES,0);
-    static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM,-1200,994,AngleUnit.DEGREES,0);
-    static final Pose2D PUSH_2_AND_PICK = new Pose2D(DistanceUnit.MM,-36,957,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM,-688,-230,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-62,967,AngleUnit.DEGREES,0);
+    static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM,-1200,1100,AngleUnit.DEGREES,0);
+    static final Pose2D PUSH_2_AND_PICK = new Pose2D(DistanceUnit.MM,-25,1000,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM,-718 ,-230,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-27,967,AngleUnit.DEGREES,0);
+    static final Pose2D WAYPOINT_4 = new Pose2D(DistanceUnit.MM,-331,-18,AngleUnit.DEGREES,0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
     static final double slidePosSpecDown = UtilityValues.SLIDE_POS_SPEC_DOWN; //UtilityValues.SLIDE_POS_SPEC_DOWN;
@@ -195,7 +198,7 @@ public class AutoRightV4 extends LinearOpMode {
 
         clipServo.setPosition(clipPosClose);
         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-        gripperServo1.setPosition(0.55);
+        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
 
         // Wait for the game to start (driver presses START)
         waitForStart();
@@ -208,7 +211,7 @@ public class AutoRightV4 extends LinearOpMode {
         while (opModeIsActive()) {
             odo.update();
 
-            switch (stateMachine){
+            switch (stateMachine) {
                 case WAITING_FOR_START:
                     //the first step in the autonomous
                     odo.setPosition(startingPos);
@@ -223,7 +226,7 @@ public class AutoRightV4 extends LinearOpMode {
                         powerOff();
 
                         specimenScore();
-                        
+
                     } else {
                         runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 0.3);
                         specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
@@ -275,7 +278,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_6:
-                    if (nav.driveTo(odo.getPosition(), WAYPOINT_3, 0.65, 0)) {
+                    if (nav.driveTo(odo.getPosition(), WAYPOINT_3, 0.6, 0)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_7;
 
@@ -302,25 +305,36 @@ public class AutoRightV4 extends LinearOpMode {
                         stateMachine = StateMachine.DRIVE_TO_TARGET_9;
 
                         powerOff();
-
+                        sleep(300);
                         clipServo.setPosition(clipPosClose);
                         sleep(300);
+                        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+
+                        step = 1;
 
                     } else {
 
                     }
                     break;
                 case DRIVE_TO_TARGET_9:
-                    if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
-                        telemetry.addLine("at position #1!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_10;
-                        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
-                        sleep(900);
-                        specimenScore();
-                        powerOff();
+                    if (step == 1) {
+                        if (nav.driveTo(odo.getPosition(), WAYPOINT_4, 0.6, 0)) {
+                            telemetry.addLine("at position #1!");
+                            powerOff();
+                            step++;
 
+                        }
                     } else {
+                        if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
+                            telemetry.addLine("at position #1!");
+                            stateMachine = StateMachine.DRIVE_TO_TARGET_10;
 
+                            specimenScore();
+                            powerOff();
+
+                            step = 1;
+
+                        }
                     }
                     break;
                 case DRIVE_TO_TARGET_10:
@@ -330,27 +344,36 @@ public class AutoRightV4 extends LinearOpMode {
 
                         powerOff();
 
+                        sleep(300);
                         clipServo.setPosition(clipPosClose);
                         sleep(300);
+                        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+
+                        step = 1;
 
                     } else {
 
                     }
                     break;
                 case DRIVE_TO_TARGET_11:
-                    if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
-                        telemetry.addLine("at position #1!");
-                        stateMachine = StateMachine.DRIVE_TO_TARGET_12;
+                    if (step == 1) {
+                        if (nav.driveTo(odo.getPosition(), WAYPOINT_4, 0.6, 0)) {
+                            telemetry.addLine("at position #1!");
+                            powerOff();
+                            step++;
 
-                        powerOff();
-
-                        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
-                        sleep(900);
-                        specimenScore();
-                        powerOff();
-
+                        }
                     } else {
+                        if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
+                            telemetry.addLine("at position #1!");
+                            stateMachine = StateMachine.DRIVE_TO_TARGET_12;
 
+                            specimenScore();
+                            powerOff();
+
+                            step = 1;
+
+                        }
                     }
                     break;
                 case DRIVE_TO_TARGET_12:
@@ -360,27 +383,36 @@ public class AutoRightV4 extends LinearOpMode {
 
                         powerOff();
 
+                        sleep(300);
                         clipServo.setPosition(clipPosClose);
                         sleep(300);
+                        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+
+                        step = 1;
 
                     } else {
 
                     }
                     break;
                 case DRIVE_TO_TARGET_13:
-                    if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
-                        telemetry.addLine("at position #1!");
-                        stateMachine = StateMachine.AT_TARGET;
+                    if (step == 1) {
+                        if (nav.driveTo(odo.getPosition(), WAYPOINT_4, 0.6, 0)) {
+                            telemetry.addLine("at position #1!");
+                            powerOff();
+                            step++;
 
-                        powerOff();
-
-                        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
-                        sleep(900);
-                        specimenScore();
-                        powerOff();
-
+                        }
                     } else {
+                        if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
+                            telemetry.addLine("at position #1!");
+                            stateMachine = StateMachine.AT_TARGET;
 
+                            specimenScore();
+                            powerOff();
+
+                            step = 1;
+
+                        }
                     }
                     break;
 
