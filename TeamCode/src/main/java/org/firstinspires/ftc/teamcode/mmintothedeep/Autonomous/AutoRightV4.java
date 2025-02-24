@@ -406,9 +406,10 @@ public class AutoRightV4 extends LinearOpMode {
                         if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
                             telemetry.addLine("at position #1!");
                             stateMachine = StateMachine.AT_TARGET;
+                            powerOff();
+                            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN_AUTO, 0.4);
 
                             specimenScore();
-                            powerOff();
 
                             step = 1;
 
