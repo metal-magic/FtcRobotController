@@ -75,7 +75,7 @@ public class AutoRightV4 extends LinearOpMode {
     }
 
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 90); // Starting position
-    static final Pose2D HIGH_CHAMBER = new Pose2D(DistanceUnit.MM,-718,-268,AngleUnit.DEGREES, 0);
+    static final Pose2D CHAMBER_SPEC_1 = new Pose2D(DistanceUnit.MM,-718,-268,AngleUnit.DEGREES, 0);
     static final Pose2D WAYPOINT_1 = new Pose2D(DistanceUnit.MM,-509,449,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,-1343,670,AngleUnit.DEGREES,0);
     static final Pose2D READY_PUSH_1 = new Pose2D(DistanceUnit.MM,-1219,883,AngleUnit.DEGREES,0);
@@ -83,7 +83,9 @@ public class AutoRightV4 extends LinearOpMode {
     static final Pose2D WAYPOINT_3 = new Pose2D(DistanceUnit.MM,-1326,928,AngleUnit.DEGREES,0);
     static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM,-1200,1100,AngleUnit.DEGREES,0);
     static final Pose2D PUSH_2_AND_PICK = new Pose2D(DistanceUnit.MM,-25,1000,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_CHAMBER = new Pose2D(DistanceUnit.MM,-718 ,-230,AngleUnit.DEGREES,0);
+    static final Pose2D CHAMBER_SPEC_2 = new Pose2D(DistanceUnit.MM,-718 ,-230,AngleUnit.DEGREES,0);
+    static final Pose2D CHAMBER_SPEC_3 = new Pose2D(DistanceUnit.MM,-718 ,-210,AngleUnit.DEGREES,0);
+    static final Pose2D CHAMBER_SPEC_4 = new Pose2D(DistanceUnit.MM,-718 ,-190,AngleUnit.DEGREES,0);
     static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-27,967,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_4 = new Pose2D(DistanceUnit.MM,-331,-18,AngleUnit.DEGREES,0);
 
@@ -219,7 +221,7 @@ public class AutoRightV4 extends LinearOpMode {
                     clipServo.setPosition(UtilityValues.CLIP_POS_CLOSE);
                     break;
                 case DRIVE_TO_TARGET_1:
-                    if (nav.driveTo(odo.getPosition(), HIGH_CHAMBER, 0.65, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), CHAMBER_SPEC_1, 0.65, 0.3)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_2;
 
@@ -325,7 +327,7 @@ public class AutoRightV4 extends LinearOpMode {
 
                         }
                     } else {
-                        if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
+                        if (nav.driveTo(odo.getPosition(), CHAMBER_SPEC_2, 0.65, 0.3)) {
                             telemetry.addLine("at position #1!");
                             stateMachine = StateMachine.DRIVE_TO_TARGET_10;
 
@@ -364,7 +366,7 @@ public class AutoRightV4 extends LinearOpMode {
 
                         }
                     } else {
-                        if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
+                        if (nav.driveTo(odo.getPosition(), CHAMBER_SPEC_2, 0.65, 0.3)) {
                             telemetry.addLine("at position #1!");
                             stateMachine = StateMachine.DRIVE_TO_TARGET_12;
 
@@ -403,7 +405,7 @@ public class AutoRightV4 extends LinearOpMode {
 
                         }
                     } else {
-                        if (nav.driveTo(odo.getPosition(), NEW_CHAMBER, 0.65, 0.3)) {
+                        if (nav.driveTo(odo.getPosition(), CHAMBER_SPEC_2, 0.65, 0.3)) {
                             telemetry.addLine("at position #1!");
                             stateMachine = StateMachine.AT_TARGET;
                             powerOff();
