@@ -27,12 +27,16 @@ public class TeleOpForMakeUp extends LinearOpMode {
     public int clawPosition = 0;
     public boolean wasPressedToggle = false;
 
+    public boolean wasPressedMode = false;
+
     public int CLAWS_OPEN = 1;
     public int CLAWS_CLOSE = 0;
 
     public static long startTime = 0;
 
     public boolean isTransferring = false;
+
+    public int mode = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,14 +49,21 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            boolean transferButton = gamepad2.right_trigger > 0.3;
-            boolean alignButton = gamepad2.left_bumper;
-            boolean downButton = gamepad2.left_trigger > 0.3;
+            boolean modeSwitchButton = gamepad2.dpad_down;
+
+            boolean SAMPLE_MODE = mode == 0;
+            boolean SPECIMEN_MODE = mode == 1;
+
+            boolean transferButton = gamepad2.right_trigger > 0.1 && SAMPLE_MODE;
+            boolean alignButton = gamepad2.left_bumper && SAMPLE_MODE;
+            boolean downButton = gamepad2.left_trigger > 0.1 && SAMPLE_MODE;
+
             boolean slideResetButton = gamepad1.x;
             boolean clawToggleButton = gamepad2.right_bumper;
-            boolean specimenUpButton = gamepad2.dpad_up;
-            boolean specimenDownButton = gamepad2.dpad_down;
-            boolean specimenPickUpButton = gamepad2.dpad_right;
+
+            boolean specimenUpButton = gamepad2.left_trigger > 0.1 && SPECIMEN_MODE;
+            boolean specimenDownButton = gamepad2.right_trigger > 0.3 && SPECIMEN_MODE;
+            boolean specimenPickUpButton = gamepad2.left_bumper && SPECIMEN_MODE;
             boolean flipButton = gamepad2.x;
             boolean pivotFloat = gamepad2.back;
 
@@ -62,9 +73,28 @@ public class TeleOpForMakeUp extends LinearOpMode {
             specimenScore(specimenUpButton, specimenDownButton, specimenPickUpButton);
             isTransferring(isTransferring);
 
+            toggleMode(modeSwitchButton);
+
+            if (mode == 0) {
+                telemetry.addLine("Sample mode");
+            } else {
+                telemetry.addLine("Specimen mode");
+            }
+
+            telemetry.addData("mode", mode);
+
         }
 
 
+    }
+
+    public void toggleMode(boolean toggle) {
+        // toggle
+        if (toggle && !wasPressedMode) {
+            mode = (mode + 1) % 2;
+        }
+
+        wasPressedMode = toggle;
     }
 
     public void claws(boolean toggle) {
@@ -136,6 +166,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
     public void afterStart() {
         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
+        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
 
         double startTimeAtStart = System.currentTimeMillis();
         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -244,6 +275,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
         if (isTransferring) {
             if (System.currentTimeMillis() > startTime + 1200.0) {
                 runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
+                flipServo.setPosition(UtilityValues.FLIP_POS_MID);
             } else if (System.currentTimeMillis() > startTime + 850.0) {
                 runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.6);
             } else if (System.currentTimeMillis() > startTime + 600.0) {

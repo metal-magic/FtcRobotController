@@ -103,7 +103,11 @@ public class AutoLeftV4 extends LinearOpMode {
     //    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-450,110,AngleUnit.DEGREES,40);
 //    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-443,180,AngleUnit.DEGREES,50);
 
+<<<<<<< HEAD
+    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-415,180,AngleUnit.DEGREES,46);
+=======
     static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-415,180,AngleUnit.DEGREES,46.2);
+>>>>>>> 04eae3534a473ea2a0761b73d015b339b8aeaf1a
 
 
     //    static final Pose2D SAMPLE_1 = new Pose2D(DistanceUnit.MM,-302,450,AngleUnit.DEGREES,90);
@@ -254,7 +258,7 @@ public class AutoLeftV4 extends LinearOpMode {
                     the robot has reached the target, and has been there for (holdTime) seconds.
                     Once driveTo returns true, it prints a telemetry line and moves the state machine forward.
                      */
-                    if (nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.5)){
+                    if (nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.75, 0.5)){
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_2;
                         pivotMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -275,7 +279,7 @@ public class AutoLeftV4 extends LinearOpMode {
                     break;
                 case DRIVE_TO_TARGET_2:
                     //drive to the first sample
-                    if (nav.driveTo(odo.getPosition(), SAMPLE_1, 0.7, 0.4)){
+                    if (nav.driveTo(odo.getPosition(), SAMPLE_1, 0.75, 0.4)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_3;
                         // pick up
@@ -305,7 +309,7 @@ public class AutoLeftV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_3:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.4)){
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.75, 0.4)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_4;
 
@@ -325,7 +329,7 @@ public class AutoLeftV4 extends LinearOpMode {
                     break;
                 case DRIVE_TO_TARGET_4:
                     //drive to the second sample
-                    if (nav.driveTo(odo.getPosition(), SAMPLE_2, 0.7, 0.4)){
+                    if (nav.driveTo(odo.getPosition(), SAMPLE_2, 0.75, 0.4)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_5;
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
@@ -357,7 +361,7 @@ public class AutoLeftV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_5:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.4)){
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.75, 0.4)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_6;
 
@@ -376,7 +380,7 @@ public class AutoLeftV4 extends LinearOpMode {
                     break;
                 case DRIVE_TO_TARGET_6:
                     //drive to the third sample
-                    if (nav.driveTo(odo.getPosition(), SAMPLE_3, 0.7, 0.4)){
+                    if (nav.driveTo(odo.getPosition(), SAMPLE_3, 0.75, 0.4)){
                         telemetry.addLine("at position #2!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_7;
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
@@ -407,7 +411,7 @@ public class AutoLeftV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_7:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.4)){
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.75, 0.4)){
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_8;
 
@@ -434,7 +438,7 @@ public class AutoLeftV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_9:
-                    if(nav.driveTo(odo.getPosition(), SUB, 0.7, 0.3)) {
+                    if(nav.driveTo(odo.getPosition(), SUB, 0.75, 0.3)) {
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.ALIGN_TO_SAMPLE;
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.5);
@@ -444,7 +448,7 @@ public class AutoLeftV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_10:
-                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.7, 0.4)) {
+                    if(nav.driveTo(odo.getPosition(), BASKET_TARGET, 0.75, 0.4)) {
                         telemetry.addLine("at position #3");
                         stateMachine = StateMachine.AT_TARGET;
 
@@ -650,14 +654,14 @@ public class AutoLeftV4 extends LinearOpMode {
         // Read the current list
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
 
-        ColorBlobLocatorProcessor.Util.filterByArea(2000, 50000, blobs);  // filter out very small blobs.
+        ColorBlobLocatorProcessor.Util.filterByArea(2000, 70000, blobs);  // filter out very small blobs.
 
         while (blobs.isEmpty()) {
             blobs = colorLocator.getBlobs();
         }
 
-        double offsetX = 360.0;
-        double offsetY = 240.0;
+        double offsetX = 240.0;
+        double offsetY = 220.0;
 
         int index = 0;
         double lowestScore = 1000000;
@@ -677,10 +681,10 @@ public class AutoLeftV4 extends LinearOpMode {
             i++;
         }
 
-        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(index);
+        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(0);
         RotatedRect boxFit = bestBlob.getBoxFit();
 
-        sample_pos = new Pose2D(DistanceUnit.INCH, odo.getPosX() / 25.4 + (offsetY - (int) boxFit.center.y) / offsetY * ratioY, odo.getPosY() / 25.4 + -1 * ((int) boxFit.center.x - offsetX) / offsetX * ratioX, AngleUnit.DEGREES, 0);
+        sample_pos = new Pose2D(DistanceUnit.INCH, odo.getPosX() / 25.4 + (offsetY - (int) boxFit.center.y) / 240.0 * ratioY, odo.getPosY() / 25.4 + (-1) * ((int) boxFit.center.x - offsetX) / 320.0 * ratioX, AngleUnit.DEGREES, 0);
 
         telemetry.addData("lowestScore", lowestScore);
 

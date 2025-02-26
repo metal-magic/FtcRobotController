@@ -1040,16 +1040,21 @@ public class CameraPickup extends LinearOpMode {
         // Read the current list
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
 
-        ColorBlobLocatorProcessor.Util.filterByArea(2000, 50000, blobs);  // filter out very small blobs.
+        ColorBlobLocatorProcessor.Util.filterByArea(2000, 70000, blobs);  // filter out very small blobs.
 
         while (blobs.isEmpty()) {
             blobs = colorLocator.getBlobs();
         }
 
+<<<<<<< HEAD
+        double offsetX = 240.0;
+        double offsetY = 220.0;
+=======
         double offsetX = 360.0;
 
 
         double offsetY = 400.0;
+>>>>>>> 04eae3534a473ea2a0761b73d015b339b8aeaf1a
 
         int index = 0;
         double lowestScore = 1000000;
@@ -1069,10 +1074,10 @@ public class CameraPickup extends LinearOpMode {
             i++;
         }
 
-        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(index);
+        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(0);
         RotatedRect boxFit = bestBlob.getBoxFit();
 
-        sample_pos = new Pose2D(DistanceUnit.INCH, (offsetY - (int) boxFit.center.y) / offsetY * ratioY, -1 * ((int) boxFit.center.x - offsetX) / offsetX * ratioX, AngleUnit.DEGREES, 0);
+        sample_pos = new Pose2D(DistanceUnit.INCH, (offsetY - (int) boxFit.center.y) / 240.0 * ratioY, -1 * ((int) boxFit.center.x - offsetX) / 320.0 * ratioX, AngleUnit.DEGREES, 0);
 
         telemetry.addData("lowestScore", lowestScore);
 

@@ -68,9 +68,9 @@ public class UtilityValues {
     public static final double SLIDE_POS_SPEC_DOWN = 1300;
     //changed from 2200 to 2195 - aditya 1/13
     public static final double SLIDE_POS_SPEC_UP = 1984;
-    public static final double SLIDE_POS_SAMP = 941; //3384;
+    public static final double SLIDE_POS_SAMP = 920; //941; //3384;
     public static final double SLIDE_POS_STABLE = 1400;
-    public static final double SLIDE_POS_TRANSFER = 80;
+    public static final double SLIDE_POS_TRANSFER = 100; //80;
 
 
     public static final double PIVOT_POS_DOWN = 0.11; //0.658; //0.76-0.05;
@@ -87,7 +87,7 @@ public class UtilityValues {
 //    public static final double FLIP_POS_DOWN = 0.1861; //0.06; // 0.1
     public static final double FLIP_POS_DOWN = 0.13;
     public static final double FLIP_POS_SCORE = 0.83; //0.7;
-    public static final double FLIP_POS_MID = 0.36; //0.7;
+    public static final double FLIP_POS_MID = 0.25; //0.7;
 
     public static final double GRIPPER_POS_CLOSE = 0.11;
     public static final double GRIPPER_POS_OPEN = 0.2794;
@@ -109,7 +109,7 @@ public class UtilityValues {
     public static final int PIVOT_MOTOR_FLOAT_AUTO = 150;
     public static final int PIVOT_MOTOR_TRANSFER_AUTO = 50;
 
-    public static final double SPECIMEN_PIVOT_DOWN = 0.1733;
+    public static final double SPECIMEN_PIVOT_DOWN = 0.18;
     public static final double SPECIMEN_PIVOT_UP = 0.74;
     public static final double SPECIMEN_PIVOT_SCORE = 0.3;
 
