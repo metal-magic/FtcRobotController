@@ -103,11 +103,7 @@ public class AutoLeftV4 extends LinearOpMode {
     //    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-450,110,AngleUnit.DEGREES,40);
 //    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-443,180,AngleUnit.DEGREES,50);
 
-<<<<<<< HEAD
     static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-415,180,AngleUnit.DEGREES,46);
-=======
-    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-415,180,AngleUnit.DEGREES,46.2);
->>>>>>> 04eae3534a473ea2a0761b73d015b339b8aeaf1a
 
 
     //    static final Pose2D SAMPLE_1 = new Pose2D(DistanceUnit.MM,-302,450,AngleUnit.DEGREES,90);

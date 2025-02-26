@@ -1046,15 +1046,8 @@ public class CameraPickup extends LinearOpMode {
             blobs = colorLocator.getBlobs();
         }
 
-<<<<<<< HEAD
         double offsetX = 240.0;
         double offsetY = 220.0;
-=======
-        double offsetX = 360.0;
-
-
-        double offsetY = 400.0;
->>>>>>> 04eae3534a473ea2a0761b73d015b339b8aeaf1a
 
         int index = 0;
         double lowestScore = 1000000;
