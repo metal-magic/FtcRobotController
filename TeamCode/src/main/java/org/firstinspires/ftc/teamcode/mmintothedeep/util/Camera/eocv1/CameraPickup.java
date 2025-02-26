@@ -1047,7 +1047,9 @@ public class CameraPickup extends LinearOpMode {
         }
 
         double offsetX = 360.0;
-        double offsetY = 240.0;
+
+
+        double offsetY = 400.0;
 
         int index = 0;
         double lowestScore = 1000000;
