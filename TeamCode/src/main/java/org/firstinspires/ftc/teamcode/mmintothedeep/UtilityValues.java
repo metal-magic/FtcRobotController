@@ -68,7 +68,7 @@ public class UtilityValues {
     public static final double SLIDE_POS_SPEC_DOWN = 1300;
     //changed from 2200 to 2195 - aditya 1/13
     public static final double SLIDE_POS_SPEC_UP = 1984;
-    public static final double SLIDE_POS_SAMP = 920; //941; //3384;
+    public static final double SLIDE_POS_SAMP = 900; //941; //3384;
     public static final double SLIDE_POS_STABLE = 1400;
     public static final double SLIDE_POS_TRANSFER = 100; //80;
 

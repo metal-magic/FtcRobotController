@@ -8,9 +8,22 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.mmintothedeep.UtilityValues;
 
-@TeleOp(name="!!!!! MAKE UP COMP TELEOP")
+
+/**
+ * Created for States Makeup Competition
+ * This is a new TeleOp (Driver controlled) with modularized code
+ * <p>
+ * Contributors:
+ * Aryan Mathur
+ * Srinandasai Ari
+ */
+
+@TeleOp(name="!!!!!!!!! MAKE UP COMP TELEOP")
 public class TeleOpForMakeUp extends LinearOpMode {
 
+    /**
+     * instantiating all the values
+     */
     public Servo gripperServo1 = null;
     public Servo turnServo = null;
     public Servo clipServo = null;
@@ -24,28 +37,35 @@ public class TeleOpForMakeUp extends LinearOpMode {
     DcMotor rightBackDrive = null;
     DcMotor pivotMotor = null;
 
+    /**
+     * other variables to be used in code
+     */
+    // for claws
     public int clawPosition = 0;
-    public boolean wasPressedToggle = false;
-
-    public boolean wasPressedMode = false;
-
+    public boolean wasPressedClaw = false;
     public int CLAWS_OPEN = 1;
     public int CLAWS_CLOSE = 0;
 
+    // for transferring
     public static long startTime = 0;
-
     public boolean isTransferring = false;
 
+    // for mode switching between sample and specimen mode
     public int mode = 0;
+    public boolean wasPressedMode = false;
 
+    /**
+     * Main section of code -- like 'main' method
+     * @throws InterruptedException - just in case
+     */
     @Override
     public void runOpMode() throws InterruptedException {
 
-        initialize();
+        initialize(); // initializing everything
 
-        waitForStart();
+        waitForStart(); // waiting until driver clicks play button
 
-        afterStart();
+        afterStart(); // some slide and servo movements after driver clicks start
 
         while (opModeIsActive()) {
 
@@ -66,6 +86,11 @@ public class TeleOpForMakeUp extends LinearOpMode {
             boolean specimenPickUpButton = gamepad2.left_bumper && SPECIMEN_MODE;
             boolean flipButton = gamepad2.x;
             boolean pivotFloat = gamepad2.back;
+
+            boolean slideFullyUpButton = gamepad2.a;
+            boolean slideFullyDownButton = gamepad2.b;
+            boolean slideUpFailSafeButton = gamepad1.a;
+            boolean slideDownFailSafeButton = gamepad1.b;
 
             moveRobot();
             slidePositions(transferButton, alignButton, downButton, slideResetButton, flipButton, pivotFloat);
@@ -88,6 +113,28 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
     }
 
+    public void slideFailSafe(boolean slideFullyUpButton, boolean slideFullyDownButton, boolean slideUpFailSafeButton, boolean slideDownFailSafeButton) {
+
+        if (slideFullyUpButton) {
+            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
+        }
+
+        if (slideFullyDownButton) {
+            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
+        }
+
+        if (slideUpFailSafeButton) {
+            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            linearSlideMotor.setPower(1);
+        } else if (slideDownFailSafeButton) {
+            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            linearSlideMotor.setPower(-1);
+        } else {
+            linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+    }
+
     public void toggleMode(boolean toggle) {
         // toggle
         if (toggle && !wasPressedMode) {
@@ -100,7 +147,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
     public void claws(boolean toggle) {
 
         // toggle
-        if (toggle && !wasPressedToggle) {
+        if (toggle && !wasPressedClaw) {
             clawPosition = (clawPosition + 1) % 2;
         }
 
@@ -113,7 +160,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
             clipServo.setPosition(UtilityValues.CLIP_POS_CLOSE);
         }
 
-        wasPressedToggle = toggle;
+        wasPressedClaw = toggle;
     }
 
     public void specimenScore(boolean specUp, boolean specDown, boolean specMiddle) {
