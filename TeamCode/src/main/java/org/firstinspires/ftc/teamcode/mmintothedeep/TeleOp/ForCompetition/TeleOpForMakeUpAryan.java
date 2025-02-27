@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.UtilityValues;
 
 /**
  * Created for States Makeup Competition
+ * THIS IS CONTROLS FOR ARYAN BECAUSE HE CANT DO SH WITH NEW ONES
  * This is a new TeleOp (Driver controlled) with modularized code
  * <p>
  * Contributors:
@@ -69,23 +70,18 @@ public class TeleOpForMakeUpAryan extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            boolean modeSwitchButton = gamepad2.dpad_down;
-
-            boolean SAMPLE_MODE = mode == 0;
-            boolean SPECIMEN_MODE = mode == 1;
-
-            boolean transferButton = gamepad2.dpad_up && SAMPLE_MODE;
-            boolean alignButton = gamepad2.dpad_right && SAMPLE_MODE;
-            boolean downButton = gamepad2.dpad_down && SAMPLE_MODE;
+            boolean transferButton = gamepad2.dpad_up;
+            boolean alignButton = gamepad2.dpad_right;
+            boolean downButton = gamepad2.dpad_down;
 
             boolean slideResetButton = gamepad1.x;
 
-            boolean clawOpenButton = gamepad2.right_bumper;
-            boolean clawCloseButton = gamepad2.left_bumper;
+            boolean clawOpenButton = gamepad2.left_bumper;
+            boolean clawCloseButton = gamepad2.right_bumper;
 
-            boolean specimenUpButton = gamepad2.left_trigger > 0.1 && SPECIMEN_MODE;
-            boolean specimenDownButton = gamepad2.right_trigger > 0.3 && SPECIMEN_MODE;
-            boolean specimenPickUpButton = gamepad2.y && SPECIMEN_MODE;
+            boolean specimenUpButton = gamepad2.left_trigger > 0.1;
+            boolean specimenDownButton = gamepad2.right_trigger > 0.3;
+            boolean specimenPickUpButton = gamepad2.y;
             boolean flipButton = gamepad2.x;
             boolean pivotFloat = gamepad2.back;
 
@@ -100,8 +96,6 @@ public class TeleOpForMakeUpAryan extends LinearOpMode {
             specimenScore(specimenUpButton, specimenDownButton, specimenPickUpButton);
             isTransferring(isTransferring);
             slideFailSafe(slideFullyUpButton, slideFullyDownButton, slideUpFailSafeButton, slideDownFailSafeButton);
-
-            toggleMode(modeSwitchButton);
 
             if (mode == 0) {
                 telemetry.addLine("Sample mode");
@@ -119,19 +113,23 @@ public class TeleOpForMakeUpAryan extends LinearOpMode {
     public void slideFailSafe(boolean slideFullyUpButton, boolean slideFullyDownButton, boolean slideUpFailSafeButton, boolean slideDownFailSafeButton) {
 
         if (slideFullyUpButton) {
-            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
+            isTransferring = false;
+            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 0.7);
         }
 
         if (slideFullyDownButton) {
+            isTransferring = false;
             runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
         }
 
         if (slideUpFailSafeButton) {
+            isTransferring = false;
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setPower(1);
+            linearSlideMotor.setPower(0.7);
         } else if (slideDownFailSafeButton) {
+            isTransferring = false;
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setPower(-1);
+            linearSlideMotor.setPower(-0.7);
         } else {
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
@@ -228,7 +226,7 @@ public class TeleOpForMakeUpAryan extends LinearOpMode {
         }
 
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 0.5);
         linearSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -326,6 +324,7 @@ public class TeleOpForMakeUpAryan extends LinearOpMode {
             if (System.currentTimeMillis() > startTime + 1200.0) {
                 runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
                 flipServo.setPosition(UtilityValues.FLIP_POS_MID);
+                isTransferring = false;
             } else if (System.currentTimeMillis() > startTime + 850.0) {
                 runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.6);
             } else if (System.currentTimeMillis() > startTime + 600.0) {

@@ -48,6 +48,8 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.odometry.pinpoint.TeleOpTest
 
 import java.util.ArrayList;
 import java.util.Date;
+
+import android.graphics.Color;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -1046,33 +1048,49 @@ public class CameraPickup extends LinearOpMode {
             blobs = colorLocator.getBlobs();
         }
 
-        double offsetX = 240.0;
-        double offsetY = 220.0;
+        double heightToGround = 260.0; // mm
+        double focalLength = 3.67; // mm
+        double cameraWidth = 4.8; // mm
+        double cameraHeight = 3.6; // mm
 
-        int index = 0;
-        double lowestScore = 1000000;
-        int i = 0;
+        double groundHeight = heightToGround / focalLength * cameraHeight;
+        double groundWidth = heightToGround / focalLength * cameraWidth;
 
-        for (ColorBlobLocatorProcessor.Blob b : blobs) {
-            RotatedRect boxFit = b.getBoxFit();
-            double currAngle = boxFit.angle;
-            if (boxFit.size.width < boxFit.size.height) {
-                currAngle -= 90;
-            }
-            double score = (Math.abs(currAngle+90)*5+Math.sqrt(Math.pow((offsetY-boxFit.center.y), 2)+Math.pow((offsetX-boxFit.center.x), 2)));
-            if (score < lowestScore) {
-                lowestScore = score;
-                index = i;
-            }
-            i++;
-        }
 
-        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(0);
-        RotatedRect boxFit = bestBlob.getBoxFit();
 
-        sample_pos = new Pose2D(DistanceUnit.INCH, (offsetY - (int) boxFit.center.y) / 240.0 * ratioY, -1 * ((int) boxFit.center.x - offsetX) / 320.0 * ratioX, AngleUnit.DEGREES, 0);
+//
+        double offsetX = 340.0;
+        double offsetY = 240.0;
+//
+//        int index = 0;
+//        double lowestScore = 1000000;
+//        int i = 0;
+//
+//        for (ColorBlobLocatorProcessor.Blob b : blobs) {
+//            RotatedRect boxFit = b.getBoxFit();
+//            double currAngle = boxFit.angle;
+//            if (boxFit.size.width < boxFit.size.height) {
+//                currAngle -= 90;
+//            }
+//            double score = (Math.abs(currAngle+90)*5+Math.sqrt(Math.pow((offsetY-boxFit.center.y), 2)+Math.pow((offsetX-boxFit.center.x), 2)));
+//            if (score < lowestScore) {
+//                lowestScore = score;
+//                index = i;
+//            }
+//            i++;
+//        }
+//
+//        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(0);
+//        RotatedRect boxFit = bestBlob.getBoxFit();
+//
+//        sample_pos = new Pose2D(DistanceUnit.INCH, (offsetY - (int) boxFit.center.y) / 240.0 * ratioY, -1 * ((int) boxFit.center.x - offsetX) / 320.0 * ratioX, AngleUnit.DEGREES, 0);
+//
+//        telemetry.addData("lowestScore", lowestScore);
 
-        telemetry.addData("lowestScore", lowestScore);
+        ColorBlobLocatorProcessor.Blob largestBlob = blobs.get(0);
+        RotatedRect boxFit = largestBlob.getBoxFit();
+
+        sample_pos = new Pose2D(DistanceUnit.MM, (offsetY - (int) boxFit.center.y) / 240.0 * groundHeight / 2.0, -1 * ((int) boxFit.center.x - offsetX) / 320.0 * groundWidth / 2.0, AngleUnit.DEGREES, 0);
 
         telemetry.addData("Pose X", sample_pos.getX(DistanceUnit.INCH));
         telemetry.addData("Pose Y", sample_pos.getY(DistanceUnit.INCH));

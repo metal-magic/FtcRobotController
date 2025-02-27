@@ -225,7 +225,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
         }
 
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 0.5);
         linearSlideMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
