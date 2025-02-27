@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.UtilityValues;
  * Srinandasai Ari
  */
 
-@TeleOp(name="!!!!!!!!! MAKE UP COMP TELEOP")
-public class TeleOpForMakeUp extends LinearOpMode {
+@TeleOp(name="!!!!!!!!! ARYANNNNNN controls - MAKE UP COMP TELEOP")
+public class TeleOpForMakeUpAryan extends LinearOpMode {
 
     /**
      * instantiating all the values
@@ -74,16 +74,18 @@ public class TeleOpForMakeUp extends LinearOpMode {
             boolean SAMPLE_MODE = mode == 0;
             boolean SPECIMEN_MODE = mode == 1;
 
-            boolean transferButton = gamepad2.right_trigger > 0.1 && SAMPLE_MODE;
-            boolean alignButton = gamepad2.left_bumper && SAMPLE_MODE;
-            boolean downButton = gamepad2.left_trigger > 0.1 && SAMPLE_MODE;
+            boolean transferButton = gamepad2.dpad_up && SAMPLE_MODE;
+            boolean alignButton = gamepad2.dpad_right && SAMPLE_MODE;
+            boolean downButton = gamepad2.dpad_down && SAMPLE_MODE;
 
             boolean slideResetButton = gamepad1.x;
-            boolean clawToggleButton = gamepad2.right_bumper;
+
+            boolean clawOpenButton = gamepad2.right_bumper;
+            boolean clawCloseButton = gamepad2.left_bumper;
 
             boolean specimenUpButton = gamepad2.left_trigger > 0.1 && SPECIMEN_MODE;
             boolean specimenDownButton = gamepad2.right_trigger > 0.3 && SPECIMEN_MODE;
-            boolean specimenPickUpButton = gamepad2.left_bumper && SPECIMEN_MODE;
+            boolean specimenPickUpButton = gamepad2.y && SPECIMEN_MODE;
             boolean flipButton = gamepad2.x;
             boolean pivotFloat = gamepad2.back;
 
@@ -94,9 +96,10 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
             moveRobot();
             slidePositions(transferButton, alignButton, downButton, slideResetButton, flipButton, pivotFloat);
-            claws(clawToggleButton);
+            claws(clawOpenButton, clawCloseButton);
             specimenScore(specimenUpButton, specimenDownButton, specimenPickUpButton);
             isTransferring(isTransferring);
+            slideFailSafe(slideFullyUpButton, slideFullyDownButton, slideUpFailSafeButton, slideDownFailSafeButton);
 
             toggleMode(modeSwitchButton);
 
@@ -144,11 +147,13 @@ public class TeleOpForMakeUp extends LinearOpMode {
         wasPressedMode = toggle;
     }
 
-    public void claws(boolean toggle) {
+    public void claws(boolean clawOpen, boolean clawClose) {
 
-        // toggle
-        if (toggle && !wasPressedClaw) {
-            clawPosition = (clawPosition + 1) % 2;
+        if (clawOpen) {
+            clawPosition = CLAWS_OPEN;
+        }
+        if (clawClose) {
+            clawPosition = CLAWS_CLOSE;
         }
 
         // servo open and close
@@ -159,8 +164,6 @@ public class TeleOpForMakeUp extends LinearOpMode {
             gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
             clipServo.setPosition(UtilityValues.CLIP_POS_CLOSE);
         }
-
-        wasPressedClaw = toggle;
     }
 
     public void specimenScore(boolean specUp, boolean specDown, boolean specMiddle) {

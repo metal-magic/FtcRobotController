@@ -70,7 +70,7 @@ public class UtilityValues {
     public static final double SLIDE_POS_SPEC_UP = 1984;
     public static final double SLIDE_POS_SAMP = 900; //941; //3384;
     public static final double SLIDE_POS_STABLE = 1400;
-    public static final double SLIDE_POS_TRANSFER = 100; //80;
+    public static final double SLIDE_POS_TRANSFER = 95; //100; //80;
 
 
     public static final double PIVOT_POS_DOWN = 0.11; //0.658; //0.76-0.05;
@@ -97,7 +97,7 @@ public class UtilityValues {
 
     public static final int PIVOT_MOTOR_DOWN = 0;
     public static final int PIVOT_MOTOR_COLOR = -120;
-    public static final int PIVOT_MOTOR_ALIGN = -140;
+    public static final int PIVOT_MOTOR_ALIGN = -155; //-140;
     public static final int PIVOT_MOTOR_SUB = -200;
     public static final int PIVOT_MOTOR_FLOAT = -500;
     public static final int PIVOT_MOTOR_TRANSFER = -660;
