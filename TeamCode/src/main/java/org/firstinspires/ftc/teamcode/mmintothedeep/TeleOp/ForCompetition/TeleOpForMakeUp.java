@@ -100,13 +100,14 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
             toggleMode(modeSwitchButton);
 
-            if (mode == 0) {
-                telemetry.addLine("Sample mode");
+            if (SAMPLE_MODE) {
+                telemetry.addLine("SAMPLE MODE");
             } else {
-                telemetry.addLine("Specimen mode");
+                telemetry.addLine("SPECIMEN MODE");
             }
+            telemetry.addData("Scoring Slide", linearSlideMotor.getCurrentPosition());
 
-            telemetry.addData("mode", mode);
+            telemetry.update();
 
         }
 
