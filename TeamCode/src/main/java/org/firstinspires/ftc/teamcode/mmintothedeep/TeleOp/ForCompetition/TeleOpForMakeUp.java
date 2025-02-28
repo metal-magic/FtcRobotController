@@ -104,6 +104,8 @@ public class TeleOpForMakeUp extends LinearOpMode {
             specimenScore(specimenUpButton, specimenDownButton, specimenPickUpButton);
             isTransferring(isTransferring);
 
+            hangSlide();
+
             toggleMode(modeSwitchButton);
 
             slideFailSafe(slideFullyUpButton, slideFullyDownButton, slideUpFailSafeButton, slideDownFailSafeButton);
@@ -388,7 +390,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
         }
 
         if (pivotFloat) {
-            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.4);
+            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SPEC, 0.4);
         }
 
     }

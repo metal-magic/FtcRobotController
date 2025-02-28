@@ -76,8 +76,9 @@ public class UtilityValues {
     public static final double PIVOT_POS_DOWN = 0.11; //0.658; //0.76-0.05;
     public static final double PIVOT_POS_HOVER = 0.25; //0.202; //0.57333333; //0.7-0.05;
     public static final double PIVOT_POS_SUB = 0.57333333; //0.7-0.05;
-    public static final double PIVOT_POS_FLOAT = 0.48;
+    public static final double PIVOT_POS_FLOAT = 0.55;
     public static final double PIVOT_POS_TRANSFER = 0.585; //0.229; //0.39-0.05;
+    //public static final double PIVOT_POS_SPEC = 0.45;
     public static final double PIVOT_POS_HANG = 0.30; //0.229; //0.39-0.05;
     public static final double PIVOT_POS_OUT_OF_SUBMERSIBLE = 0.2644;
 
@@ -99,7 +100,8 @@ public class UtilityValues {
     public static final int PIVOT_MOTOR_COLOR = -120;
     public static final int PIVOT_MOTOR_ALIGN = -155; //-140;
     public static final int PIVOT_MOTOR_SUB = -200;
-    public static final int PIVOT_MOTOR_FLOAT = -530; //-500;
+    public static final int PIVOT_MOTOR_FLOAT = -500; //-500;
+    public static final int PIVOT_MOTOR_SPEC = -450; //-500;
     public static final int PIVOT_MOTOR_TRANSFER = -660;
     public static final int PIVOT_MOTOR_HANG = -275;
 
