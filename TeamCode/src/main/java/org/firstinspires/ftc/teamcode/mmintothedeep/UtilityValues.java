@@ -109,7 +109,7 @@ public class UtilityValues {
     public static final int PIVOT_MOTOR_FLOAT_AUTO = 150;
     public static final int PIVOT_MOTOR_TRANSFER_AUTO = 50;
 
-    public static final double SPECIMEN_PIVOT_DOWN = 0.22;
+    public static final double SPECIMEN_PIVOT_DOWN = 0.255;
     public static final double SPECIMEN_PIVOT_UP = 0.7772;
     public static final double SPECIMEN_PIVOT_SCORE = 0.3;
 

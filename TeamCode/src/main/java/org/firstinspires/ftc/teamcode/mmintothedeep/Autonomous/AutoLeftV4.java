@@ -107,13 +107,13 @@ public class AutoLeftV4 extends LinearOpMode {
 
 
     //    static final Pose2D SAMPLE_1 = new Pose2D(DistanceUnit.MM,-302,450,AngleUnit.DEGREES,90);
-    static final Pose2D SAMPLE_1 = new Pose2D(DistanceUnit.MM,-300,390,AngleUnit.DEGREES,90);
+    static final Pose2D SAMPLE_1 = new Pose2D(DistanceUnit.MM,-300,410,AngleUnit.DEGREES,90);
 
     //    static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-522,450,AngleUnit.DEGREES,90);
-    static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-530,382,AngleUnit.DEGREES,90);
+    static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-520,405,AngleUnit.DEGREES,90);
 
     //    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-515,570,AngleUnit.DEGREES,120);
-    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-510,450,AngleUnit.DEGREES,117);
+    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-510,470,AngleUnit.DEGREES,117);
 
     static final Pose2D WAYPOINT_SUB = new Pose2D(DistanceUnit.MM,-320,1225,AngleUnit.DEGREES,0);
 
@@ -153,7 +153,7 @@ public class AutoLeftV4 extends LinearOpMode {
     boolean atTarget = false;
     public Servo turnServo = null;
 
-    public static final int toleranceMotorSleep = 20;
+    public static final int toleranceMotorSleep = 40;
 
 
     @Override
@@ -286,10 +286,9 @@ public class AutoLeftV4 extends LinearOpMode {
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
                         flipServo.setPosition(flipPosDown);
 
-                        waitSlide((int) UtilityValues.SLIDE_POS_TRANSFER);
-
                         sleep(200);
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
+                        waitSlide((int) UtilityValues.SLIDE_POS_TRANSFER);
                         sleep(200);
                         // transfer
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
@@ -652,14 +651,14 @@ public class AutoLeftV4 extends LinearOpMode {
         // Read the current list
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
 
-        ColorBlobLocatorProcessor.Util.filterByArea(2000, 70000, blobs);  // filter out very small blobs.
+        ColorBlobLocatorProcessor.Util.filterByArea(1500, 70000, blobs);  // filter out very small blobs.
 
         while (blobs.isEmpty()) {
             blobs = colorLocator.getBlobs();
         }
 
         double offsetX = 240.0;
-        double offsetY = 200; //220.0;
+        double offsetY = 215; //200; //220.0;
 
         int index = 0;
         double lowestScore = 1000000;

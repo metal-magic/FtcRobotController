@@ -36,6 +36,8 @@ public class TeleOpForMakeUp extends LinearOpMode {
     DcMotor leftBackDrive = null;
     DcMotor rightBackDrive = null;
     DcMotor pivotMotor = null;
+    DcMotor hangSlideMotor1 = null;
+    DcMotor hangSlideMotor2 = null;
 
     /**
      * other variables to be used in code
@@ -54,6 +56,8 @@ public class TeleOpForMakeUp extends LinearOpMode {
     public int mode = 0;
     public boolean wasPressedMode = false;
 
+    boolean isHangPressed;
+
     /**
      * Main section of code -- like 'main' method
      * @throws InterruptedException - just in case
@@ -67,9 +71,11 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
         afterStart(); // some slide and servo movements after driver clicks start
 
+        isHangPressed = false;
+
         while (opModeIsActive()) {
 
-            boolean modeSwitchButton = gamepad2.dpad_down;
+            boolean modeSwitchButton = gamepad2.dpad_down || gamepad1.dpad_down;
 
             boolean SAMPLE_MODE = mode == 0;
             boolean SPECIMEN_MODE = mode == 1;
@@ -100,6 +106,8 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
             toggleMode(modeSwitchButton);
 
+            slideFailSafe(slideFullyUpButton, slideFullyDownButton, slideUpFailSafeButton, slideDownFailSafeButton);
+
             if (SAMPLE_MODE) {
                 telemetry.addLine("SAMPLE MODE");
             } else {
@@ -114,22 +122,74 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
     }
 
+    public void hangSlide() {
+        if (gamepad1.right_bumper) {
+            hangSlideMotor1.setDirection(DcMotor.Direction.FORWARD);
+            hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hangSlideMotor1.setPower(-0.7);
+        } else if (gamepad1.left_bumper) {
+            hangSlideMotor1.setDirection(DcMotor.Direction.FORWARD);
+            hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hangSlideMotor1.setPower(0.7);
+        } else {
+            if (!isHangPressed) {
+                hangSlideMotor1.setPower(0);
+            }
+        }
+
+        if (gamepad1.right_trigger >= 0.3F) {
+            hangSlideMotor2.setDirection(DcMotor.Direction.REVERSE);
+            hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hangSlideMotor2.setPower(-0.7*(1459.0/2040.0));
+        } else if (gamepad1.left_trigger >= 0.3F) {
+            hangSlideMotor2.setDirection(DcMotor.Direction.REVERSE);
+            hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            hangSlideMotor2.setPower(0.7*(1459.0/2040.0));
+        } else {
+            if (!isHangPressed) {
+                hangSlideMotor2.setPower(0);
+            }
+        }
+
+        if (gamepad1.dpad_up) {
+            isHangPressed = true;
+        } else {
+            if (isHangPressed) {
+                hangSlideMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                hangSlideMotor1.setPower(-0.7 * (1459.0/2050.0));
+                hangSlideMotor2.setPower(-0.7);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_HANG, 0.34);
+                specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+            }
+        }
+
+        if (gamepad1.right_stick_button) {
+            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_HANG, 0.34);
+            specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+        }
+    }
+
     public void slideFailSafe(boolean slideFullyUpButton, boolean slideFullyDownButton, boolean slideUpFailSafeButton, boolean slideDownFailSafeButton) {
 
         if (slideFullyUpButton) {
-            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
+            isTransferring = false;
+            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 0.7);
         }
 
         if (slideFullyDownButton) {
+            isTransferring = false;
             runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
         }
 
         if (slideUpFailSafeButton) {
+            isTransferring = false;
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setPower(1);
+            linearSlideMotor.setPower(0.7);
         } else if (slideDownFailSafeButton) {
+            isTransferring = false;
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setPower(-1);
+            linearSlideMotor.setPower(-0.7);
         } else {
             linearSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
@@ -223,6 +283,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
                 break;
             }
             linearSlideMotor.setPower(-1);
+            pivotMotor.setPower(0.1);
         }
 
         linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -265,6 +326,19 @@ public class TeleOpForMakeUp extends LinearOpMode {
         clipServo = hardwareMap.servo.get("clipServo");
         flipServo = hardwareMap.servo.get("flipServo");
         specimenServo = hardwareMap.servo.get("specPivot");
+
+        hangSlideMotor1 = hardwareMap.dcMotor.get("hangSlideMotor1");
+        hangSlideMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangSlideMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
+        hangSlideMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        hangSlideMotor2 = hardwareMap.dcMotor.get("hangSlideMotor2");
+        hangSlideMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hangSlideMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        hangSlideMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        hangSlideMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hangSlideMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
 
