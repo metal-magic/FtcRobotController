@@ -86,7 +86,7 @@ public class AutoRightV4 extends LinearOpMode {
     static final Pose2D CHAMBER_SPEC_2 = new Pose2D(DistanceUnit.MM,-718 ,-260,AngleUnit.DEGREES,0);
     static final Pose2D CHAMBER_SPEC_3 = new Pose2D(DistanceUnit.MM,-718 ,-220,AngleUnit.DEGREES,0);
     static final Pose2D CHAMBER_SPEC_4 = new Pose2D(DistanceUnit.MM,-718 ,-170,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-15,967,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-30,967,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_4 = new Pose2D(DistanceUnit.MM,-331,-18,AngleUnit.DEGREES,0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
