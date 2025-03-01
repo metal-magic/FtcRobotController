@@ -83,12 +83,12 @@ public class AutoRightV4 extends LinearOpMode {
     static final Pose2D WAYPOINT_3 = new Pose2D(DistanceUnit.MM,-1326,928,AngleUnit.DEGREES,0);
     static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM,-1200,1100,AngleUnit.DEGREES,0);
     static final Pose2D PUSH_2_AND_PICK = new Pose2D(DistanceUnit.MM,-15,1000,AngleUnit.DEGREES,0);
-    static final Pose2D CHAMBER_SPEC_2 = new Pose2D(DistanceUnit.MM,-718 ,-260,AngleUnit.DEGREES,0);
+    static final Pose2D CHAMBER_SPEC_2 = new Pose2D(DistanceUnit.MM,-715 ,-260,AngleUnit.DEGREES,0);
     static final Pose2D CHAMBER_SPEC_3 = new Pose2D(DistanceUnit.MM,-718 ,-220,AngleUnit.DEGREES,0);
     static final Pose2D CHAMBER_SPEC_4 = new Pose2D(DistanceUnit.MM,-718 ,-170,AngleUnit.DEGREES,0);
     static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-30,967,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_4 = new Pose2D(DistanceUnit.MM,-331,-18,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_PICK_UP_4 = new Pose2D(DistanceUnit.MM,-43,967,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_PICK_UP_4 = new Pose2D(DistanceUnit.MM,-50,967,AngleUnit.DEGREES,0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
     static final double slidePosSpecDown = UtilityValues.SLIDE_POS_SPEC_DOWN; //UtilityValues.SLIDE_POS_SPEC_DOWN;
@@ -328,10 +328,11 @@ public class AutoRightV4 extends LinearOpMode {
 
                         }
                     } else {
-                        if (nav.driveTo(odo.getPosition(), CHAMBER_SPEC_2, 0.65, 0.3)) {
+                        if (nav.driveTo(odo.getPosition(), CHAMBER_SPEC_2, 0.65, 0.1)) {
                             telemetry.addLine("at position #1!");
                             stateMachine = StateMachine.DRIVE_TO_TARGET_10;
 
+                            powerOff();
                             specimenScore();
                             powerOff();
 
@@ -504,12 +505,24 @@ public class AutoRightV4 extends LinearOpMode {
         rightBackDrive.setPower(0);
     }
 
-    public void specimenScore() {
+    public void specimenScore2() {
 
         clipServo.setPosition(UtilityValues.CLIP_POS_LOOSEN);
         specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
         //sleepWithSlightly(1000);
         sleepWithSlightly(800, -0.5);
+        clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
+        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
+
+    }
+
+    public void specimenScore() {
+
+        clipServo.setPosition(UtilityValues.CLIP_POS_LOOSEN_TELEOP);
+        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
+        //sleepWithSlightly(1000);
+        sleepWithSlightly(400, -0.6);
+        sleepWithSlightly(400, 0.3);
         clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
         specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
 

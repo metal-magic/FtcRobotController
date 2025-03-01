@@ -234,14 +234,9 @@ public class TeleOpForMakeUp extends LinearOpMode {
         }
 
         if (specDown) {
-            specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
-            clipServo.setPosition(UtilityValues.CLIP_POS_LOOSEN);
-            //sleepWithSlightly(1000);
-            sleepWithSlightly(1000, -0.3);
-            clawPosition = CLAWS_OPEN;
+            specimenScore();
             clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
-            sleepWithMoving(200);
-            specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
+            clawPosition = CLAWS_OPEN;
         }
 
         if (specMiddle) {
@@ -258,6 +253,18 @@ public class TeleOpForMakeUp extends LinearOpMode {
         while(System.currentTimeMillis() < endTimer) {
             moveRobot();
         }
+    }
+
+    public void specimenScore() {
+
+        clipServo.setPosition(UtilityValues.CLIP_POS_LOOSEN_TELEOP);
+        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
+        //sleepWithSlightly(1000);
+        sleepWithSlightly(400, -0.6);
+        sleepWithSlightly(400, 0.3);
+        clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
+        specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
+
     }
 
     public void sleepWithSlightly(int miliseconds, double power) {
