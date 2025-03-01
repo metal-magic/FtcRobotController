@@ -83,6 +83,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
             boolean transferButton = gamepad2.right_trigger > 0.1 && SAMPLE_MODE;
             boolean alignButton = gamepad2.left_bumper && SAMPLE_MODE;
             boolean downButton = gamepad2.left_trigger > 0.1 && SAMPLE_MODE;
+            boolean subButton = gamepad2.dpad_left && SAMPLE_MODE;
 
             boolean slideResetButton = gamepad1.x;
             boolean clawToggleButton = gamepad2.right_bumper;
@@ -99,7 +100,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
             boolean slideDownFailSafeButton = gamepad1.b;
 
             moveRobot();
-            slidePositions(transferButton, alignButton, downButton, slideResetButton, flipButton, pivotFloat);
+            slidePositions(transferButton, alignButton, subButton, downButton, slideResetButton, flipButton, pivotFloat);
             claws(clawToggleButton);
             specimenScore(specimenUpButton, specimenDownButton, specimenPickUpButton);
             isTransferring(isTransferring);
@@ -229,7 +230,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
     public void specimenScore(boolean specUp, boolean specDown, boolean specMiddle) {
         // pivot specimen
         if (specUp) {
-            specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);
+            specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP_TELE);
         }
 
         if (specDown) {
@@ -344,7 +345,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
     }
 
-    public void slidePositions(boolean slideUpControl, boolean alignControl, boolean downControl, boolean resetSlideControl, boolean flip, boolean pivotFloat) {
+    public void slidePositions(boolean slideUpControl, boolean alignControl, boolean subPosition, boolean downControl, boolean resetSlideControl, boolean flip, boolean pivotFloat) {
 
         if (flip) {
             isTransferring = false;
@@ -374,6 +375,14 @@ public class TeleOpForMakeUp extends LinearOpMode {
             flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
             runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
             runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.45);
+        }
+
+        if (subPosition) {
+            isTransferring = false;
+            turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
+            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.45);
         }
 
         if (downControl) {

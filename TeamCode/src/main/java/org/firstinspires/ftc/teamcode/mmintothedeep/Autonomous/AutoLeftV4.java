@@ -110,7 +110,7 @@ public class AutoLeftV4 extends LinearOpMode {
     static final Pose2D SAMPLE_1 = new Pose2D(DistanceUnit.MM,-300,410,AngleUnit.DEGREES,90);
 
     //    static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-522,450,AngleUnit.DEGREES,90);
-    static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-520,405,AngleUnit.DEGREES,90);
+    static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-520,415,AngleUnit.DEGREES,90);
 
     //    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-515,570,AngleUnit.DEGREES,120);
     static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-510,470,AngleUnit.DEGREES,117);
@@ -430,7 +430,7 @@ public class AutoLeftV4 extends LinearOpMode {
                         stateMachine = StateMachine.DRIVE_TO_TARGET_9;
                     } else {
                         runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.8);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.8);
                     }
                     break;
                 case DRIVE_TO_TARGET_9:
@@ -488,7 +488,7 @@ public class AutoLeftV4 extends LinearOpMode {
                         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
                         sleep(400);
                         turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
-                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.5);
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.35);
                         sleep(100);
                         timeToTransfer5th = System.currentTimeMillis();
 
@@ -569,6 +569,7 @@ public class AutoLeftV4 extends LinearOpMode {
 //        sleep(20);
 //    }
 
+    // Method to initialize colorBlobProcessor (Drawing boxes around samples)
     public void initColorBlobsProcessor(ColorRange color) {
         colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(color)         // use a predefined color match
@@ -587,7 +588,88 @@ public class AutoLeftV4 extends LinearOpMode {
                 .build();
     }
 
-    // Method to manually set exposure and gain values
+    // Method to stream camera frames to the driver station
+    private void getCameraSetting() {
+        // Ensure Vision Portal has been setup.
+        if (visionPortal == null) {
+            return;
+        }
+
+        // Wait for the camera to be open
+        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+            telemetry.addData("Camera", "Waiting");
+            telemetry.update();
+            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                sleep(20);
+            }
+            telemetry.addData("Camera", "Ready");
+            telemetry.update();
+        }
+    }
+
+    private void alignToSample() {
+
+        // Read the current list
+        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+
+        ColorBlobLocatorProcessor.Util.filterByArea(2000, 70000, blobs);  // filter out very small blobs.
+
+        while (blobs.isEmpty()) {
+            blobs = colorLocator.getBlobs();
+        }
+
+        double heightToGround = 260.0; // mm
+        double focalLength = 3.67; // mm
+        double cameraWidth = 4.8; // mm
+        double cameraHeight = 3.6; // mm
+
+        double groundHeight = heightToGround / focalLength * cameraHeight;
+        double groundWidth = heightToGround / focalLength * cameraWidth;
+
+
+
+//
+        double offsetX = 340.0;
+        double offsetY = 240.0;
+//
+//        int index = 0;
+//        double lowestScore = 1000000;
+//        int i = 0;
+//
+//        for (ColorBlobLocatorProcessor.Blob b : blobs) {
+//            RotatedRect boxFit = b.getBoxFit();
+//            double currAngle = boxFit.angle;
+//            if (boxFit.size.width < boxFit.size.height) {
+//                currAngle -= 90;
+//            }
+//            double score = (Math.abs(currAngle+90)*5+Math.sqrt(Math.pow((offsetY-boxFit.center.y), 2)+Math.pow((offsetX-boxFit.center.x), 2)));
+//            if (score < lowestScore) {
+//                lowestScore = score;
+//                index = i;
+//            }
+//            i++;
+//        }
+//
+//        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(0);
+//        RotatedRect boxFit = bestBlob.getBoxFit();
+//
+//        sample_pos = new Pose2D(DistanceUnit.INCH, (offsetY - (int) boxFit.center.y) / 240.0 * ratioY, -1 * ((int) boxFit.center.x - offsetX) / 320.0 * ratioX, AngleUnit.DEGREES, 0);
+//
+//        telemetry.addData("lowestScore", lowestScore);
+
+        ColorBlobLocatorProcessor.Blob largestBlob = blobs.get(0);
+        RotatedRect boxFit = largestBlob.getBoxFit();
+
+        sample_pos = new Pose2D(DistanceUnit.MM, (offsetY - (int) boxFit.center.y) / 240.0 * groundHeight / 2.0 + odo.getPosX(), -1 * ((int) boxFit.center.x - offsetX) / 320.0 * groundWidth / 2.0 + odo.getPosY(), AngleUnit.DEGREES, 0);
+
+        telemetry.addData("Pose X", sample_pos.getX(DistanceUnit.INCH));
+        telemetry.addData("Pose Y", sample_pos.getY(DistanceUnit.INCH));
+        telemetry.addData("Pose Heading", sample_pos.getHeading(AngleUnit.DEGREES));
+
+        telemetry.update();
+        sleep(20);
+    }
+
     private boolean setManualExposure(int exposureMS, int gain) {
         // Ensure Vision Portal has been setup.
         if (visionPortal == null) {
@@ -627,71 +709,6 @@ public class AutoLeftV4 extends LinearOpMode {
         }
     }
 
-    // Method to stream camera frames to the driver station
-    private void getCameraSetting() {
-        // Ensure Vision Portal has been setup.
-        if (visionPortal == null) {
-            return;
-        }
-
-        // Wait for the camera to be open
-        if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
-            telemetry.addData("Camera", "Waiting");
-            telemetry.update();
-            while (!isStopRequested() && (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
-                sleep(20);
-            }
-            telemetry.addData("Camera", "Ready");
-            telemetry.update();
-        }
-    }
-
-    private void alignToSample() {
-
-        // Read the current list
-        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-
-        ColorBlobLocatorProcessor.Util.filterByArea(1500, 70000, blobs);  // filter out very small blobs.
-
-        while (blobs.isEmpty()) {
-            blobs = colorLocator.getBlobs();
-        }
-
-        double offsetX = 240.0;
-        double offsetY = 215; //200; //220.0;
-
-        int index = 0;
-        double lowestScore = 1000000;
-        int i = 0;
-
-        for (ColorBlobLocatorProcessor.Blob b : blobs) {
-            RotatedRect boxFit = b.getBoxFit();
-            double currAngle = boxFit.angle;
-            if (boxFit.size.width < boxFit.size.height) {
-                currAngle -= 90;
-            }
-            double score = (Math.abs(currAngle+90)*5+Math.sqrt(Math.pow((offsetY-boxFit.center.y), 2)+Math.pow((offsetX-boxFit.center.x), 2)));
-            if (score < lowestScore) {
-                lowestScore = score;
-                index = i;
-            }
-            i++;
-        }
-
-        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(0);
-        RotatedRect boxFit = bestBlob.getBoxFit();
-
-        sample_pos = new Pose2D(DistanceUnit.INCH, odo.getPosX() / 25.4 + (offsetY - (int) boxFit.center.y) / 240.0 * ratioY, odo.getPosY() / 25.4 + (-1) * ((int) boxFit.center.x - offsetX) / 320.0 * ratioX, AngleUnit.DEGREES, 0);
-
-        telemetry.addData("lowestScore", lowestScore);
-
-        telemetry.addData("Pose X", sample_pos.getX(DistanceUnit.INCH));
-        telemetry.addData("Pose Y", sample_pos.getY(DistanceUnit.INCH));
-        telemetry.addData("Pose Heading", sample_pos.getHeading(AngleUnit.DEGREES));
-
-        telemetry.update();
-        sleep(20);
-    }
 
     public void waitSlide(int pos) {
 
