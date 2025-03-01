@@ -92,7 +92,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
             boolean specimenDownButton = gamepad2.right_trigger > 0.3 && SPECIMEN_MODE;
             boolean specimenPickUpButton = gamepad2.left_bumper && SPECIMEN_MODE;
             boolean flipButton = gamepad2.x;
-            boolean pivotFloat = gamepad2.back;
+            boolean pivotFloat = gamepad2.back || gamepad1.back;
 
             boolean slideFullyUpButton = gamepad2.a;
             boolean slideFullyDownButton = gamepad2.b;
@@ -235,6 +235,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
         if (specDown) {
             specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
+            clipServo.setPosition(UtilityValues.CLIP_POS_LOOSEN);
             //sleepWithSlightly(1000);
             sleepWithSlightly(1000, -0.3);
             clawPosition = CLAWS_OPEN;

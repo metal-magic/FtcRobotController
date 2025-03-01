@@ -75,7 +75,7 @@ public class AutoRightV4 extends LinearOpMode {
     }
 
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 90); // Starting position
-    static final Pose2D CHAMBER_SPEC_1 = new Pose2D(DistanceUnit.MM,-721,-290,AngleUnit.DEGREES, 0);
+    static final Pose2D CHAMBER_SPEC_1 = new Pose2D(DistanceUnit.MM,-721,-310,AngleUnit.DEGREES, 0);
     static final Pose2D WAYPOINT_1 = new Pose2D(DistanceUnit.MM,-509,449,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,-1343,670,AngleUnit.DEGREES,0);
     static final Pose2D READY_PUSH_1 = new Pose2D(DistanceUnit.MM,-1219,883,AngleUnit.DEGREES,0);
@@ -88,6 +88,7 @@ public class AutoRightV4 extends LinearOpMode {
     static final Pose2D CHAMBER_SPEC_4 = new Pose2D(DistanceUnit.MM,-718 ,-170,AngleUnit.DEGREES,0);
     static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-30,967,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_4 = new Pose2D(DistanceUnit.MM,-331,-18,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_PICK_UP_4 = new Pose2D(DistanceUnit.MM,-43,967,AngleUnit.DEGREES,0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
     static final double slidePosSpecDown = UtilityValues.SLIDE_POS_SPEC_DOWN; //UtilityValues.SLIDE_POS_SPEC_DOWN;
@@ -379,7 +380,7 @@ public class AutoRightV4 extends LinearOpMode {
                     }
                     break;
                 case DRIVE_TO_TARGET_12:
-                    if (nav.driveTo(odo.getPosition(), NEW_PICK_UP, 0.65, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), NEW_PICK_UP_4, 0.65, 0.3)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_13;
 
@@ -505,6 +506,7 @@ public class AutoRightV4 extends LinearOpMode {
 
     public void specimenScore() {
 
+        clipServo.setPosition(UtilityValues.CLIP_POS_LOOSEN);
         specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
         //sleepWithSlightly(1000);
         sleepWithSlightly(800, -0.5);

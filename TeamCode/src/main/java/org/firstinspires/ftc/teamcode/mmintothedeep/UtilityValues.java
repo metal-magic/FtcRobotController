@@ -95,6 +95,7 @@ public class UtilityValues {
 
     public static final double CLIP_POS_CLOSE = 0.3;
     public static final double CLIP_POS_OPEN = 0;
+    public static final double CLIP_POS_LOOSEN = 0.16;
 
     public static final int PIVOT_MOTOR_DOWN = 0;
     public static final int PIVOT_MOTOR_COLOR = -120;
@@ -109,11 +110,12 @@ public class UtilityValues {
     public static final int PIVOT_MOTOR_ALIGN_AUTO = 625;
     public static final int PIVOT_MOTOR_SUB_AUTO = 550;
     public static final int PIVOT_MOTOR_FLOAT_AUTO = 150;
+    public static final int PIVOT_MOTOR_FLOAT_AUTO_SPEC = 70;
     public static final int PIVOT_MOTOR_TRANSFER_AUTO = 50;
 
     public static final double SPECIMEN_PIVOT_DOWN = 0.255;
     public static final double SPECIMEN_PIVOT_UP = 0.7772;
-    public static final double SPECIMEN_PIVOT_UP_TELE = 0.73;
+    public static final double SPECIMEN_PIVOT_UP_TELE = SPECIMEN_PIVOT_UP;
     public static final double SPECIMEN_PIVOT_SCORE = 0.3;
 
 

@@ -113,7 +113,7 @@ public class AutoLeftV4 extends LinearOpMode {
     static final Pose2D SAMPLE_2 = new Pose2D(DistanceUnit.MM,-520,415,AngleUnit.DEGREES,90);
 
     //    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-515,570,AngleUnit.DEGREES,120);
-    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-510,470,AngleUnit.DEGREES,117);
+    static final Pose2D SAMPLE_3 = new Pose2D(DistanceUnit.MM,-510,480,AngleUnit.DEGREES,117);
 
     static final Pose2D WAYPOINT_SUB = new Pose2D(DistanceUnit.MM,-320,1225,AngleUnit.DEGREES,0);
 
@@ -413,7 +413,7 @@ public class AutoLeftV4 extends LinearOpMode {
                         waitSlide((int) UtilityValues.SLIDE_POS_SAMP);
 
                         flipServo.setPosition(flipPosScore);
-                        sleep(400);
+                        sleep(600);
                         flipServo.setPosition(flipPosDown);
                         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.2);
                         sleep(300);
@@ -629,8 +629,8 @@ public class AutoLeftV4 extends LinearOpMode {
 
 
 //
-        double offsetX = 340.0;
-        double offsetY = 240.0;
+        double offsetX = 240.0;
+        double offsetY = 220.0;
 //
 //        int index = 0;
 //        double lowestScore = 1000000;
