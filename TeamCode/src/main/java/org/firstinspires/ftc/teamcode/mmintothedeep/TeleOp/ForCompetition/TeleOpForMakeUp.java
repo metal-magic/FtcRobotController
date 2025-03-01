@@ -43,7 +43,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
      * other variables to be used in code
      */
     // for claws
-    public int clawPosition = 0;
+    public int clawPosition = 1;
     public boolean wasPressedClaw = false;
     public int CLAWS_OPEN = 1;
     public int CLAWS_CLOSE = 0;
@@ -268,7 +268,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
         specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_SCORE);
         //sleepWithSlightly(1000);
         sleepWithSlightly(400, -0.6);
-        sleepWithSlightly(400, 0.3);
+        sleepWithSlightly(400, 0.4);
         clipServo.setPosition(UtilityValues.CLIP_POS_OPEN);
         specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
 
@@ -294,8 +294,13 @@ public class TeleOpForMakeUp extends LinearOpMode {
         gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
         specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_DOWN);
 
-        double startTimeAtStart = System.currentTimeMillis();
+        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
+        sleep(300);
+        pivotMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        double startTimeAtStart = System.currentTimeMillis();
+
         while (linearSlideMotor.getCurrentPosition() > 50) {
             if (System.currentTimeMillis() > startTimeAtStart + 2000) {
                 break;
@@ -310,8 +315,11 @@ public class TeleOpForMakeUp extends LinearOpMode {
         linearSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+        pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.3);
         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.3);
+
     }
 
     public void initialize() {
@@ -468,7 +476,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
     }
 
     public void isLowTransferring(boolean isLowTransferring) {
-        if (isTransferring) {
+        if (isLowTransferring) {
             if (System.currentTimeMillis() > startTime + 1200.0) {
                 runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP_LOWER_BASKET, 1);
                 flipServo.setPosition(UtilityValues.FLIP_POS_MID);

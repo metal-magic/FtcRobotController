@@ -71,7 +71,7 @@ public class UtilityValues {
     public static final double SLIDE_POS_SAMP = 900; //941; //3384;
     public static final double SLIDE_POS_STABLE = 1400;
     public static final double SLIDE_POS_TRANSFER = 90; //100; //80;
-    public static final double SLIDE_POS_SAMP_LOWER_BASKET = 900; //941; //3384;
+    public static final double SLIDE_POS_SAMP_LOWER_BASKET = 344; //941; //3384;
 
     public static final double PIVOT_POS_DOWN = 0.11; //0.658; //0.76-0.05;
     public static final double PIVOT_POS_HOVER = 0.25; //0.202; //0.57333333; //0.7-0.05;
