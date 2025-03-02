@@ -95,20 +95,26 @@ public class TeleOpForMakeUp extends LinearOpMode {
             boolean specimenPickUpButton = gamepad2.left_bumper && SPECIMEN_MODE;
             boolean flipButton = gamepad2.x;
             boolean pivotFloat = gamepad2.back || gamepad1.back;
+            boolean resetPivot = gamepad1.left_stick_button;
 
             boolean slideFullyUpButton = gamepad2.a;
             boolean slideFullyDownButton = gamepad2.b;
             boolean slideUpFailSafeButton = gamepad1.a;
             boolean slideDownFailSafeButton = gamepad1.b;
 
+            boolean spinDownFailSafe = gamepad2.left_stick_button;
+
+
+
             moveRobot();
-            slidePositions(transferButton, lowBasketButton, alignButton, subButton, downButton, slideResetButton, flipButton, pivotFloat);
+            slidePositions(transferButton, lowBasketButton, alignButton, subButton, downButton, slideResetButton, flipButton, pivotFloat, resetPivot);
             claws(clawToggleButton);
             specimenScore(specimenUpButton, specimenDownButton, specimenPickUpButton);
             isTransferring(isTransferring);
             isLowTransferring(isLowTransferring);
 
             hangSlide();
+            spinDown(spinDownFailSafe);
 
             toggleMode(modeSwitchButton);
 
@@ -125,6 +131,14 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
         }
 
+
+    }
+
+    public void spinDown(boolean control) {
+
+        if (control) {
+            turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+        }
 
     }
 
@@ -316,9 +330,9 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
         flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.3);
+        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN_TELEOP, 0.3);
         pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.3);
+        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN_TELEOP, 0.3);
 
     }
 
@@ -368,94 +382,98 @@ public class TeleOpForMakeUp extends LinearOpMode {
 
     }
 
-    public void slidePositions(boolean slideUpControl, boolean slideLowerBasketControl, boolean alignControl, boolean subPosition, boolean downControl, boolean resetSlideControl, boolean flip, boolean pivotFloat) {
+    public void slidePositions(boolean slideUpControl, boolean slideLowerBasketControl, boolean alignControl, boolean subPosition, boolean downControl, boolean resetSlideControl, boolean flip, boolean pivotFloat, boolean pivotReset) {
+        if (pivotReset) {
+            pivotMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            pivotMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        } else {
+            if (flip) {
+                isTransferring = false;
+                isLowTransferring = false;
+                flipServo.setPosition(UtilityValues.FLIP_POS_SCORE);
+                sleepWithMoving(500);
+                flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+                sleepWithMoving(200);
+                alignControl = true; // align then
+            }
 
-        if (flip) {
-            isTransferring = false;
-            isLowTransferring = false;
-            flipServo.setPosition(UtilityValues.FLIP_POS_SCORE);
-            sleepWithMoving(500);
-            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
-            sleepWithMoving(200);
-            alignControl = true; // align then
-        }
+            if (slideUpControl) {
+                runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
+                isTransferring = true;
+                isLowTransferring = false;
+                flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+                clawPosition = CLAWS_CLOSE;
+                gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.5);
+                turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
 
-        if (slideUpControl) {
-            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
-            isTransferring = true;
-            isLowTransferring = false;
-            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
-            clawPosition = CLAWS_CLOSE;
-            gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.5);
-            turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
+                linearSlideMotor.setPower(0);
+                startTime = System.currentTimeMillis();
+            }
 
-            linearSlideMotor.setPower(0);
-            startTime = System.currentTimeMillis();
-        }
+            if (slideLowerBasketControl) {
+                runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
+                isLowTransferring = true;
+                isTransferring = false;
+                flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+                clawPosition = CLAWS_CLOSE;
+                gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.5);
+                turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
 
-        if (slideLowerBasketControl) {
-            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
-            isLowTransferring = true;
-            isTransferring = false;
-            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
-            clawPosition = CLAWS_CLOSE;
-            gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.5);
-            turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
+                linearSlideMotor.setPower(0);
+                startTime = System.currentTimeMillis();
+            }
 
-            linearSlideMotor.setPower(0);
-            startTime = System.currentTimeMillis();
-        }
+            if (slideUpControl) {
+                runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
+                isLowTransferring = false;
+                isTransferring = true;
+                flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+                clawPosition = CLAWS_CLOSE;
+                gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.5);
+                turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
 
-        if (slideUpControl) {
-            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
-            isLowTransferring = false;
-            isTransferring = true;
-            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
-            clawPosition = CLAWS_CLOSE;
-            gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
-            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_TRANSFER, 0.5);
-            turnServo.setPosition(UtilityValues.TURN_POS_TRANSFER);
+                linearSlideMotor.setPower(0);
+                startTime = System.currentTimeMillis();
+            }
 
-            linearSlideMotor.setPower(0);
-            startTime = System.currentTimeMillis();
-        }
+            if (alignControl) {
+                isTransferring = false;
+                isLowTransferring = false;
+                turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+                flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+                runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN_TELEOP, 0.45);
+            }
 
-        if (alignControl) {
-            isTransferring = false;
-            isLowTransferring = false;
-            turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
-            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
-            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_ALIGN, 0.45);
-        }
+            if (subPosition) {
+                isTransferring = false;
+                isLowTransferring = false;
+                turnServo.setPosition(UtilityValues.TURN_POS_SIDE);
+                flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+                runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.45);
+            }
 
-        if (subPosition) {
-            isTransferring = false;
-            isLowTransferring = false;
-            turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
-            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
-            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SUB, 0.45);
-        }
+            if (downControl) {
+                isTransferring = false;
+                isLowTransferring = false;
+                turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
+                flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
+                runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.45);
+            }
 
-        if (downControl) {
-            isTransferring = false;
-            isLowTransferring = false;
-            turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
-            flipServo.setPosition(UtilityValues.FLIP_POS_DOWN);
-            runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_TRANSFER, 1);
-            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_DOWN, 0.45);
-        }
+            if (resetSlideControl) {
+                linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
 
-        if (resetSlideControl) {
-            linearSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            linearSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
-
-        if (pivotFloat) {
-            runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SPEC, 0.4);
+            if (pivotFloat) {
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_SPEC, 0.4);
+            }
         }
 
     }
@@ -466,7 +484,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
                 runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP, 1);
                 flipServo.setPosition(UtilityValues.FLIP_POS_MID);
             } else if (System.currentTimeMillis() > startTime + 850.0) {
-                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.6);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT_BUCKET, 0.6);
             } else if (System.currentTimeMillis() > startTime + 600.0) {
                 clawPosition = CLAWS_OPEN;
                 gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);
@@ -481,7 +499,7 @@ public class TeleOpForMakeUp extends LinearOpMode {
                 runToPosition(linearSlideMotor, (int) UtilityValues.SLIDE_POS_SAMP_LOWER_BASKET, 1);
                 flipServo.setPosition(UtilityValues.FLIP_POS_MID);
             } else if (System.currentTimeMillis() > startTime + 850.0) {
-                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT, 0.6);
+                runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT_BUCKET, 0.6);
             } else if (System.currentTimeMillis() > startTime + 600.0) {
                 clawPosition = CLAWS_OPEN;
                 gripperServo1.setPosition(UtilityValues.GRIPPER_POS_OPEN);

@@ -75,7 +75,7 @@ public class AutoRightV4 extends LinearOpMode {
     }
 
     static final Pose2D startingPos = new Pose2D(DistanceUnit.MM, 0, 0, AngleUnit.DEGREES, 90); // Starting position
-    static final Pose2D CHAMBER_SPEC_1 = new Pose2D(DistanceUnit.MM,-721,-310,AngleUnit.DEGREES, 0);
+    static final Pose2D CHAMBER_SPEC_1 = new Pose2D(DistanceUnit.MM,-735,-310,AngleUnit.DEGREES, 0);
     static final Pose2D WAYPOINT_1 = new Pose2D(DistanceUnit.MM,-509,449,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_2 = new Pose2D(DistanceUnit.MM,-1343,670,AngleUnit.DEGREES,0);
     static final Pose2D READY_PUSH_1 = new Pose2D(DistanceUnit.MM,-1219,883,AngleUnit.DEGREES,0);
@@ -83,12 +83,12 @@ public class AutoRightV4 extends LinearOpMode {
     static final Pose2D WAYPOINT_3 = new Pose2D(DistanceUnit.MM,-1326,928,AngleUnit.DEGREES,0);
     static final Pose2D READY_TO_PUSH_2 = new Pose2D(DistanceUnit.MM,-1200,1100,AngleUnit.DEGREES,0);
     static final Pose2D PUSH_2_AND_PICK = new Pose2D(DistanceUnit.MM,-15,1000,AngleUnit.DEGREES,0);
-    static final Pose2D CHAMBER_SPEC_2 = new Pose2D(DistanceUnit.MM,-715 ,-260,AngleUnit.DEGREES,0);
-    static final Pose2D CHAMBER_SPEC_3 = new Pose2D(DistanceUnit.MM,-718 ,-220,AngleUnit.DEGREES,0);
-    static final Pose2D CHAMBER_SPEC_4 = new Pose2D(DistanceUnit.MM,-718 ,-170,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-30,967,AngleUnit.DEGREES,0);
+    static final Pose2D CHAMBER_SPEC_2 = new Pose2D(DistanceUnit.MM,-730 ,-260,AngleUnit.DEGREES,0);
+    static final Pose2D CHAMBER_SPEC_3 = new Pose2D(DistanceUnit.MM,-730 ,-220,AngleUnit.DEGREES,0);
+    static final Pose2D CHAMBER_SPEC_4 = new Pose2D(DistanceUnit.MM,-730 ,-170,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_PICK_UP = new Pose2D(DistanceUnit.MM,-39,967,AngleUnit.DEGREES,0);
     static final Pose2D WAYPOINT_4 = new Pose2D(DistanceUnit.MM,-331,-18,AngleUnit.DEGREES,0);
-    static final Pose2D NEW_PICK_UP_4 = new Pose2D(DistanceUnit.MM,-50,967,AngleUnit.DEGREES,0);
+    static final Pose2D NEW_PICK_UP_4 = new Pose2D(DistanceUnit.MM,-37,967,AngleUnit.DEGREES,0);
 
     static final double slidePosDown = UtilityValues.SLIDE_POS_DOWN;
     static final double slidePosSpecDown = UtilityValues.SLIDE_POS_SPEC_DOWN; //UtilityValues.SLIDE_POS_SPEC_DOWN;
@@ -222,7 +222,7 @@ public class AutoRightV4 extends LinearOpMode {
                     clipServo.setPosition(UtilityValues.CLIP_POS_CLOSE);
                     break;
                 case DRIVE_TO_TARGET_1:
-                    if (nav.driveTo(odo.getPosition(), CHAMBER_SPEC_1, 0.65, 0.3)) {
+                    if (nav.driveTo(odo.getPosition(), CHAMBER_SPEC_1, 0.65, 0.2)) {
                         telemetry.addLine("at position #1!");
                         stateMachine = StateMachine.DRIVE_TO_TARGET_2;
 
@@ -244,7 +244,7 @@ public class AutoRightV4 extends LinearOpMode {
                         powerOff();
 
                     } else {
-
+                        runToPosition(pivotMotor, UtilityValues.PIVOT_MOTOR_FLOAT_AUTO_SPEC, 0.3);
                     }
                     break;
                 case DRIVE_TO_TARGET_3:
@@ -368,9 +368,10 @@ public class AutoRightV4 extends LinearOpMode {
 
                         }
                     } else {
-                        if (nav.driveTo(odo.getPosition(), CHAMBER_SPEC_3, 0.65, 0.3)) {
+                        if (nav.driveTo(odo.getPosition(), CHAMBER_SPEC_3, 0.65, 0.1)) {
                             telemetry.addLine("at position #1!");
                             stateMachine = StateMachine.DRIVE_TO_TARGET_12;
+                            powerOff();
 
                             specimenScore();
                             powerOff();
@@ -387,7 +388,7 @@ public class AutoRightV4 extends LinearOpMode {
 
                         powerOff();
 
-                        sleep(300);
+                        sleep(100);
                         clipServo.setPosition(clipPosClose);
                         sleep(300);
                         specimenServo.setPosition(UtilityValues.SPECIMEN_PIVOT_UP);

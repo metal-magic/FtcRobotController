@@ -33,10 +33,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name="!!AutoLeftV4Color")
+@Autonomous(name="!!AutoLeftV5Density")
 //@Disabled
 
-public class AutoLeftV4 extends LinearOpMode {
+public class AutoLeftV5 extends LinearOpMode {
 
     DcMotor leftFrontDrive;
     DcMotor rightFrontDrive;
@@ -104,7 +104,7 @@ public class AutoLeftV4 extends LinearOpMode {
     //    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-450,110,AngleUnit.DEGREES,40);
 //    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-443,180,AngleUnit.DEGREES,50);
 
-//    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-415,180,AngleUnit.DEGREES,46);
+    //    static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-415,180,AngleUnit.DEGREES,46);
     static final Pose2D BASKET_TARGET = new Pose2D(DistanceUnit.MM,-409,125,AngleUnit.DEGREES,50);
 
 
@@ -462,7 +462,6 @@ public class AutoLeftV4 extends LinearOpMode {
                         turnServo.setPosition(UtilityValues.TURN_POS_DOWN);
 
                         waitSlide((int) UtilityValues.SLIDE_POS_SAMP);
-                        gripperServo1.setPosition(UtilityValues.GRIPPER_POS_CLOSE);
 
                         flipServo.setPosition(flipPosScore);
                         sleep(400);
@@ -642,7 +641,70 @@ public class AutoLeftV4 extends LinearOpMode {
 
 
 //
-        double offsetX = 240.0;
+        double offsetX = 235.0;
+        double offsetY = 220.0;
+//
+//        int index = 0;
+//        double lowestScore = 1000000;
+//        int i = 0;
+//
+//        for (ColorBlobLocatorProcessor.Blob b : blobs) {
+//            RotatedRect boxFit = b.getBoxFit();
+//            double currAngle = boxFit.angle;
+//            if (boxFit.size.width < boxFit.size.height) {
+//                currAngle -= 90;
+//            }
+//            double score = (Math.abs(currAngle+90)*5+Math.sqrt(Math.pow((offsetY-boxFit.center.y), 2)+Math.pow((offsetX-boxFit.center.x), 2)));
+//            if (score < lowestScore) {
+//                lowestScore = score;
+//                index = i;
+//            }
+//            i++;
+//        }
+//
+//        ColorBlobLocatorProcessor.Blob bestBlob = blobs.get(0);
+//        RotatedRect boxFit = bestBlob.getBoxFit();
+//
+//        sample_pos = new Pose2D(DistanceUnit.INCH, (offsetY - (int) boxFit.center.y) / 240.0 * ratioY, -1 * ((int) boxFit.center.x - offsetX) / 320.0 * ratioX, AngleUnit.DEGREES, 0);
+//
+//        telemetry.addData("lowestScore", lowestScore);
+
+        ColorBlobLocatorProcessor.Blob largestBlob = blobs.get(0);
+        RotatedRect boxFit = largestBlob.getBoxFit();
+
+        sample_pos = new Pose2D(DistanceUnit.MM, (offsetY - (int) boxFit.center.y) / 240.0 * groundHeight / 2.0 + odo.getPosX(), -1 * ((int) boxFit.center.x - offsetX) / 320.0 * groundWidth / 2.0 + odo.getPosY(), AngleUnit.DEGREES, 0);
+
+        telemetry.addData("Pose X", sample_pos.getX(DistanceUnit.INCH));
+        telemetry.addData("Pose Y", sample_pos.getY(DistanceUnit.INCH));
+        telemetry.addData("Pose Heading", sample_pos.getHeading(AngleUnit.DEGREES));
+
+        telemetry.update();
+        sleep(20);
+    }
+
+    private void checkSample() {
+
+        // Read the current list
+        List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
+
+        ColorBlobLocatorProcessor.Util.filterByArea(2000, 70000, blobs);  // filter out very small blobs.
+
+        while (blobs.isEmpty()) {
+            blobs = colorLocator.getBlobs();
+        }
+
+        double heightToGround = 260.0; // mm
+        double focalLength = 3.67; // mm
+        double cameraWidth = 4.8; // mm
+        double cameraHeight = 3.6; // mm
+
+        double groundHeight = heightToGround / focalLength * cameraHeight;
+        double groundWidth = heightToGround / focalLength * cameraWidth;
+
+
+
+//
+        double offsetX = 235.0;
         double offsetY = 220.0;
 //
 //        int index = 0;

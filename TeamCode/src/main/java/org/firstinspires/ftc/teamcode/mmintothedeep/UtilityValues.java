@@ -68,7 +68,7 @@ public class UtilityValues {
     public static final double SLIDE_POS_SPEC_DOWN = 1300;
     //changed from 2200 to 2195 - aditya 1/13
     public static final double SLIDE_POS_SPEC_UP = 1984;
-    public static final double SLIDE_POS_SAMP = 900; //941; //3384;
+    public static final double SLIDE_POS_SAMP = 875; //900; //941; //3384;
     public static final double SLIDE_POS_STABLE = 1400;
     public static final double SLIDE_POS_TRANSFER = 90; //100; //80;
     public static final double SLIDE_POS_SAMP_LOWER_BASKET = 344; //941; //3384;
@@ -77,12 +77,14 @@ public class UtilityValues {
     public static final double PIVOT_POS_HOVER = 0.25; //0.202; //0.57333333; //0.7-0.05;
     public static final double PIVOT_POS_SUB = 0.57333333; //0.7-0.05;
     public static final double PIVOT_POS_FLOAT = 0.55;
+    public static final double PIVOT_POS_FLOAT_BUCKET = 0.425;
     public static final double PIVOT_POS_TRANSFER = 0.585; //0.229; //0.39-0.05;
     //public static final double PIVOT_POS_SPEC = 0.45;
     public static final double PIVOT_POS_HANG = 0.30; //0.229; //0.39-0.05;
     public static final double PIVOT_POS_OUT_OF_SUBMERSIBLE = 0.2644;
 
     public static final double TURN_POS_DOWN = 0.0617;
+    public static final double TURN_POS_SIDE = 0.35;
     public static final double TURN_POS_TRANSFER = 0.75; //0.7178;
 
 //    public static final double FLIP_POS_DOWN = 0.1861; //0.06; // 0.1
@@ -101,8 +103,10 @@ public class UtilityValues {
     public static final int PIVOT_MOTOR_DOWN = 0;
     public static final int PIVOT_MOTOR_COLOR = -120;
     public static final int PIVOT_MOTOR_ALIGN = -163; //-155; //-140;
-    public static final int PIVOT_MOTOR_SUB = -150;
+    public static final int PIVOT_MOTOR_ALIGN_TELEOP = -182; //-155; //-140;
+    public static final int PIVOT_MOTOR_SUB = -140;
     public static final int PIVOT_MOTOR_FLOAT = -450; //-500;
+    public static final int PIVOT_MOTOR_FLOAT_BUCKET = -385;
     public static final int PIVOT_MOTOR_SPEC = -550; //-450; //-500;
     public static final int PIVOT_MOTOR_TRANSFER = -660;
     public static final int PIVOT_MOTOR_HANG = -275;
@@ -114,7 +118,7 @@ public class UtilityValues {
     public static final int PIVOT_MOTOR_FLOAT_AUTO_SPEC = 70;
     public static final int PIVOT_MOTOR_TRANSFER_AUTO = 50;
 
-    public static final double SPECIMEN_PIVOT_DOWN = 0.23; //0.255;
+    public static final double SPECIMEN_PIVOT_DOWN = 0.224; //0.255;
     public static final double SPECIMEN_PIVOT_UP = 0.7772;
     public static final double SPECIMEN_PIVOT_UP_TELE = SPECIMEN_PIVOT_UP;
     public static final double SPECIMEN_PIVOT_SCORE = 0.3;
