@@ -86,7 +86,7 @@ import java.util.concurrent.TimeUnit;
   =========================================
  */
 
-@TeleOp(name= "Camera Test TeleOp WORLDS???")
+@TeleOp(name= "Camera Test TeleOp (no) WORLDS??? (but better than revaeb)")
 public class CameraPickup extends LinearOpMode {
 
     private VisionPortal visionPortal = null;        // Used to manage the video source.
@@ -1060,7 +1060,7 @@ public class CameraPickup extends LinearOpMode {
 
 //
         double offsetX = 340.0;
-        double offsetY = 240.0;
+        double offsetY = 300; //240.0;
 //
 //        int index = 0;
 //        double lowestScore = 1000000;
