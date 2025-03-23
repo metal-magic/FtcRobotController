@@ -22,7 +22,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(group = "parts", name = "Servo Test")
-//@Disabled
+@Disabled
 public class spinServoTest extends OpMode {
     public Servo testServo = null;
 

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.ForCompetition;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.mmintothedeep.UtilityValues;
  */
 
 @TeleOp(name="!!!!!!!!! ARYANNNNNN controls - MAKE UP COMP TELEOP")
+@Disabled
 public class TeleOpForMakeUpAryan extends LinearOpMode {
 
     /**

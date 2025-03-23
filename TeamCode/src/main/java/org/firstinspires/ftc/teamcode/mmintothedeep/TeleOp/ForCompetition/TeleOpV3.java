@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.ForCompetition;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -46,6 +47,7 @@ import java.util.Date;
  */
 
 @TeleOp(name= "TeleOp v3 - Alternate without odo and other features")
+@Disabled
 public class TeleOpV3 extends LinearOpMode {
 
     int newTarget;

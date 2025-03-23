@@ -22,6 +22,7 @@
 
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.ForCompetition;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -61,7 +62,7 @@ For support, contact tech@gobilda.com
  */
 
 @TeleOp(name="!COMP ODO startWith90")
-//@Disabled
+@Disabled
 
 public class startWith90 extends LinearOpMode {
 

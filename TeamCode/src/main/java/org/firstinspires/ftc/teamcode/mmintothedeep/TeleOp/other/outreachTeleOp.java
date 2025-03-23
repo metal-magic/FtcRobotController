@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.other;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -46,6 +47,7 @@ import java.util.Date;
  */
 
 @TeleOp(name = "Outreach Event")
+@Disabled
 public class outreachTeleOp extends OpMode {
 
     public DcMotor motorFrontLeft = null;

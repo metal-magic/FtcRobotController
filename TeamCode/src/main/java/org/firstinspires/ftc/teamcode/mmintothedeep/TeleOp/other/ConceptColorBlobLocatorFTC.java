@@ -61,6 +61,7 @@ import java.util.List;
  */
 
 @TeleOp(name = "FTC Concept: Vision Color-Locator")
+@Disabled
 public class ConceptColorBlobLocatorFTC extends LinearOpMode
 {
     @Override

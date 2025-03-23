@@ -60,6 +60,7 @@ import java.util.concurrent.TimeUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 @TeleOp(name = "HuskyLensTest", group = "Sensor")
+@Disabled
 public class huskyLensTest extends LinearOpMode {
 
     private final int READ_PERIOD = 1;

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mmintothedeep.TeleOp.ForCompetition;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.mmintothedeep.UtilityValues;
 
 @TeleOp(name = "!! Test The Specimen Stuff")
+@Disabled
 public class SpecClawTest extends LinearOpMode {
 
     public Servo pivotServo = null;

@@ -22,7 +22,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(group = "parts", name = "pivot spec Servo Test")
-//@Disabled
+@Disabled
 public class specServoPivotTest extends OpMode {
     public Servo testServo = null;
 
