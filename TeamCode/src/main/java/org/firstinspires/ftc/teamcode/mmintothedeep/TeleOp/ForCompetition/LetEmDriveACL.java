@@ -76,6 +76,11 @@ public class LetEmDriveACL extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            /*
+             * ====================
+             * CONTROLS
+             * ====================
+             */
             boolean modeSwitchButton = gamepad2.dpad_down || gamepad1.dpad_down;
 
             boolean SAMPLE_MODE = mode == 0;
@@ -104,7 +109,11 @@ public class LetEmDriveACL extends LinearOpMode {
 
             boolean spinDownFailSafe = gamepad2.left_stick_button;
 
-
+            /*
+             * ====================
+             * MOVEMENTS TO CONTROL ROBOT
+             * ====================
+             */
 
             moveRobot();
             slidePositions(transferButton, lowBasketButton, alignButton, subButton, downButton, slideResetButton, flipButton, pivotFloat, resetPivot);
